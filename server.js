@@ -74,13 +74,13 @@ function authMiddleware(req, res, next) {
     req.userId = decoded.userId;
     next();
   } catch (e) {
-    res.status(401).json({ error: 'Token inválido' });
+    res.status(401).json({ error: 'Token invalido' });
   }
 }
 
 app.post('/api/registro', async (req, res) => {
   const { email, password, nombre } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email y contraseña requeridos' });
+  if (!email || !password) return res.status(400).json({ error: 'Email y contrasena requeridos' });
   
   const existe = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
   if (existe) return res.status(400).json({ error: 'Email ya registrado' });
@@ -100,10 +100,9 @@ app.post('/api/login', async (req, res) => {
   if (!user) return res.status(400).json({ error: 'Email no encontrado' });
   
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(400).json({ error: 'Contraseña incorrecta' });
+  if (!valid) return res.status(400).json({ error: 'Contrasena incorrecta' });
   
   const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '30d' });
-  
   const suscripcionActiva = user.suscripcion_activa === 1 && (!user.fecha_expiracion || new Date(user.fecha_expiracion) > new Date());
   
   res.json({ token, userId: user.id, nombre: user.nombre, suscripcion_activa: suscripcionActiva });
@@ -119,25 +118,23 @@ app.get('/api/datos', authMiddleware, (req, res) => {
 app.post('/api/datos', authMiddleware, (req, res) => {
   const { cuentas, trades, retiros } = req.body;
   
-  const deleteCuentas = db.prepare('DELETE FROM cuentas WHERE user_id = ?');
-  const deleteTrades = db.prepare('DELETE FROM trades WHERE user_id = ?');
-  const deleteRetiros = db.prepare('DELETE FROM retiros WHERE user_id = ?');
+  db.prepare('DELETE FROM cuentas WHERE user_id = ?').run(req.userId);
+  db.prepare('DELETE FROM trades WHERE user_id = ?').run(req.userId);
+  db.prepare('DELETE FROM retiros WHERE user_id = ?').run(req.userId);
   
-  const insertCuenta = db.prepare('INSERT INTO cuentas (user_id, nombre, empresa, tamano, invertido, objetivo, consistenciaPct) VALUES (?, ?, ?, ?, ?, ?, ?)');
-  const insertTrade = db.prepare('INSERT INTO trades (user_id, cuenta_id, fecha, hora_entrada, hora_salida, activo, tipo, cierre, resultado, resultado_pct, notas, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-  const insertRetiro = db.prepare('INSERT INTO retiros (user_id, cuenta_id, monto, fecha, notas) VALUES (?, ?, ?, ?, ?)');
+  if (cuentas) {
+    const insertCuenta = db.prepare('INSERT INTO cuentas (user_id, nombre, empresa, tamano, invertido, objetivo, consistenciaPct) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    cuentas.forEach(c => insertCuenta.run(req.userId, c.nombre, c.empresa, c.tamano, c.invertido, c.objetivo, c.consistenciaPct));
+  }
+  if (trades) {
+    const insertTrade = db.prepare('INSERT INTO trades (user_id, cuenta_id, fecha, hora_entrada, hora_salida, activo, tipo, cierre, resultado, resultado_pct, notas, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    trades.forEach(t => insertTrade.run(req.userId, t.cuenta_id, t.fecha, t.hora_entrada, t.hora_salida, t.activo, t.tipo, t.cierre, t.resultado, t.resultado_pct, t.notas, t.imagen));
+  }
+  if (retiros) {
+    const insertRetiro = db.prepare('INSERT INTO retiros (user_id, cuenta_id, monto, fecha, notas) VALUES (?, ?, ?, ?, ?)');
+    retiros.forEach(r => insertRetiro.run(req.userId, r.cuenta_id, r.monto, r.fecha, r.notas));
+  }
   
-  const transaction = db.transaction(() => {
-    deleteCuentas.run(req.userId);
-    deleteTrades.run(req.userId);
-    deleteRetiros.run(req.userId);
-    
-    if (cuentas) cuentas.forEach(c => insertCuenta.run(req.userId, c.nombre, c.empresa, c.tamano, c.invertido, c.objetivo, c.consistenciaPct));
-    if (trades) trades.forEach(t => insertTrade.run(req.userId, t.cuenta_id, t.fecha, t.hora_entrada, t.hora_salida, t.activo, t.tipo, t.cierre, t.resultado, t.resultado_pct, t.notas, t.imagen));
-    if (retiros) retiros.forEach(r => insertRetiro.run(req.userId, r.cuenta_id, r.monto, r.fecha, r.notas));
-  });
-  
-  transaction();
   res.json({ success: true });
 });
 
@@ -152,5 +149,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`CRT JOURNAL corriendo en puerto ${PORT}`);
+  console.log('CRT JOURNAL corriendo en puerto ' + PORT);
 });
