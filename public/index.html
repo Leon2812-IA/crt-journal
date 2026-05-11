@@ -604,10 +604,10 @@
 
 // Contrasena fija de acceso (puedes cambiarla aqui)
 var ACCESS_PASSWORD = 'trading2026';
+// NOTA: Ya NO se persiste la sesion en localStorage. Siempre pide contrasena al cargar la pagina.
 
 // Datos se guardan en localStorage (no necesita backend ni API)
 var data = JSON.parse(localStorage.getItem('tjp_data')) || { cuentas: [], trades: [], retiros: [], nextId: { cuenta: 1, retiro: 1, trade: 1 }, plan: null };
-var sesionActiva = localStorage.getItem('tjp_sesion') === '1';
 var cuentaActivaId = null;
 var calYear = new Date().getFullYear(), calMonth = new Date().getMonth() + 1;
 var editingTradeId = null;
@@ -626,13 +626,11 @@ function aplicarNombreJournal() {
 }
 aplicarNombreJournal();
 
-// Función de acceso con contraseña fija
+// Funcion de acceso con contraseña fija — solo para esta sesion (no persiste)
 function acceder() {
     var password = document.getElementById('access-password').value;
     var msg = document.getElementById('login-msg');
     if (password === ACCESS_PASSWORD) {
-        sesionActiva = true;
-        localStorage.setItem('tjp_sesion', '1');
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('app-container').classList.add('active');
         cargarDatos();
@@ -645,7 +643,6 @@ function acceder() {
 }
 
 function cerrarSesion() {
-    localStorage.removeItem('tjp_sesion');
     location.reload();
 }
 
@@ -1824,10 +1821,9 @@ function importarCSV() {
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     }
     var file = document.getElementById('import-file').files[0];
-    if (!file) return;
+    if (!file) return alert('Selecciona un archivo primero');
 
     var ext = file.name.split('.').pop().toLowerCase();
-
     if (ext === 'pdf') {
         importarPDF(file);
     } else {
@@ -1840,32 +1836,53 @@ function importarPDF(file) {
     reader.onload = function(e) {
         var typedarray = new Uint8Array(e.target.result);
         pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
-            var textoCompleto = '';
             var pages = [];
             for (var p = 1; p <= pdf.numPages; p++) {
                 pages.push(pdf.getPage(p).then(function(page) {
                     return page.getTextContent().then(function(tc) {
-                        return tc.items.map(function(item) { return item.str; }).join(' ');
+                        // tc.items tiene cada texto con su posicion (x,y)
+                        // Agrupar por fila segun posicion Y
+                        var filas = {};
+                        tc.items.forEach(function(item) {
+                            var y = Math.round(item.transform[5]);
+                            if (!filas[y]) filas[y] = [];
+                            filas[y].push({ x: item.transform[4], texto: item.str });
+                        });
+                        // Ordenar filas de arriba a abajo (Y mayor primero)
+                        var yKeys = Object.keys(filas).sort(function(a,b) { return b - a; });
+                        var lineas = yKeys.map(function(y) {
+                            // Ordenar columnas de izquierda a derecha
+                            filas[y].sort(function(a,b) { return a.x - b.x; });
+                            return filas[y].map(function(c) { return c.texto; }).join(',');
+                        });
+                        return lineas;
                     });
                 }));
             }
-            Promise.all(pages).then(function(textos) {
-                textoCompleto = textos.join('\n');
-                // Intentar parsear como CSV simulado (lineas con datos tabulares)
-                var lineas = textoCompleto.split('\n').filter(function(l) { return l.trim(); });
-                if (lineas.length < 2) { alert('PDF vacio o formato no reconocido'); return; }
-                // Buscar header
+            Promise.all(pages).then(function(resultados) {
+                var lineas = [];
+                resultados.forEach(function(r) { lineas = lineas.concat(r); });
+                lineas = lineas.filter(function(l) { return l.trim(); });
+                if (lineas.length < 2) { alert('PDF vacio o sin datos de trades'); return; }
+
+                // Buscar header (soporta acentos)
                 var hi = -1;
                 for (var i = 0; i < lineas.length; i++) {
-                    var l = lineas[i].toLowerCase();
-                    if (l.indexOf('simbolo') > -1 || l.indexOf('simbol') > -1 || l.indexOf('symbol') > -1 || (l.indexOf('beneficio') > -1 || l.indexOf('profit') > -1)) { hi = i; break; }
+                    var l = lineas[i].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                    if ((l.indexOf('simbolo') > -1 || l.indexOf('symbol') > -1) &&
+                        (l.indexOf('beneficio') > -1 || l.indexOf('profit') > -1 || l.indexOf('resultado') > -1)) {
+                        hi = i; break;
+                    }
+                    // Si encuentra una linea que claramente es un header tabular
+                    if (l.indexOf('simbolo') > -1 || l.indexOf('symbol') > -1) { hi = i; break; }
                 }
-                if (hi < 0) return alert('Formato PDF no reconocido. Asegurate de que el PDF tenga columnas de trades.');
-                // Reemplazar multiples espacios por coma para simular CSV
-                var csvSimulado = lineas.map(function(l) { return l.replace(/\s+/g, ','); });
-                procesarLineasCSV(csvSimulado, hi);
+                if (hi < 0) {
+                    alert('Formato PDF no reconocido. Busco columnas: Simbolo, Beneficio. Asegurate de que el PDF tenga una fila de encabezados.');
+                    return;
+                }
+                procesarLineasCSV(lineas, hi);
             });
-        }).catch(function() { alert('Error al leer el PDF. Asegurate de que sea un archivo PDF valido.'); });
+        }).catch(function(err) { alert('Error al leer el PDF: ' + err.message); });
     };
     reader.readAsArrayBuffer(file);
 }
@@ -1874,13 +1891,18 @@ function importarDesdeTexto(file) {
     var reader = new FileReader();
     reader.onload = function(e) {
         var lines = e.target.result.split('\n').filter(function(l) { return l.trim(); });
-        if (lines.length < 2) return;
+        if (lines.length < 2) { alert('Archivo vacio'); return; }
         var hi = -1;
         for (var i = 0; i < lines.length; i++) {
-            var l = lines[i].toLowerCase();
-            if (l.indexOf('simbolo') > -1 || l.indexOf('simbol') > -1 || l.indexOf('symbol') > -1 || l.indexOf('fecha') > -1) { hi = i; break; }
+            var l = lines[i].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            // Buscar header (simbolo sin acento despues de normalizar)
+            if ((l.indexOf('simbolo') > -1 || l.indexOf('symbol') > -1) &&
+                (l.indexOf('beneficio') > -1 || l.indexOf('profit') > -1 || l.indexOf('resultado') > -1)) {
+                hi = i; break;
+            }
+            if (l.indexOf('simbolo') > -1 || l.indexOf('symbol') > -1) { hi = i; break; }
         }
-        if (hi < 0) return alert('Formato no reconocido. El archivo debe tener columnas como: Simbolo, Beneficio, Fecha, etc.');
+        if (hi < 0) return alert('Formato no reconocido. El archivo debe tener una fila con columnas como: Simbolo, Beneficio, Fecha');
         procesarLineasCSV(lines, hi);
     };
     reader.readAsText(file);
@@ -1888,19 +1910,23 @@ function importarDesdeTexto(file) {
 
 function procesarLineasCSV(lines, hi) {
     var headers = lines[hi].split(',');
-    // Mapear columnas por nombre (soporta espa\u00f1ol e ingles)
+    // Normalizar headers: quitar acentos, espacios, comillas
+    var headersNorm = headers.map(function(h) {
+        return h.replace(/['"]/g, '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    });
+
     function idxCol(nombres) {
         for (var k = 0; k < nombres.length; k++) {
-            var idx = headers.findIndex(function(h) {
-                var hh = h.replace(/['"]/g, '').trim().toLowerCase();
-                return hh.indexOf(nombres[k].toLowerCase()) > -1 || hh === nombres[k].toLowerCase();
+            var busca = nombres[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            var idx = headersNorm.findIndex(function(h) {
+                return h.indexOf(busca) > -1 || h === busca;
             });
             if (idx > -1) return idx;
         }
         return -1;
     }
 
-    var iF = idxCol(['fecha', 'hora de apertura', 'open time', 'date']);
+    var iF = idxCol(['fecha', 'hora de apertura', 'open time', 'date', 'hora']);
     var iHoraEntrada = idxCol(['hora de apertura', 'open time']);
     var iHoraSalida = idxCol(['hora de cierre', 'close time']);
     var iA = idxCol(['simbolo', 'symbol', 'activo', 'instrumento', 'instrument']);
@@ -1909,7 +1935,8 @@ function procesarLineasCSV(lines, hi) {
     var iCierre = idxCol(['razon', 'reason', 'cierre', 'close reason', 'comment']);
     var iVol = idxCol(['volumen', 'volume', 'lotes', 'lots', 'size']);
 
-    if (iA < 0 || iR < 0) return alert('Columnas no encontradas. Necesito al menos "Simbolo" y "Beneficio"');
+    if (iA < 0) return alert('No se encontro la columna "Simbolo". Los headers detectados son: ' + headersNorm.join(', '));
+    if (iR < 0) return alert('No se encontro la columna "Beneficio". Los headers detectados son: ' + headersNorm.join(', '));
 
     var c = 0;
     for (var i = hi + 1; i < lines.length; i++) {
@@ -1923,23 +1950,17 @@ function procesarLineasCSV(lines, hi) {
         var f = '', horaEnt = '00:00', horaSal = '00:00';
         if (iF > -1 && cols[iF]) {
             f = cols[iF].replace(/['"]/g, '').trim();
-            // Formato DD/MM/YYYY HH:MM:SS
             var mDMY = f.match(/(\d{2})\/(\d{2})\/(\d{4})/);
             if (mDMY) {
                 f = mDMY[3] + '-' + mDMY[2] + '-' + mDMY[1];
-                // Extraer hora si viene en el mismo campo
                 var hPart = f.match(/\d{4}-\d{2}-\d{2}\s+(\d{2}:\d{2})/);
                 if (hPart) { horaEnt = hPart[1]; f = f.split(' ')[0]; }
             }
-            var mISO = f.match(/(\d{4})-(\d{2})-(\d{2})/);
-            if (!mDMY && mISO) { /* ya esta en ISO */ }
         }
-        // Si hay columna separada de hora entrada
         if (iHoraEntrada > -1 && cols[iHoraEntrada]) {
             var he = cols[iHoraEntrada].replace(/['"]/g, '').trim();
             var mH = he.match(/(\d{2}:\d{2})/);
-            if (mH) { horaEnt = mH[1]; }
-            // Si la fecha y hora estan juntas en hora de apertura
+            if (mH) horaEnt = mH[1];
             var mFD = he.match(/(\d{2})\/(\d{2})\/(\d{4})/);
             if (mFD) f = mFD[3] + '-' + mFD[2] + '-' + mFD[1];
         }
@@ -1949,10 +1970,11 @@ function procesarLineasCSV(lines, hi) {
             if (mHS) horaSal = mHS[1];
         }
 
-        // Determinar tipo (Largo/Corto) y cierre
         var tipo = 'Largo';
         var opVal = (iTipo > -1 && cols[iTipo]) ? cols[iTipo].replace(/['"]/g, '').trim().toLowerCase() : '';
-        if (opVal === 'sell' || opVal === 'corto' || opVal === 'short' || opVal === 'venta') tipo = 'Corto';
+        if (opVal === 'sell' || opVal === 'corto' || opVal === 'short' || opVal === 'venta' || opVal === 'buy') {
+            if (opVal === 'sell' || opVal === 'corto' || opVal === 'short' || opVal === 'venta') tipo = 'Corto';
+        }
 
         var cierre = 'Manual';
         var razonVal = (iCierre > -1 && cols[iCierre]) ? cols[iCierre].replace(/['"]/g, '').trim().toLowerCase() : '';
@@ -2018,12 +2040,7 @@ function refreshActive() {
     if (p === 'stats') renderStats();
 }
 
-// Auto-acceso si la sesion esta activa
-if (sesionActiva) {
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app-container').classList.add('active');
-    cargarDatos();
-}
+// La pantalla de acceso siempre se muestra al cargar. No hay auto-acceso.
 </script>
 </body>
 </html>
