@@ -9,6 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="Trading Journal Pro">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' rx='40' fill='%230a0a0d'/><text x='100' y='130' font-family='Arial' font-size='80' font-weight='bold' fill='%2300c2ff' text-anchor='middle'>TJP</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         :root { 
             --bg: #0a0a0d; --sidebar: #07070a; --card: #121216; --card2: #18181e; 
@@ -201,11 +202,10 @@
 </head>
 <body>
 
-<div class="forex-bg" id="forex-bg"></div>
-<div class="grid-overlay"></div>
-
 <!-- PANTALLA DE ACCESO (LOGIN SIMPLE CON CONTRASENA) -->
 <div id="login-screen">
+    <div class="forex-bg" id="forex-bg"></div>
+    <div class="grid-overlay"></div>
     <div class="login-box">
         <div class="logo" id="login-logo">Trading Journal Pro</div>
         <div class="slogan">Acceso privado al dashboard</div>
@@ -220,7 +220,7 @@
 <aside class="sidebar">
     <div class="sidebar-header">
         <div class="logo" id="app-logo" onclick="editarNombreJournal()" title="Click para editar nombre">Trading Journal Pro</div>
-        <div class="user" id="nombre-usuario">Trader</div>
+        <div class="user" id="nombre-usuario" onclick="editarNombreTrader()" title="Click para editar tu nombre" style="cursor:pointer;">Cesar</div>
     </div>
     <div class="sidebar-footer">
         <select id="cuenta-selector" onchange="cambiarCuenta()"></select>
@@ -509,7 +509,7 @@
         <h3>Cuenta</h3>
         <div class="form-row">
             <div class="form-group"><label>Nombre</label><input type="text" id="cuenta-edit-nombre"></div>
-            <div class="form-group"><label>Empresa</label><input type="text" id="cuenta-edit-empresa"></div>
+            <div class="form-group"><label>Empresa / Broker</label><input type="text" id="cuenta-edit-empresa" placeholder="Ej: FTMO, MQ, cTrader"></div>
         </div>
         <div class="form-row">
             <div class="form-group"><label>Tamano ($)</label><input type="number" id="cuenta-edit-tamano"></div>
@@ -542,6 +542,18 @@
     </div>
 </div>
 
+<!-- MODAL EDITAR NOMBRE TRADER -->
+<div class="modal-overlay hidden" id="modal-trader">
+    <div class="modal">
+        <h3>Nombre del Trader</h3>
+        <div class="form-group"><label>Tu nombre</label><input type="text" id="trader-nombre-input" value="Cesar"></div>
+        <div class="btn-group">
+            <button class="btn btn-blue" onclick="guardarNombreTrader()">Guardar</button>
+            <button class="btn btn-outline" onclick="cerrarModal('modal-trader')">Cancelar</button>
+        </div>
+    </div>
+</div>
+
 <!-- MODAL RETIRO -->
 <div class="modal-overlay hidden" id="modal-retiro">
     <div class="modal">
@@ -558,11 +570,12 @@
     </div>
 </div>
 
-<!-- MODAL IMPORTAR CSV -->
+<!-- MODAL IMPORTAR CSV/PDF -->
 <div class="modal-overlay hidden" id="modal-importar">
     <div class="modal">
-        <h3>Importar CSV</h3>
-        <div class="form-group"><label>Archivo CSV</label><input type="file" id="import-file" accept=".csv"></div>
+        <h3>Importar Trades</h3>
+        <div class="form-group"><label>Archivo (CSV o PDF)</label><input type="file" id="import-file" accept=".csv,.pdf"></div>
+        <div style="font-size:0.8rem;color:#8888a0;margin-bottom:12px;">Formatos soportados: CSV con columnas Símbolo, Beneficio, Fecha, Hora / PDF extraído del broker</div>
         <div class="btn-group">
             <button class="btn btn-blue" onclick="importarCSV()">Importar</button>
             <button class="btn btn-outline" onclick="cerrarModal('modal-importar')">Cancelar</button>
@@ -603,11 +616,13 @@ var horaChart = null, activoBreakdownChart = null, diaChart = null, cierreChart 
 var chatHistory = [];
 var journalNombre = localStorage.getItem('tjp_nombre') || 'Trading Journal Pro';
 
-// Aplicar nombre del journal
+// Aplicar nombre del journal y trader
+var traderNombre = localStorage.getItem('tjp_trader') || 'Cesar';
 function aplicarNombreJournal() {
     document.getElementById('page-title').textContent = journalNombre;
     document.getElementById('login-logo').textContent = journalNombre;
     document.getElementById('app-logo').textContent = journalNombre;
+    document.getElementById('nombre-usuario').textContent = traderNombre;
 }
 aplicarNombreJournal();
 
@@ -1785,63 +1800,193 @@ function guardarNombreJournal() {
     cerrarModal('modal-nombre');
 }
 
+function editarNombreTrader() {
+    document.getElementById('trader-nombre-input').value = traderNombre;
+    abrirModal('modal-trader');
+}
+
+function guardarNombreTrader() {
+    var nuevo = document.getElementById('trader-nombre-input').value.trim();
+    if (nuevo) {
+        traderNombre = nuevo;
+        localStorage.setItem('tjp_trader', traderNombre);
+        aplicarNombreJournal();
+    }
+    cerrarModal('modal-trader');
+}
+
 // ============ UTILIDADES ============
 function abrirModalImportar() { document.getElementById('import-file').value = ''; abrirModal('modal-importar'); }
 
-function importarCSV() { 
+function importarCSV() {
+    // Configurar worker de pdf.js si no esta ya
+    if (typeof pdfjsLib !== 'undefined' && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
     var file = document.getElementById('import-file').files[0];
     if (!file) return;
+
+    var ext = file.name.split('.').pop().toLowerCase();
+
+    if (ext === 'pdf') {
+        importarPDF(file);
+    } else {
+        importarDesdeTexto(file);
+    }
+}
+
+function importarPDF(file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var typedarray = new Uint8Array(e.target.result);
+        pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+            var textoCompleto = '';
+            var pages = [];
+            for (var p = 1; p <= pdf.numPages; p++) {
+                pages.push(pdf.getPage(p).then(function(page) {
+                    return page.getTextContent().then(function(tc) {
+                        return tc.items.map(function(item) { return item.str; }).join(' ');
+                    });
+                }));
+            }
+            Promise.all(pages).then(function(textos) {
+                textoCompleto = textos.join('\n');
+                // Intentar parsear como CSV simulado (lineas con datos tabulares)
+                var lineas = textoCompleto.split('\n').filter(function(l) { return l.trim(); });
+                if (lineas.length < 2) { alert('PDF vacio o formato no reconocido'); return; }
+                // Buscar header
+                var hi = -1;
+                for (var i = 0; i < lineas.length; i++) {
+                    var l = lineas[i].toLowerCase();
+                    if (l.indexOf('simbolo') > -1 || l.indexOf('simbol') > -1 || l.indexOf('symbol') > -1 || (l.indexOf('beneficio') > -1 || l.indexOf('profit') > -1)) { hi = i; break; }
+                }
+                if (hi < 0) return alert('Formato PDF no reconocido. Asegurate de que el PDF tenga columnas de trades.');
+                // Reemplazar multiples espacios por coma para simular CSV
+                var csvSimulado = lineas.map(function(l) { return l.replace(/\s+/g, ','); });
+                procesarLineasCSV(csvSimulado, hi);
+            });
+        }).catch(function() { alert('Error al leer el PDF. Asegurate de que sea un archivo PDF valido.'); });
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function importarDesdeTexto(file) {
     var reader = new FileReader();
     reader.onload = function(e) {
         var lines = e.target.result.split('\n').filter(function(l) { return l.trim(); });
         if (lines.length < 2) return;
         var hi = -1;
         for (var i = 0; i < lines.length; i++) {
-            if (lines[i].toLowerCase().indexOf('simbolo') > -1 || lines[i].toLowerCase().indexOf('fecha') > -1) { hi = i; break; }
+            var l = lines[i].toLowerCase();
+            if (l.indexOf('simbolo') > -1 || l.indexOf('simbol') > -1 || l.indexOf('symbol') > -1 || l.indexOf('fecha') > -1) { hi = i; break; }
         }
-        if (hi < 0) return alert('Formato no reconocido');
-        var headers = lines[hi].split(',');
-        var iF = headers.findIndex(function(h) { return h.indexOf('fecha') > -1; });
-        var iA = headers.findIndex(function(h) { return h.indexOf('activo') > -1 || h.indexOf('Simbolo') > -1 || h.indexOf('S\u00edmbolo') > -1; });
-        var iR = headers.findIndex(function(h) { return h.indexOf('resultado') > -1 || h.indexOf('Beneficio') > -1; });
-        if (iA < 0 || iR < 0) return alert('Columnas no encontradas');
-        var c = 0;
-        for (var i = hi + 1; i < lines.length; i++) {
-            if (lines[i].toLowerCase().indexOf('total') > -1) continue;
-            var cols = lines[i].split(',');
-            if (cols.length < Math.max(iA, iR) + 1) continue;
-            var a = cols[iA]?.trim(), rs = cols[iR]?.trim();
-            if (!a || !rs) continue;
-            var f = cols[iF]?.trim();
-            if (f) {
-                var m = f.match(/(\d{2})\/(\d{2})\/(\d{4})/);
-                if (m) f = m[3] + '-' + m[2] + '-' + m[1];
-            }
-            data.trades.push({
-                id: data.nextId.trade,
-                fecha: f || new Date().toISOString().split('T')[0],
-                hora_entrada: '00:00',
-                hora_salida: '00:00',
-                activo: a,
-                tipo: 'Largo',
-                cierre: 'Manual',
-                resultado: parseFloat(rs) || 0,
-                resultado_pct: 0,
-                ratio_r: 0,
-                lotes: 0,
-                notas: 'Importado',
-                imagen: null,
-                cuenta_id: cuentaActivaId
-            });
-            data.nextId.trade++;
-            c++;
-        }
-        guardarDatos();
-        alert(c + ' trades importados');
-        cerrarModal('modal-importar');
-        refreshActive();
+        if (hi < 0) return alert('Formato no reconocido. El archivo debe tener columnas como: Simbolo, Beneficio, Fecha, etc.');
+        procesarLineasCSV(lines, hi);
     };
     reader.readAsText(file);
+}
+
+function procesarLineasCSV(lines, hi) {
+    var headers = lines[hi].split(',');
+    // Mapear columnas por nombre (soporta espa\u00f1ol e ingles)
+    function idxCol(nombres) {
+        for (var k = 0; k < nombres.length; k++) {
+            var idx = headers.findIndex(function(h) {
+                var hh = h.replace(/['"]/g, '').trim().toLowerCase();
+                return hh.indexOf(nombres[k].toLowerCase()) > -1 || hh === nombres[k].toLowerCase();
+            });
+            if (idx > -1) return idx;
+        }
+        return -1;
+    }
+
+    var iF = idxCol(['fecha', 'hora de apertura', 'open time', 'date']);
+    var iHoraEntrada = idxCol(['hora de apertura', 'open time']);
+    var iHoraSalida = idxCol(['hora de cierre', 'close time']);
+    var iA = idxCol(['simbolo', 'symbol', 'activo', 'instrumento', 'instrument']);
+    var iR = idxCol(['beneficio', 'profit', 'resultado', 'net p&l', 'p&l', 'net profit']);
+    var iTipo = idxCol(['operacion', 'operation', 'tipo', 'type', 'direction']);
+    var iCierre = idxCol(['razon', 'reason', 'cierre', 'close reason', 'comment']);
+    var iVol = idxCol(['volumen', 'volume', 'lotes', 'lots', 'size']);
+
+    if (iA < 0 || iR < 0) return alert('Columnas no encontradas. Necesito al menos "Simbolo" y "Beneficio"');
+
+    var c = 0;
+    for (var i = hi + 1; i < lines.length; i++) {
+        if (lines[i].toLowerCase().indexOf('total') > -1) continue;
+        var cols = lines[i].split(',');
+        if (cols.length < Math.max(iA, iR) + 1) continue;
+        var a = cols[iA]?.replace(/['"]/g, '').trim();
+        var rs = cols[iR]?.replace(/['"]/g, '').trim();
+        if (!a || rs === undefined || rs === '') continue;
+
+        var f = '', horaEnt = '00:00', horaSal = '00:00';
+        if (iF > -1 && cols[iF]) {
+            f = cols[iF].replace(/['"]/g, '').trim();
+            // Formato DD/MM/YYYY HH:MM:SS
+            var mDMY = f.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+            if (mDMY) {
+                f = mDMY[3] + '-' + mDMY[2] + '-' + mDMY[1];
+                // Extraer hora si viene en el mismo campo
+                var hPart = f.match(/\d{4}-\d{2}-\d{2}\s+(\d{2}:\d{2})/);
+                if (hPart) { horaEnt = hPart[1]; f = f.split(' ')[0]; }
+            }
+            var mISO = f.match(/(\d{4})-(\d{2})-(\d{2})/);
+            if (!mDMY && mISO) { /* ya esta en ISO */ }
+        }
+        // Si hay columna separada de hora entrada
+        if (iHoraEntrada > -1 && cols[iHoraEntrada]) {
+            var he = cols[iHoraEntrada].replace(/['"]/g, '').trim();
+            var mH = he.match(/(\d{2}:\d{2})/);
+            if (mH) { horaEnt = mH[1]; }
+            // Si la fecha y hora estan juntas en hora de apertura
+            var mFD = he.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+            if (mFD) f = mFD[3] + '-' + mFD[2] + '-' + mFD[1];
+        }
+        if (iHoraSalida > -1 && cols[iHoraSalida]) {
+            var hs = cols[iHoraSalida].replace(/['"]/g, '').trim();
+            var mHS = hs.match(/(\d{2}:\d{2})/);
+            if (mHS) horaSal = mHS[1];
+        }
+
+        // Determinar tipo (Largo/Corto) y cierre
+        var tipo = 'Largo';
+        var opVal = (iTipo > -1 && cols[iTipo]) ? cols[iTipo].replace(/['"]/g, '').trim().toLowerCase() : '';
+        if (opVal === 'sell' || opVal === 'corto' || opVal === 'short' || opVal === 'venta') tipo = 'Corto';
+
+        var cierre = 'Manual';
+        var razonVal = (iCierre > -1 && cols[iCierre]) ? cols[iCierre].replace(/['"]/g, '').trim().toLowerCase() : '';
+        if (razonVal === 'tp' || razonVal === 'take profit') cierre = 'TP';
+        else if (razonVal === 'sl' || razonVal === 'stop loss') cierre = 'SL';
+        else if (razonVal === 'be' || razonVal === 'break even') cierre = 'BE';
+
+        var resultado = parseFloat(rs) || 0;
+        var lotes = 0;
+        if (iVol > -1 && cols[iVol]) lotes = parseFloat(cols[iVol].replace(/['"]/g, '').trim()) || 0;
+
+        data.trades.push({
+            id: data.nextId.trade,
+            fecha: f || new Date().toISOString().split('T')[0],
+            hora_entrada: horaEnt,
+            hora_salida: horaSal,
+            activo: a.toUpperCase(),
+            tipo: tipo,
+            cierre: cierre,
+            resultado: resultado,
+            resultado_pct: 0,
+            ratio_r: 0,
+            lotes: lotes,
+            notas: 'Importado',
+            imagen: null,
+            cuenta_id: cuentaActivaId
+        });
+        data.nextId.trade++;
+        c++;
+    }
+    guardarDatos();
+    alert(c + ' trades importados correctamente');
+    cerrarModal('modal-importar');
+    refreshActive();
 }
 
 function exportarCSV() { 
