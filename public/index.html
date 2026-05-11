@@ -273,7 +273,7 @@
         <div class="card">
             <div class="card-title" id="hist-title">Historial del Mes</div>
             <table>
-                <thead><tr><th>Fecha</th><th>Activo</th><th>Tipo</th><th>Entrada</th><th>Salida</th><th>Cierre</th><th>Resultado</th><th>Notas</th><th></th></tr></thead>
+                <thead><tr><th>Fecha</th><th>Activo</th><th>Tipo</th><th>Entrada</th><th>Salida</th><th>Cierre</th><th>Resultado</th><th>Img</th><th>Notas</th><th></th></tr></thead>
                 <tbody id="trades-tbody"></tbody>
             </table>
         </div>
@@ -494,12 +494,32 @@
                 <div class="form-group"><label>Lotes (opcional)</label><input type="number" id="trade-lotes" step="0.01" placeholder="Ej: 0.5"></div>
             </div>
             <div class="form-group"><label>Notas</label><textarea id="trade-notas" rows="3"></textarea></div>
+            <div class="form-group">
+                <label>Captura de TradingView</label>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                    <input type="file" id="trade-imagen" accept=".png,.jpg,.jpeg" style="flex:1;background:#18181e;border:1px solid #222230;border-radius:6px;color:#e0e0e8;padding:8px;font-size:0.82rem;">
+                    <button type="button" class="btn btn-outline btn-sm hidden" id="btn-quitar-imagen" onclick="quitarImagenTrade()" style="color:#e74c3c;border-color:#e74c3c;">Quitar</button>
+                </div>
+                <div id="trade-imagen-preview" style="margin-top:6px;display:none;">
+                    <img id="trade-imagen-preview-img" style="max-width:100%;max-height:150px;border-radius:6px;border:1px solid #222230;cursor:pointer;" onclick="verImagenTrade()">
+                </div>
+            </div>
             <div class="btn-group">
                 <button type="submit" class="btn btn-blue">Guardar</button>
                 <button type="button" class="btn btn-outline" onclick="cerrarModal('modal-trade')">Cancelar</button>
                 <button type="button" class="btn btn-outline hidden" id="btn-del-trade" onclick="eliminarTrade()" style="color:#e74c3c;border-color:#e74c3c;">Eliminar</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- MODAL VER IMAGEN -->
+<div class="modal-overlay hidden" id="modal-ver-imagen" onclick="cerrarModal('modal-ver-imagen')">
+    <div class="modal" style="max-width:800px;text-align:center;background:#000;" onclick="event.stopPropagation()">
+        <img id="imagen-grande" style="max-width:100%;max-height:80vh;border-radius:8px;">
+        <div class="btn-group" style="justify-content:center;margin-top:12px;">
+            <button class="btn btn-outline" onclick="cerrarModal('modal-ver-imagen')">Cerrar</button>
+        </div>
     </div>
 </div>
 
@@ -890,8 +910,9 @@ function renderCalendar() {
 function renderHistorial() {
     var trades = tradesCuenta().filter(function(t) { return new Date(t.fecha+'T00:00:00').getMonth() === calMonth-1; }).sort(function(a,b) { return b.fecha.localeCompare(a.fecha); });
     document.getElementById('hist-title').textContent = 'Historial - ' + trades.length + ' ops';
-    document.getElementById('trades-tbody').innerHTML = trades.map(function(t) { 
-        return '<tr ondblclick="editarTrade(' + t.id + ')"><td>' + t.fecha + '</td><td><strong>' + t.activo + '</strong></td><td>' + t.tipo + '</td><td>' + (t.hora_entrada||'--') + '</td><td>' + (t.hora_salida||'--') + '</td><td><span class="badge ' + (t.cierre==='TP'?'badge-green':t.cierre==='SL'?'badge-red':'') + '">' + t.cierre + '</span></td><td class="' + (t.resultado>=0?'green':'red') + '">' + (t.resultado>=0?'+':'') + '$' + t.resultado.toFixed(2) + '</td><td>' + (t.notas||'').substring(0,15) + '</td><td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();editarTrade(' + t.id + ')">&#9998;</button></td></tr>'; 
+    document.getElementById('trades-tbody').innerHTML = trades.map(function(t) {
+        var imgIcon = t.imagen ? '<span style="cursor:pointer;font-size:1.1rem;" onclick="event.stopPropagation();verImagenTradeDesdeId(' + t.id + ')" title="Ver captura">🖼️</span>' : '';
+        return '<tr ondblclick="editarTrade(' + t.id + ')"><td>' + t.fecha + '</td><td><strong>' + t.activo + '</strong></td><td>' + t.tipo + '</td><td>' + (t.hora_entrada||'--') + '</td><td>' + (t.hora_salida||'--') + '</td><td><span class="badge ' + (t.cierre==='TP'?'badge-green':t.cierre==='SL'?'badge-red':'') + '">' + t.cierre + '</span></td><td class="' + (t.resultado>=0?'green':'red') + '">' + (t.resultado>=0?'+':'') + '$' + t.resultado.toFixed(2) + '</td><td>' + imgIcon + '</td><td>' + (t.notas||'').substring(0,15) + '</td><td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();editarTrade(' + t.id + ')">&#9998;</button></td></tr>';
     }).join('');
 }
 
@@ -914,6 +935,11 @@ function abrirDiaFormNuevo(y,m,d) {
     document.getElementById('trade-cierre').value = 'Manual';
     document.querySelectorAll('#cierre-toggle .toggle-btn').forEach(function(b) { b.classList.remove('active'); });
     document.querySelector('#cierre-toggle [data-val="Manual"]').classList.add('active');
+    // Resetear imagen
+    document.getElementById('trade-imagen').value = '';
+    document.getElementById('trade-imagen-preview').style.display = 'none';
+    document.getElementById('trade-imagen-preview-img').src = '';
+    document.getElementById('btn-quitar-imagen').classList.add('hidden');
     abrirModal('modal-trade');
 }
 
@@ -937,6 +963,20 @@ function editarTrade(id) {
     document.querySelectorAll('#cierre-toggle .toggle-btn').forEach(function(b) { b.classList.remove('active'); });
     var btnC = document.querySelector('#cierre-toggle [data-val="' + t.cierre + '"]');
     if (btnC) btnC.classList.add('active');
+    // Cargar imagen si existe
+    var preview = document.getElementById('trade-imagen-preview');
+    var previewImg = document.getElementById('trade-imagen-preview-img');
+    var btnQuitar = document.getElementById('btn-quitar-imagen');
+    document.getElementById('trade-imagen').value = '';
+    if (t.imagen) {
+        previewImg.src = t.imagen;
+        preview.style.display = 'block';
+        btnQuitar.classList.remove('hidden');
+    } else {
+        preview.style.display = 'none';
+        previewImg.src = '';
+        btnQuitar.classList.add('hidden');
+    }
     abrirModal('modal-trade');
 }
 
@@ -944,21 +984,22 @@ function eliminarTrade() { if (!editingTradeId || !confirm('Eliminar trade?')) r
 
 document.getElementById('trade-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    var trade = { 
-        id: editingTradeId || data.nextId.trade, 
-        fecha: document.getElementById('trade-fecha').value, 
-        hora_entrada: document.getElementById('trade-hora-entrada').value||'00:00', 
-        hora_salida: document.getElementById('trade-hora-salida').value||'00:00', 
-        activo: document.getElementById('trade-activo').value, 
-        tipo: document.getElementById('trade-tipo').value, 
-        cierre: document.getElementById('trade-cierre').value, 
-        resultado: parseFloat(document.getElementById('trade-resultado').value)||0, 
-        resultado_pct: parseFloat(document.getElementById('trade-resultado-pct').value)||0, 
-        ratio_r: parseFloat(document.getElementById('trade-ratio').value)||0, 
-        lotes: parseFloat(document.getElementById('trade-lotes').value)||0, 
-        notas: document.getElementById('trade-notas').value, 
-        imagen: null, 
-        cuenta_id: cuentaActivaId 
+    var trade = {
+        id: editingTradeId || data.nextId.trade,
+        fecha: document.getElementById('trade-fecha').value,
+        hora_entrada: document.getElementById('trade-hora-entrada').value||'00:00',
+        hora_salida: document.getElementById('trade-hora-salida').value||'00:00',
+        activo: document.getElementById('trade-activo').value,
+        tipo: document.getElementById('trade-tipo').value,
+        cierre: document.getElementById('trade-cierre').value,
+        resultado: parseFloat(document.getElementById('trade-resultado').value)||0,
+        resultado_pct: parseFloat(document.getElementById('trade-resultado-pct').value)||0,
+        ratio_r: parseFloat(document.getElementById('trade-ratio').value)||0,
+        lotes: parseFloat(document.getElementById('trade-lotes').value)||0,
+        notas: document.getElementById('trade-notas').value,
+        // Mantener imagen existente si no se subio una nueva
+        imagen: document.getElementById('trade-imagen-preview-img').src || null,
+        cuenta_id: cuentaActivaId
     };
     if (editingTradeId) { var idx = data.trades.findIndex(function(t) { return t.id === editingTradeId; }); if (idx >= 0) { trade.id = editingTradeId; data.trades[idx] = trade; } }
     else { data.trades.push(trade); data.nextId.trade++; }
@@ -1810,6 +1851,45 @@ function guardarNombreTrader() {
         aplicarNombreJournal();
     }
     cerrarModal('modal-trader');
+}
+
+// ============ FUNCIONES DE IMAGEN ============
+// Previsualizar imagen al seleccionar archivo
+document.getElementById('trade-imagen').addEventListener('change', function() {
+    var file = this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var preview = document.getElementById('trade-imagen-preview');
+        var previewImg = document.getElementById('trade-imagen-preview-img');
+        previewImg.src = e.target.result;
+        preview.style.display = 'block';
+        document.getElementById('btn-quitar-imagen').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+});
+
+function quitarImagenTrade() {
+    document.getElementById('trade-imagen').value = '';
+    document.getElementById('trade-imagen-preview').style.display = 'none';
+    document.getElementById('trade-imagen-preview-img').src = '';
+    document.getElementById('btn-quitar-imagen').classList.add('hidden');
+}
+
+function verImagenTrade() {
+    var src = document.getElementById('trade-imagen-preview-img').src;
+    if (src) {
+        document.getElementById('imagen-grande').src = src;
+        abrirModal('modal-ver-imagen');
+    }
+}
+
+function verImagenTradeDesdeId(id) {
+    var t = data.trades.find(function(tr) { return tr.id === id; });
+    if (t && t.imagen) {
+        document.getElementById('imagen-grande').src = t.imagen;
+        abrirModal('modal-ver-imagen');
+    }
 }
 
 // ============ UTILIDADES ============
