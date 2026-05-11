@@ -28,21 +28,15 @@
         /* Grid de fondo tipo terminal */
         .grid-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background-image: linear-gradient(rgba(0,194,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,194,255,0.02) 1px, transparent 1px); background-size: 50px 50px; }
         
-        /* Login / Register */
-        #login-screen, #register-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(ellipse at center, #0a0a1a 0%, #000 100%); position: relative; z-index: 1; }
+        /* Pantalla de acceso */
+        #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(ellipse at center, #0a0a1a 0%, #000 100%); position: relative; z-index: 1; }
         .login-box { background: rgba(18,18,22,0.95); border: 1px solid #222230; border-radius: 16px; padding: 40px; text-align: center; max-width: 420px; width: 90%; backdrop-filter: blur(10px); position: relative; z-index: 2; box-shadow: 0 0 40px rgba(0,194,255,0.1), inset 0 0 40px rgba(0,194,255,0.02); }
         .login-box .logo { font-size: 1.8rem; font-weight: 700; color: #00c2ff; margin-bottom: 5px; text-shadow: 0 0 20px rgba(0,194,255,0.5); }
-        .login-box .slogan { color: #8888a0; font-size: 0.85rem; margin-bottom: 8px; }
-        .plan-info { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        .plan-badge { display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-        .plan-badge.free { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
-        .plan-badge.pro { background: rgba(0,194,255,0.15); color: #00c2ff; border: 1px solid rgba(0,194,255,0.3); }
+        .login-box .slogan { color: #8888a0; font-size: 0.85rem; margin-bottom: 20px; }
         .login-box input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1rem; margin-bottom: 12px; transition: all 0.3s; }
         .login-box input:focus { outline: none; border-color: #00c2ff; box-shadow: 0 0 10px rgba(0,194,255,0.3); }
         .login-box .btn { width: 100%; padding: 14px; background: #00c2ff; color: #000; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 8px; transition: all 0.3s; }
         .login-box .btn:hover { box-shadow: 0 0 20px rgba(0,194,255,0.5); transform: translateY(-1px); }
-        .login-box .btn-outline { background: transparent; border: 1px solid #222230; color: #e0e0e8; }
-        .login-box .btn-outline:hover { border-color: #00c2ff; color: #00c2ff; }
         .msg { font-size: 0.8rem; margin-top: 10px; min-height: 20px; } .msg.error { color: #e74c3c; } .msg.success { color: #2ecc71; }
         
         /* App Container */
@@ -210,32 +204,14 @@
 <div class="forex-bg" id="forex-bg"></div>
 <div class="grid-overlay"></div>
 
-<!-- LOGIN SCREEN -->
+<!-- PANTALLA DE ACCESO (LOGIN SIMPLE CON CONTRASENA) -->
 <div id="login-screen">
     <div class="login-box">
         <div class="logo" id="login-logo">Trading Journal Pro</div>
-        <div class="slogan">El journal que te hace mejor trader</div>
-        <div class="plan-info"><span class="plan-badge free">14 dias gratis</span><span class="plan-badge pro">$5/mes despues</span></div>
-        <input type="email" id="login-email" placeholder="Email">
-        <input type="password" id="login-password" placeholder="Contrasena">
-        <button class="btn" onclick="login()">INICIAR SESION</button>
-        <button class="btn btn-outline" onclick="mostrarRegistro()">CREAR CUENTA GRATIS</button>
+        <div class="slogan">Acceso privado al dashboard</div>
+        <input type="password" id="access-password" placeholder="Contrasena de acceso" onkeydown="if(event.key==='Enter')acceder()">
+        <button class="btn" onclick="acceder()">ACCEDER</button>
         <div class="msg" id="login-msg"></div>
-    </div>
-</div>
-
-<!-- REGISTER SCREEN -->
-<div id="register-screen" class="hidden" style="display:flex;align-items:center;justify-content:center;min-height:100vh;position:relative;z-index:1;">
-    <div class="login-box">
-        <div class="logo" id="reg-logo">Trading Journal Pro</div>
-        <div class="slogan">Empieza hoy. Sin tarjeta de credito.</div>
-        <div class="plan-info"><span class="plan-badge free">14 dias gratis</span><span class="plan-badge pro">$5/mes despues</span></div>
-        <input type="text" id="reg-nombre" placeholder="Nombre">
-        <input type="email" id="reg-email" placeholder="Email">
-        <input type="password" id="reg-password" placeholder="Contrasena">
-        <button class="btn" onclick="registro()">COMENZAR PRUEBA GRATIS</button>
-        <button class="btn btn-outline" onclick="mostrarLogin()">VOLVER</button>
-        <div class="msg" id="reg-msg"></div>
     </div>
 </div>
 
@@ -613,9 +589,12 @@
     }
 })();
 
-var API = window.location.origin;
-var token = localStorage.getItem('tjp_token');
-var data = { cuentas: [], trades: [], retiros: [], nextId: { cuenta: 1, retiro: 1, trade: 1 }, plan: null };
+// Contrasena fija de acceso (puedes cambiarla aqui)
+var ACCESS_PASSWORD = 'trading2026';
+
+// Datos se guardan en localStorage (no necesita backend ni API)
+var data = JSON.parse(localStorage.getItem('tjp_data')) || { cuentas: [], trades: [], retiros: [], nextId: { cuenta: 1, retiro: 1, trade: 1 }, plan: null };
+var sesionActiva = localStorage.getItem('tjp_sesion') === '1';
 var cuentaActivaId = null;
 var calYear = new Date().getFullYear(), calMonth = new Date().getMonth() + 1;
 var editingTradeId = null;
@@ -628,71 +607,46 @@ var journalNombre = localStorage.getItem('tjp_nombre') || 'Trading Journal Pro';
 function aplicarNombreJournal() {
     document.getElementById('page-title').textContent = journalNombre;
     document.getElementById('login-logo').textContent = journalNombre;
-    document.getElementById('reg-logo').textContent = journalNombre;
     document.getElementById('app-logo').textContent = journalNombre;
 }
 aplicarNombreJournal();
 
-function mostrarRegistro() { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('register-screen').classList.remove('hidden'); }
-function mostrarLogin() { document.getElementById('register-screen').classList.add('hidden'); document.getElementById('login-screen').classList.remove('hidden'); }
-
-async function login() {
-    var email = document.getElementById('login-email').value;
-    var password = document.getElementById('login-password').value;
+// Función de acceso con contraseña fija
+function acceder() {
+    var password = document.getElementById('access-password').value;
     var msg = document.getElementById('login-msg');
-    try {
-        var res = await fetch(API + '/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, password: password }) });
-        var d = await res.json();
-        if (d.error) { msg.textContent = d.error; msg.className = 'msg error'; return; }
-        token = d.token; localStorage.setItem('tjp_token', token);
-        document.getElementById('nombre-usuario').textContent = d.nombre;
+    if (password === ACCESS_PASSWORD) {
+        sesionActiva = true;
+        localStorage.setItem('tjp_sesion', '1');
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('app-container').classList.add('active');
-        await cargarDatos();
-    } catch(e) { msg.textContent = 'Error de conexion'; msg.className = 'msg error'; }
+        cargarDatos();
+    } else {
+        msg.textContent = 'Contrasena incorrecta';
+        msg.className = 'msg error';
+        document.getElementById('access-password').value = '';
+        document.getElementById('access-password').focus();
+    }
 }
 
-async function registro() {
-    var nombre = document.getElementById('reg-nombre').value;
-    var email = document.getElementById('reg-email').value;
-    var password = document.getElementById('reg-password').value;
-    var msg = document.getElementById('reg-msg');
-    try {
-        var res = await fetch(API + '/api/registro', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, password: password, nombre: nombre }) });
-        var d = await res.json();
-        if (d.error) { msg.textContent = d.error; msg.className = 'msg error'; return; }
-        msg.textContent = 'Cuenta creada! Ahora inicia sesion.'; msg.className = 'msg success';
-        setTimeout(mostrarLogin, 1500);
-    } catch(e) { msg.textContent = 'Error de conexion'; msg.className = 'msg error'; }
+function cerrarSesion() {
+    localStorage.removeItem('tjp_sesion');
+    location.reload();
 }
 
-function cerrarSesion() { localStorage.removeItem('tjp_token'); location.reload(); }
-
-async function cargarDatos() {
-    try {
-        var res = await fetch(API + '/api/datos', { headers: { 'Authorization': 'Bearer ' + token } });
-        if (res.ok) { 
-            var d = await res.json(); 
-            data.cuentas = d.cuentas || []; 
-            data.trades = d.trades || []; 
-            data.retiros = d.retiros || []; 
-            data.plan = d.plan || null;
-            data.nextId = { cuenta: data.cuentas.length + 1, retiro: data.retiros.length + 1, trade: data.trades.length + 1 }; 
-        }
-    } catch(e) {}
-    if (data.cuentas.length === 0) { 
-        data.cuentas = [{ id: 1, nombre: '50K', empresa: 'Prop Firm', tamano: 50000, invertido: 0, objetivo: 1250, consistenciaPct: 35, diasMinimos: 10 }]; 
-        data.nextId.cuenta = 2; 
+function cargarDatos() {
+    // data ya se cargo desde localStorage al inicio
+    if (data.cuentas.length === 0) {
+        data.cuentas = [{ id: 1, nombre: '50K', empresa: 'Prop Firm', tamano: 50000, invertido: 0, objetivo: 1250, consistenciaPct: 35, diasMinimos: 10 }];
+        data.nextId.cuenta = 2;
     }
     cuentaActivaId = data.cuentas[0]?.id || 1;
     if (data.plan) cargarPlan();
     init();
 }
 
-async function guardarDatos() { 
-    try { 
-        await fetch(API + '/api/datos', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ cuentas: data.cuentas, trades: data.trades, retiros: data.retiros, plan: data.plan }) }); 
-    } catch(e) {} 
+function guardarDatos() {
+    localStorage.setItem('tjp_data', JSON.stringify(data));
 }
 
 function cuentaActiva() { return data.cuentas.find(function(c) { return c.id === cuentaActivaId; }); }
@@ -1919,11 +1873,11 @@ function refreshActive() {
     if (p === 'stats') renderStats();
 }
 
-// Auto-login si hay token
-if (token) { 
-    document.getElementById('login-screen').classList.add('hidden'); 
-    document.getElementById('app-container').classList.add('active'); 
-    cargarDatos(); 
+// Auto-acceso si la sesion esta activa
+if (sesionActiva) {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-container').classList.add('active');
+    cargarDatos();
 }
 </script>
 </body>
