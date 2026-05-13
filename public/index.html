@@ -14,8 +14,6 @@
         @keyframes gridScroll { 0% { transform: translate(0,0); } 100% { transform: translate(40px,40px); } }
         body::after { content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 50% 0%, rgba(0,255,255,0.04) 0%, transparent 70%); pointer-events: none; z-index: 0; }
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(0,255,255,0.3); border-radius: 2px; }
-
-        /* ========== LANDING PAGE ========== */
         #landing-page { position: relative; z-index: 1; min-height: 100vh; }
         .landing-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; position: relative; z-index: 2; }
         .landing-nav .logo-landing { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 30px var(--neon-glow); letter-spacing: 3px; text-decoration: none; }
@@ -65,8 +63,6 @@
         .btn-plan { padding: 12px 28px; border-radius: 25px; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; background: transparent; color: var(--neon); border: 1.5px solid var(--neon); text-decoration: none; display: inline-block; }
         .btn-plan:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon-glow); }
         .landing-footer { text-align: center; padding: 30px 20px; color: var(--text2); font-size: 0.72rem; border-top: 1px solid var(--border); position: relative; z-index: 1; letter-spacing: 0.5px; font-family: 'Inter', sans-serif; }
-
-        /* ========== MODALS ========== */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(8px); }
         .modal-panel { background: rgba(18,18,22,0.95); border: 1px solid var(--neon-strong); border-radius: var(--radius); padding: 36px 28px; width: 90%; max-width: 420px; box-shadow: 0 0 60px var(--neon-glow); position: relative; animation: modalIn 0.3s ease; backdrop-filter: blur(24px); }
         @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -84,24 +80,17 @@
         .modal-panel .modal-link a { color: var(--neon); cursor: pointer; font-weight: 600; text-decoration: none; }
         .modal-panel .modal-link a:hover { text-decoration: underline; }
         .hidden { display: none !important; }
-
-        /* ========== DASHBOARD ========== */
         #app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
-        .sidebar { width: 220px; background: rgba(10,10,10,0.85); border-right: 1px solid var(--border); height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; padding: 20px 0; z-index: 100; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+        .sidebar { width: 220px; background: rgba(10,10,10,0.85); border-right: 1px solid var(--border); height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; padding: 20px 0; z-index: 100; backdrop-filter: blur(24px); }
         .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
         .sidebar-header .logo { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--neon); text-shadow: 0 0 20px var(--neon-glow); letter-spacing: 2px; cursor: pointer; }
-        .sidebar-header .logo:hover { text-shadow: 0 0 30px var(--neon-glow); }
         .sidebar-header .user { font-size: 0.8rem; color: var(--text2); margin-top: 4px; cursor: pointer; transition: 0.2s; }
-        .sidebar-header .user:hover { color: var(--neon); text-shadow: 0 0 10px var(--neon-glow); }
         .sidebar-nav { flex: 1; padding: 10px 0; }
         .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; color: var(--text2); text-decoration: none; font-size: 0.82rem; cursor: pointer; position: relative; transition: all 0.25s; border-left: 3px solid transparent; }
         .sidebar-nav a:hover, .sidebar-nav a.active { background: rgba(0,255,255,0.05); color: #fff; border-left: 3px solid var(--neon); box-shadow: inset 0 0 20px rgba(0,255,255,0.05); }
-        .sidebar-nav a::after { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%) scaleY(0); width: 2px; height: 20px; background: var(--neon); transition: transform 0.25s; box-shadow: 0 0 8px var(--neon-glow); }
-        .sidebar-nav a.active::after { transform: translateY(-50%) scaleY(1); }
         .sidebar-footer { padding: 15px 20px; border-top: 1px solid var(--border); }
-        .sidebar-footer select { width: 100%; padding: 10px; background: rgba(24,24,30,0.6); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; backdrop-filter: blur(12px); margin-bottom: 8px; }
+        .sidebar-footer select { width: 100%; padding: 10px; background: rgba(24,24,30,0.6); border: 1px solid var(--border); color: var(--text); border-radius: 6px; font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
         .sidebar-footer .btn-logout { width: 100%; padding: 8px; background: transparent; color: var(--red); border: 1px solid var(--red); border-radius: var(--radius-sm); font-size: 0.72rem; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
-        .sidebar-footer .btn-logout:hover { background: rgba(255,51,85,0.1); box-shadow: 0 0 15px rgba(255,51,85,0.3); }
         .main { margin-left: 220px; flex: 1; padding: 24px 28px; position: relative; z-index: 1; }
         .page { display: none; animation: fadeIn 0.3s ease; } .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -109,56 +98,45 @@
         .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: 12px; margin-bottom: 18px; }
         .stat-card { background: rgba(18,18,22,0.7); border: 1px solid var(--border); border-radius: 12px; padding: 18px; position: relative; backdrop-filter: blur(16px); transition: all 0.3s; cursor: default; }
         .stat-card.clickable { cursor: pointer; }
-        .stat-card.clickable:hover { transform: translateY(-2px); }
         .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--neon), transparent); opacity: 0; transition: opacity 0.3s; }
         .stat-card:hover::before { opacity: 1; } .stat-card:hover { box-shadow: 0 0 30px var(--neon-glow); border-color: var(--neon-strong); }
         .stat-card .lbl { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; }
         .stat-card .val { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; margin-top: 6px; }
-        .val.green { color: var(--green); text-shadow: 0 0 10px rgba(0,255,136,0.3); } .val.red { color: var(--red); text-shadow: 0 0 10px rgba(255,51,85,0.3); } .val.neon { color: var(--neon); }
-        .card { background: rgba(18,18,22,0.7); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; position: relative; backdrop-filter: blur(16px); transition: all 0.3s; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--neon), transparent); opacity: 0; transition: opacity 0.3s; }
-        .card:hover::before { opacity: 1; } .card:hover { box-shadow: 0 0 30px var(--neon-glow); border-color: var(--neon-strong); }
+        .val.green { color: var(--green); } .val.red { color: var(--red); } .val.neon { color: var(--neon); }
+        .card { background: rgba(18,18,22,0.7); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; backdrop-filter: blur(16px); }
         .card-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
         table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
         th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); color: var(--text2); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron', sans-serif; }
-        td { padding: 10px; border-bottom: 1px solid rgba(0,255,255,0.06); color: var(--text); } tr { transition: all 0.2s; } tr:hover td { background: rgba(0,255,255,0.03); color: #fff; }
+        td { padding: 10px; border-bottom: 1px solid rgba(0,255,255,0.06); color: var(--text); }
         .green { color: var(--green); } .red { color: var(--red); }
-        .btn { padding: 9px 16px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.78rem; cursor: pointer; font-weight: 600; transition: all 0.3s; font-family: 'JetBrains Mono', monospace; background: rgba(24,24,30,0.6); color: var(--text); backdrop-filter: blur(12px); }
+        .btn { padding: 9px 16px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.78rem; cursor: pointer; font-weight: 600; transition: all 0.3s; font-family: 'JetBrains Mono', monospace; background: rgba(24,24,30,0.6); color: var(--text); }
         .btn:hover { box-shadow: 0 0 20px var(--neon-glow); border-color: var(--neon); color: #fff; }
-        .btn-blue { background: rgba(0,255,255,0.15); border-color: var(--neon); color: var(--neon); font-weight: 700; } .btn-blue:hover { background: rgba(0,255,255,0.25); box-shadow: 0 0 30px var(--neon-glow); }
+        .btn-blue { background: rgba(0,255,255,0.15); border-color: var(--neon); color: var(--neon); font-weight: 700; }
         .btn-outline { background: transparent; } .btn-sm { padding: 5px 10px; font-size: 0.7rem; }
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: 600; }
         .badge-green { background: rgba(0,255,136,0.12); color: var(--green); border: 1px solid rgba(0,255,136,0.25); }
         .badge-red { background: rgba(255,51,85,0.12); color: var(--red); border: 1px solid rgba(255,51,85,0.25); }
         .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
         .cal-day { padding: 8px 4px; text-align: center; border-radius: 6px; cursor: pointer; min-height: 90px; background: rgba(24,24,30,0.4); font-size: 0.9rem; border: 1px solid transparent; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
-        .cal-day:hover { background: rgba(0,255,255,0.05); border-color: rgba(0,255,255,0.2); box-shadow: 0 0 12px rgba(0,255,255,0.1); }
+        .cal-day:hover { background: rgba(0,255,255,0.05); border-color: rgba(0,255,255,0.2); }
         .cal-day.head { background: transparent; cursor: default; font-weight: 600; font-size: 0.75rem; color: var(--neon); font-family: 'Orbitron', sans-serif; min-height: auto; border: none; padding: 8px 4px; }
         .cal-day.empty { background: transparent; cursor: default; border: none; } .cal-day.today { border: 2px solid var(--neon); box-shadow: 0 0 15px var(--neon-glow); background: rgba(0,255,255,0.08); }
         .cal-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-        .cal-nav button { background: rgba(24,24,30,0.6); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 5px; cursor: pointer; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
-        .cal-nav button:hover { border-color: var(--neon); box-shadow: 0 0 12px var(--neon-glow); }
+        .cal-nav button { background: rgba(24,24,30,0.6); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 5px; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
         .cal-nav .month-label { font-family: 'Orbitron', sans-serif; font-weight: 600; min-width: 100px; text-align: center; font-size: 0.85rem; color: var(--neon); }
         .trades-layout { display: flex; gap: 16px; } .trades-layout .cal-column { flex: 1; min-width: 0; } .trades-layout .semanas-column { width: 300px; flex-shrink: 0; }
-        .semana-card { background: rgba(18,18,22,0.7); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; position: relative; backdrop-filter: blur(16px); transition: all 0.3s; }
-        .semana-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--neon), transparent); opacity: 0; transition: opacity 0.3s; }
-        .semana-card:hover::before { opacity: 1; } .semana-card:hover { box-shadow: 0 0 20px var(--neon-glow); border-color: var(--neon-strong); }
+        .semana-card { background: rgba(18,18,22,0.7); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; position: relative; backdrop-filter: blur(16px); }
         .semana-card .semana-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .semana-card .semana-titulo { font-family: 'Orbitron', sans-serif; font-weight: 600; font-size: 0.8rem; color: var(--neon); }
         .semana-card .semana-total { font-weight: 700; font-size: 0.85rem; font-family: 'Orbitron', sans-serif; }
         .semana-card .semana-dias { display: flex; gap: 4px; flex-wrap: wrap; }
         .semana-dia { padding: 5px 7px; border-radius: 4px; font-size: 0.62rem; text-align: center; background: rgba(24,24,30,0.4); min-width: 37px; border: 1px solid transparent; }
         .semana-dia.pos { background: rgba(0,255,136,0.1); color: var(--green); border-color: rgba(0,255,136,0.2); } .semana-dia.neg { background: rgba(255,51,85,0.1); color: var(--red); border-color: rgba(255,51,85,0.2); } .semana-dia.neu { color: var(--text2); }
-        .semana-dia .dia-num { font-weight: 600; font-size: 0.7rem; } .semana-dia .dia-pnl { font-size: 0.58rem; }
-
-        @media (max-width: 768px) { .sidebar { width: 60px; } .sidebar-header .logo, .sidebar-header .user, .sidebar-nav a span, .sidebar-footer select, .sidebar-footer .btn-logout { display: none; } .sidebar-nav a { justify-content: center; padding: 14px; font-size: 1.2rem; } .main { margin-left: 60px; padding: 16px; } .trades-layout { flex-direction: column; } .trades-layout .semanas-column { width: 100%; } .cal-day { min-height: 65px; font-size: 0.75rem; padding: 6px 2px; } .landing-nav { padding: 14px 16px; } .hero h1 { font-size: 1.8rem; } .hero-stats { gap: 20px; padding: 16px; } .hero-stat .stat-num { font-size: 1.3rem; } }
+        @media (max-width: 768px) { .sidebar { width: 60px; } .sidebar-nav a span, .sidebar-footer select, .sidebar-footer .btn-logout { display: none; } .sidebar-nav a { justify-content: center; padding: 14px; font-size: 1.2rem; } .main { margin-left: 60px; padding: 16px; } .trades-layout { flex-direction: column; } .trades-layout .semanas-column { width: 100%; } .cal-day { min-height: 65px; font-size: 0.75rem; padding: 6px 2px; } .landing-nav { padding: 14px 16px; } .hero h1 { font-size: 1.8rem; } .hero-stats { gap: 20px; padding: 16px; } }
     </style>
 </head>
 <body>
 
-    <!-- ============================================ -->
-    <!-- LANDING PAGE -->
-    <!-- ============================================ -->
     <div id="landing-page">
         <nav class="landing-nav">
             <a href="#" class="logo-landing">CRT JOURNAL</a>
@@ -186,10 +164,10 @@
             <div class="section-title">Características</div>
             <div class="section-subtitle">Todo lo que necesitas para llevar tu trading al siguiente nivel</div>
             <div class="features-grid">
-                <div class="feature-card"><span class="feature-icon">📊</span><h3>Métricas Avanzadas</h3><p>Win rate, profit factor, expectancy, racha, drawdown y más. Todo calculado automáticamente.</p></div>
-                <div class="feature-card"><span class="feature-icon">🛡️</span><h3>Gestión de Riesgo</h3><p>Control de riesgo por operación, alertas de límites y calculadora de tamaño de posición.</p></div>
-                <div class="feature-card"><span class="feature-icon">📈</span><h3>Gráficos Interactivos</h3><p>Evolución de PnL, curva de equity y distribución de ganadoras/perdedoras en tiempo real.</p></div>
-                <div class="feature-card"><span class="feature-icon">🤖</span><h3>Chat IA Integrado</h3><p>Asistente inteligente que analiza tus trades y te da recomendaciones personalizadas.</p></div>
+                <div class="feature-card"><span class="feature-icon">📊</span><h3>Métricas Avanzadas</h3><p>Win rate, profit factor, expectancy, racha, drawdown y más.</p></div>
+                <div class="feature-card"><span class="feature-icon">🛡️</span><h3>Gestión de Riesgo</h3><p>Control de riesgo por operación, alertas de límites.</p></div>
+                <div class="feature-card"><span class="feature-icon">📈</span><h3>Gráficos Interactivos</h3><p>Evolución de PnL, curva de equity y distribución.</p></div>
+                <div class="feature-card"><span class="feature-icon">🤖</span><h3>Chat IA</h3><p>Asistente que analiza tus trades y te da recomendaciones.</p></div>
             </div>
         </section>
         <section class="plans">
@@ -199,77 +177,50 @@
                 <div class="plan-card">
                     <h3>Básico</h3>
                     <div class="plan-price">$0<small>/mes</small></div>
-                    <div class="plan-trial">✅ Incluye 1 semana de prueba Pro</div>
-                    <ul>
-                        <li>Hasta 50 trades</li>
-                        <li>1 cuenta</li>
-                        <li>Estadísticas básicas</li>
-                        <li>Exportación CSV</li>
-                    </ul>
+                    <div class="plan-trial">✅ 1 semana de prueba Pro</div>
+                    <ul><li>Hasta 50 trades</li><li>1 cuenta</li><li>Estadísticas básicas</li><li>Exportación CSV</li></ul>
                     <button class="btn-plan" onclick="abrirRegistro()">Empezar gratis</button>
                 </div>
                 <div class="plan-card popular">
                     <h3>Pro</h3>
                     <div class="plan-price">$10<small>/mes</small></div>
                     <div class="plan-trial">🎁 1 semana de prueba gratis</div>
-                    <ul>
-                        <li>Trades ilimitados</li>
-                        <li>5 cuentas</li>
-                        <li>Métricas avanzadas</li>
-                        <li>Chat IA</li>
-                        <li>Alertas personalizadas</li>
-                    </ul>
+                    <ul><li>Trades ilimitados</li><li>5 cuentas</li><li>Métricas avanzadas</li><li>Chat IA</li><li>Alertas personalizadas</li></ul>
                     <button class="btn-plan" onclick="abrirRegistro()">Comenzar prueba gratis</button>
                 </div>
             </div>
         </section>
-        <footer class="landing-footer">© 2026 CRT Journal. Todos los derechos reservados. Diseñado para traders profesionales.</footer>
+        <footer class="landing-footer">© 2026 CRT Journal. Todos los derechos reservados.</footer>
     </div>
 
-    <!-- ============================================ -->
-    <!-- MODAL REGISTRO -->
-    <!-- ============================================ -->
     <div class="modal-overlay hidden" id="modal-registro">
         <div class="modal-panel">
             <button class="modal-close" onclick="cerrarRegistro()">✕</button>
-            <h2>Crear Cuenta</h2>
-            <div class="modal-subtitle">Únete a CRT Journal</div>
-            <label>Nombre</label>
-            <input type="text" id="reg-nombre" placeholder="Tu nombre" autocomplete="name">
-            <label>Email</label>
-            <input type="email" id="reg-email" placeholder="tu@email.com" autocomplete="email">
-            <label>Contraseña</label>
-            <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
+            <h2>Crear Cuenta</h2><div class="modal-subtitle">Únete a CRT Journal</div>
+            <label>Nombre</label><input type="text" id="reg-nombre" placeholder="Tu nombre">
+            <label>Email</label><input type="email" id="reg-email" placeholder="tu@email.com">
+            <label>Contraseña</label><input type="password" id="reg-password" placeholder="••••••••">
             <button class="btn-submit" onclick="registrar()">Crear cuenta</button>
             <div class="modal-error" id="reg-error"></div>
             <div class="modal-link">¿Ya tienes cuenta? <a onclick="cambiarALogin()">Inicia sesión</a></div>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- MODAL LOGIN -->
-    <!-- ============================================ -->
     <div class="modal-overlay hidden" id="modal-login">
         <div class="modal-panel">
             <button class="modal-close" onclick="cerrarLogin()">✕</button>
-            <h2>Iniciar Sesión</h2>
-            <div class="modal-subtitle">Accede a tu journal</div>
-            <label>Email</label>
-            <input type="email" id="login-email" placeholder="tu@email.com" autocomplete="email">
-            <label>Contraseña</label>
-            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+            <h2>Iniciar Sesión</h2><div class="modal-subtitle">Accede a tu journal</div>
+            <label>Email</label><input type="email" id="login-email" placeholder="tu@email.com">
+            <label>Contraseña</label><input type="password" id="login-password" placeholder="••••••••">
             <button class="btn-submit" onclick="iniciarSesion()">Acceder</button>
             <div class="modal-error" id="login-error"></div>
             <div class="modal-link">¿No tienes cuenta? <a onclick="cambiarARegistro()">Regístrate</a></div>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- DASHBOARD (OCULTO HASTA LOGIN) -->
-    <!-- ============================================ -->
     <div id="app" style="display:none;">
         <aside class="sidebar">
-            <div class="sidebar-header"><div class="logo" id="journal-logo" onclick="cambiarLogo()" title="Click para cambiar nombre">CRT JOURNAL</div><div class="user" id="nombre-usuario" onclick="cambiarNombre()">Cesar</div></div>
+            <div class="sidebar-header"><div class="logo" id="journal-logo" onclick="cambiarLogo()">CRT JOURNAL</div><div class="user" id="nombre-usuario" onclick="cambiarNombre()">Cesar</div></div>
             <div class="sidebar-footer"><select id="cuenta-selector" onchange="cambiarCuenta()"></select><button class="btn-logout" onclick="cerrarSesion()">🔒 Cerrar sesión</button></div>
             <nav class="sidebar-nav">
                 <a onclick="showPage('dashboard',this)" class="active">📊 <span>Dashboard</span></a>
@@ -292,11 +243,9 @@
             <div id="page-plan" class="page"><h2>📝 Mi Plan de Trading</h2><div class="card"><div class="card-title">Mis Reglas <button class="btn btn-blue btn-sm" onclick="agregarReglaPlan()">+ Añadir</button></div><p style="color:var(--text2);font-size:0.7rem;margin-bottom:8px;">Doble clic para editar cada regla</p><div id="plan-reglas-container"></div><button class="btn btn-blue" onclick="guardarPlan()" style="margin-top:12px;">💾 Guardar Plan</button></div><div class="card"><div class="card-title">📊 Cumplimiento Semanal</div><div id="plan-cumplimiento-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
             <div id="page-metricas" class="page"><h2>📊 Métricas Avanzadas</h2><div class="cards" id="metricas-cards"></div><div class="card"><div class="card-title">📅 Rendimiento Mensual</div><div id="rendimiento-mensual"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📈 Frecuencia por Día</div><div style="height:250px;"><canvas id="frecuenciaChart"></canvas></div></div><div class="card"><div class="card-title">⏱️ Análisis de Duración</div><div id="duracion-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Duración por Tipo</div><div style="height:250px;"><canvas id="duracionChart"></canvas></div></div></div>
             <div id="page-rendimiento" class="page"><h2>📈 Rendimiento Diario</h2><div class="cards" id="rendimiento-daily-cards"></div><div class="card"><div class="card-title">Balance Diario Acumulado</div><div style="height:300px;"><canvas id="balanceDiarioChart"></canvas></div></div><div class="card"><div class="card-title">Desglose por Día</div><div id="desglose-diario-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
-            <div id="page-stats" class="page"><h2>Estadísticas</h2><div class="cards" id="stats-cards"></div><div class="card"><div class="card-title">🛡️ Gestión de Riesgo</div><div id="riesgo-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Distribución de Resultados</div><div style="height:280px;"><canvas id="distChart"></canvas></div></div><div class="card"><div class="card-title">🧠 Análisis</div><div id="ai-observations" class="ai-box">Cargando...</div></div><div class="card"><div class="card-title">💬 Chat IA</div><div id="chat-messages" class="ai-box" style="min-height:150px;"><p style="color:#888;">Pregúntame sobre tus trades. Ej: "¿cómo voy con el plan?", "¿qué día tuve mejor gestión de riesgo?", "¿cuál es mi punto más débil?"</p></div><div class="chat-input-row"><input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')preguntarAI()"><button onclick="preguntarAI()">➤</button></div></div></div>
+            <div id="page-stats" class="page"><h2>Estadísticas</h2><div class="cards" id="stats-cards"></div><div class="card"><div class="card-title">🛡️ Gestión de Riesgo</div><div id="riesgo-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Distribución de Resultados</div><div style="height:280px;"><canvas id="distChart"></canvas></div></div><div class="card"><div class="card-title">🧠 Análisis</div><div id="ai-observations" class="ai-box">Cargando...</div></div><div class="card"><div class="card-title">💬 Chat IA</div><div id="chat-messages" class="ai-box" style="min-height:150px;"><p style="color:#888;">Pregúntame sobre tus trades.</p></div><div class="chat-input-row"><input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')preguntarAI()"><button onclick="preguntarAI()">➤</button></div></div></div>
         </main>
-    </div>
-
-<!-- MODALES DEL DASHBOARD -->
+    </div><!-- MODALES DEL DASHBOARD -->
 <div class="modal-overlay hidden" id="modal-dia-trades"><div class="modal"><h3 id="modal-dia-titulo">Trades del día</h3><div id="modal-dia-lista"></div><div class="btn-group"><button class="btn btn-blue btn-sm" onclick="nuevoTradeEnDia()">+ Añadir trade</button><button class="btn btn-outline btn-sm" onclick="cerrarModal('modal-dia-trades')">Cerrar</button></div></div></div>
 <div class="modal-overlay hidden" id="modal-trade"><div class="modal"><h3 id="modal-trade-title">Nuevo Trade</h3><form id="trade-form"><input type="hidden" id="trade-id"><div class="form-group"><label>Fecha</label><input type="date" id="trade-fecha" required></div><div class="form-row"><div class="form-group"><label>Hora Entrada</label><input type="time" id="trade-hora-entrada" value="00:00"></div><div class="form-group"><label>Hora Salida</label><input type="time" id="trade-hora-salida" value="00:00"></div></div><div class="form-row"><div class="form-group"><label>Activo</label><select id="trade-activo"><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>XAUUSD</option><option>BTCUSD</option><option>SPX</option><option>NAS100</option><option>US30</option></select></div><div class="form-group"><label>Tipo</label><select id="trade-tipo"><option>Largo</option><option>Corto</option></select></div></div><div class="form-group"><label>Cierre</label><div class="toggle-group" id="cierre-toggle"><button type="button" class="toggle-btn active" data-val="Manual">Manual</button><button type="button" class="toggle-btn" data-val="TP">TP</button><button type="button" class="toggle-btn" data-val="SL">SL</button><button type="button" class="toggle-btn" data-val="BE">BE</button></div><input type="hidden" id="trade-cierre" value="Manual"></div><div class="form-row"><div class="form-group"><label>Resultado ($)</label><input type="number" id="trade-resultado" step="0.01"></div><div class="form-group"><label>Resultado (%)</label><input type="number" id="trade-resultado-pct" step="0.01"></div></div><div class="form-group"><label>Notas</label><textarea id="trade-notas"></textarea></div><div class="form-group"><label>🖼️ Imagen (URL o archivo)</label><input type="text" id="trade-imagen" placeholder="https://... o pega URL"><input type="file" id="trade-imagen-file" accept="image/*" style="margin-top:6px;" onchange="previewImagen(this)"><img id="trade-imagen-preview" class="img-preview hidden"></div><div class="form-group"><label>📋 Checklist del Plan</label><div id="trade-checklist"></div></div><div class="btn-group"><button type="submit" class="btn btn-blue">Guardar</button><button type="button" class="btn btn-outline" onclick="cerrarModal('modal-trade')">Cancelar</button><button type="button" class="btn btn-outline hidden" id="btn-del-trade" onclick="eliminarTrade()" style="color:var(--red);border-color:var(--red);">Eliminar</button></div></form></div></div>
 <div class="modal-overlay hidden" id="modal-cuenta"><div class="modal"><h3 id="modal-cuenta-titulo">Nueva Cuenta</h3><input type="hidden" id="cuenta-edit-id"><div class="form-row"><div class="form-group"><label>Nombre</label><input type="text" id="cuenta-edit-nombre" placeholder="Ej: 50K"></div><div class="form-group"><label>Empresa</label><input type="text" id="cuenta-edit-empresa" placeholder="Ej: Elevate"></div></div><div class="form-row"><div class="form-group"><label>Tamaño ($)</label><input type="number" id="cuenta-edit-tamano" value="50000"></div><div class="form-group"><label>Invertido ($)</label><input type="number" id="cuenta-edit-invertido" value="0" step="0.01"></div></div><div class="form-row"><div class="form-group"><label>Objetivo ($)</label><input type="number" id="cuenta-edit-objetivo" value="1250"></div><div class="form-group"><label>Días Mínimos</label><input type="number" id="cuenta-edit-diasmin" value="10"></div></div><div class="form-group"><label>Consistencia (%)</label><input type="number" id="cuenta-edit-consistencia" value="35"></div><div class="btn-group"><button class="btn btn-blue" onclick="guardarCuenta()">Guardar</button><button class="btn btn-outline" onclick="cerrarModal('modal-cuenta')">Cancelar</button></div></div></div>
@@ -334,12 +283,16 @@
 </style>
 
 <script>
-    function abrirLogin(){document.getElementById('modal-login').classList.remove('hidden');document.getElementById('login-error').textContent='';}
+// ============================================
+// FUNCIONES DE MODALES (DEFINIDAS PRIMERO)
+// ============================================
+function abrirLogin(){document.getElementById('modal-login').classList.remove('hidden');document.getElementById('login-error').textContent='';}
 function cerrarLogin(){document.getElementById('modal-login').classList.add('hidden');}
 function abrirRegistro(){document.getElementById('modal-registro').classList.remove('hidden');document.getElementById('reg-error').textContent='';}
 function cerrarRegistro(){document.getElementById('modal-registro').classList.add('hidden');}
 function cambiarALogin(){cerrarRegistro();abrirLogin();}
 function cambiarARegistro(){cerrarLogin();abrirRegistro();}
+
 // ============================================
 // SISTEMA DE AUTENTICACIÓN (SHA-256)
 // ============================================
@@ -383,13 +336,6 @@ function setUsuarios(arr) { localStorage.setItem('crt_usuarios', JSON.stringify(
 function getUsuarioActual() { try { return JSON.parse(localStorage.getItem('crt_usuario_actual')); } catch (e) { return null; } }
 function setUsuarioActual(obj) { localStorage.setItem('crt_usuario_actual', JSON.stringify(obj)); }
 
-  function abrirRegistro() { document.getElementById('modal-registro').classList.remove('hidden'); document.getElementById('reg-error').textContent = ''; }
-function cerrarRegistro() { document.getElementById('modal-registro').classList.add('hidden'); }
-function abrirLogin() { document.getElementById('modal-login').classList.remove('hidden'); document.getElementById('login-error').textContent = ''; }
-function cerrarLogin() { document.getElementById('modal-login').classList.add('hidden'); }
-function cambiarALogin() { cerrarRegistro(); abrirLogin(); }
-function cambiarARegistro() { cerrarLogin(); abrirRegistro(); }
-
 function precargarAdmin() {
     var usuarios = getUsuarios();
     if (!usuarios.some(function(u) { return u.email === 'cesar@crtjournal.com'; })) {
@@ -421,16 +367,6 @@ function getDatosUsuario(email) {
 function setDatosUsuario(email, datos) { localStorage.setItem('crt_data_' + email, JSON.stringify(datos)); }
 
 precargarAdmin();
-
-// ============================================
-// MODALES DE AUTENTICACIÓN
-// ============================================
-function abrirRegistro() { document.getElementById('modal-registro').classList.remove('hidden'); document.getElementById('reg-error').textContent = ''; }
-function cerrarRegistro() { document.getElementById('modal-registro').classList.add('hidden'); }
-function abrirLogin() { document.getElementById('modal-login').classList.remove('hidden'); document.getElementById('login-error').textContent = ''; }
-function cerrarLogin() { document.getElementById('modal-login').classList.add('hidden'); }
-function cambiarALogin() { cerrarRegistro(); abrirLogin(); }
-function cambiarARegistro() { cerrarLogin(); abrirRegistro(); }
 
 function registrar() {
     var nombre = document.getElementById('reg-nombre').value.trim();
@@ -483,7 +419,26 @@ function mostrarDashboard() {
     document.getElementById('reg-email').value = '';
     document.getElementById('reg-password').value = '';
     cargarDatosUsuario();
-}// ============================================
+}function cargarDatosUsuario() {
+    var usuario = getUsuarioActual();
+    if (!usuario) return;
+    data = getDatosUsuario(usuario.email);
+    if (!data.planReglas) data.planReglas = ['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2'];
+    if (!data.nextId) data.nextId = {cuenta: (data.cuentas.length > 0 ? Math.max.apply(null, data.cuentas.map(function(c){return c.id;})) + 1 : 1), retiro: (data.retiros.length > 0 ? Math.max.apply(null, data.retiros.map(function(r){return r.id;})) + 1 : 1), trade: (data.trades.length > 0 ? Math.max.apply(null, data.trades.map(function(t){return t.id;})) + 1 : 1)};
+    document.getElementById('nombre-usuario').textContent = usuario.nombre;
+    cuentaActivaId = data.cuentas[0]?.id || 1;
+    document.getElementById('cuenta-selector').innerHTML = data.cuentas.map(function(c){return'<option value="'+c.id+'"'+(c.id===cuentaActivaId?' selected':'')+'>'+c.nombre+'</option>';}).join('');
+    if (data.cuentas.length === 0) document.getElementById('cuenta-selector').innerHTML = '<option value="">Sin cuentas</option>';
+    showPage('dashboard', document.querySelector('.sidebar-nav a'));
+}
+
+function saveData() {
+    var usuario = getUsuarioActual();
+    if (!usuario) return;
+    setDatosUsuario(usuario.email, data);
+}
+
+// ============================================
 // DATOS Y VARIABLES DEL DASHBOARD
 // ============================================
 var data = { cuentas: [], trades: [], retiros: [], nextId: {cuenta:1,retiro:1,trade:1}, planReglas: [] };
@@ -507,25 +462,6 @@ function cambiarNombre() {
 function cambiarLogo() {
     var nuevo = prompt('Nombre del Journal:', document.getElementById('journal-logo').textContent);
     if (nuevo && nuevo.trim()) { document.getElementById('journal-logo').textContent = nuevo.trim(); }
-}
-
-function cargarDatosUsuario() {
-    var usuario = getUsuarioActual();
-    if (!usuario) return;
-    data = getDatosUsuario(usuario.email);
-    if (!data.planReglas) data.planReglas = ['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2'];
-    if (!data.nextId) data.nextId = {cuenta: (data.cuentas.length > 0 ? Math.max.apply(null, data.cuentas.map(function(c){return c.id;})) + 1 : 1), retiro: (data.retiros.length > 0 ? Math.max.apply(null, data.retiros.map(function(r){return r.id;})) + 1 : 1), trade: (data.trades.length > 0 ? Math.max.apply(null, data.trades.map(function(t){return t.id;})) + 1 : 1)};
-    document.getElementById('nombre-usuario').textContent = usuario.nombre;
-    cuentaActivaId = data.cuentas[0]?.id || 1;
-    document.getElementById('cuenta-selector').innerHTML = data.cuentas.map(function(c){return'<option value="'+c.id+'"'+(c.id===cuentaActivaId?' selected':'')+'>'+c.nombre+'</option>';}).join('');
-    if (data.cuentas.length === 0) document.getElementById('cuenta-selector').innerHTML = '<option value="">Sin cuentas</option>';
-    showPage('dashboard', document.querySelector('.sidebar-nav a'));
-}
-
-function saveData() {
-    var usuario = getUsuarioActual();
-    if (!usuario) return;
-    setDatosUsuario(usuario.email, data);
 }
 
 function showPage(page, el) {
@@ -684,8 +620,9 @@ function renderPlan() { renderPlanReglas(); renderPlanCumplimiento(); }
 function renderPlanReglas() { var container = document.getElementById('plan-reglas-container'); if (!data.planReglas || !data.planReglas.length) { container.innerHTML = '<p style="color:var(--text2);">No hay reglas. Añade tu primera regla.</p>'; return; } container.innerHTML = data.planReglas.map(function(r, i) { return '<div class="plan-regla-editable" ondblclick="editarReglaPlan(' + i + ')"><span id="plan-regla-text-' + i + '">' + r + '</span></div>'; }).join(''); }
 function agregarReglaPlan() { if (!data.planReglas) data.planReglas = []; data.planReglas.push('Nueva regla (doble clic para editar)'); saveData(); renderPlanReglas(); }
 function editarReglaPlan(i) { var nuevo = prompt('Editar regla:', data.planReglas[i]); if (nuevo !== null && nuevo.trim() !== '') { data.planReglas[i] = nuevo.trim(); saveData(); renderPlanReglas(); } }
-function guardarPlan() { saveData(); alert('✅ Plan guardado'); }
-function renderPlanCumplimiento() { var container = document.getElementById('plan-cumplimiento-content'); if (!data.planReglas || !data.planReglas.length) { container.innerHTML = '<p style="color:var(--text2);">Define tus reglas primero.</p>'; return; } var t = tradesCuenta(); var hoy = new Date(); var inicioSem = new Date(hoy); inicioSem.setDate(hoy.getDate() - (hoy.getDay() || 7) + 1); var dias = []; for (var i = 0; i < 7; i++) { var d = new Date(inicioSem); d.setDate(d.getDate() + i); if (d.getMonth() === hoy.getMonth() || d.getDate() <= hoy.getDate()) dias.push(d); } var diasSem = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']; var html = '<table><thead><tr><th>Regla</th>'; dias.forEach(function(d) { html += '<th>' + diasSem[d.getDay()] + ' ' + d.getDate() + '</th>'; }); html += '</tr></thead><tbody>'; data.planReglas.forEach(function(regla, ri) { html += '<tr><td style="font-size:0.7rem;">' + regla + '</td>'; dias.forEach(function(d) { var fechaStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); var tradesDia = t.filter(function(tr) { return tr.fecha === fechaStr && tr.checklist; }); var checks = 0, total = 0; tradesDia.forEach(function(tr) { if (tr.checklist[ri] !== undefined) { total++; if (tr.checklist[ri]) checks++; } }); if (total === 0) html += '<td style="color:var(--text2);">-</td>'; else if (checks === total) html += '<td class="green">✅</td>'; else html += '<td class="red">' + checks + '/' + total + '</td>'; }); html += '</tr>'; }); html += '</tbody></table>'; container.innerHTML = html; }// ============ MÉTRICAS ============
+function guardarPlan() { saveData(); alert('✅ Plan guardado'); }function renderPlanCumplimiento() { var container = document.getElementById('plan-cumplimiento-content'); if (!data.planReglas || !data.planReglas.length) { container.innerHTML = '<p style="color:var(--text2);">Define tus reglas primero.</p>'; return; } var t = tradesCuenta(); var hoy = new Date(); var inicioSem = new Date(hoy); inicioSem.setDate(hoy.getDate() - (hoy.getDay() || 7) + 1); var dias = []; for (var i = 0; i < 7; i++) { var d = new Date(inicioSem); d.setDate(d.getDate() + i); if (d.getMonth() === hoy.getMonth() || d.getDate() <= hoy.getDate()) dias.push(d); } var diasSem = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']; var html = '<table><thead><tr><th>Regla</th>'; dias.forEach(function(d) { html += '<th>' + diasSem[d.getDay()] + ' ' + d.getDate() + '</th>'; }); html += '</tr></thead><tbody>'; data.planReglas.forEach(function(regla, ri) { html += '<tr><td style="font-size:0.7rem;">' + regla + '</td>'; dias.forEach(function(d) { var fechaStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); var tradesDia = t.filter(function(tr) { return tr.fecha === fechaStr && tr.checklist; }); var checks = 0, total = 0; tradesDia.forEach(function(tr) { if (tr.checklist[ri] !== undefined) { total++; if (tr.checklist[ri]) checks++; } }); if (total === 0) html += '<td style="color:var(--text2);">-</td>'; else if (checks === total) html += '<td class="green">✅</td>'; else html += '<td class="red">' + checks + '/' + total + '</td>'; }); html += '</tr>'; }); html += '</tbody></table>'; container.innerHTML = html; }
+
+// ============ MÉTRICAS ============
 function calcularDuracionMinutos(tr) { if (!tr.hora_entrada || !tr.hora_salida || tr.hora_entrada === '00:00' || tr.hora_salida === '00:00') return null; var h1 = tr.hora_entrada.split(':'), h2 = tr.hora_salida.split(':'); var mins = parseInt(h2[0]) * 60 + parseInt(h2[1]) - parseInt(h1[0]) * 60 - parseInt(h1[1]); if (mins < 0) mins += 1440; return mins; }
 function renderMetricas() { var t = tradesCuenta(), total = t.length, ganados = t.filter(function(tr) { return tr.resultado > 0; }), perdidos = t.filter(function(tr) { return tr.resultado < 0; }); var mejorTrade = ganados.length > 0 ? Math.max.apply(null, ganados.map(function(tr) { return tr.resultado; })) : 0; var peorTrade = perdidos.length > 0 ? Math.min.apply(null, perdidos.map(function(tr) { return tr.resultado; })) : 0; var promGanancia = ganados.length > 0 ? ganados.reduce(function(s, tr) { return s + tr.resultado; }, 0) / ganados.length : 0; var promPerdida = perdidos.length > 0 ? Math.abs(perdidos.reduce(function(s, tr) { return s + tr.resultado; }, 0) / perdidos.length) : 0; var maxRachaG = (function(arr) { var m = 0, c = 0; arr.forEach(function(v) { if (v > 0) { c++; m = Math.max(m, c); } else c = 0; }); return m; })(t.map(function(tr) { return tr.resultado; })); var maxRachaP = (function(arr) { var m = 0, c = 0; arr.forEach(function(v) { if (v < 0) { c++; m = Math.max(m, c); } else c = 0; }); return m; })(t.map(function(tr) { return tr.resultado; })); var mejorTradeObj = ganados.length > 0 ? ganados.reduce(function(a, b) { return a.resultado > b.resultado ? a : b; }) : null; var peorTradeObj = perdidos.length > 0 ? perdidos.reduce(function(a, b) { return a.resultado < b.resultado ? a : b; }) : null; var tradesConHoras = t.filter(function(tr) { return calcularDuracionMinutos(tr) !== null; }); var durTotal = 0, durGan = 0, durPer = 0, cG = 0, cP = 0; tradesConHoras.forEach(function(tr) { var d = calcularDuracionMinutos(tr); durTotal += d; if (tr.resultado > 0) { durGan += d; cG++; } else { durPer += d; cP++; } }); var durMedia = tradesConHoras.length > 0 ? Math.round(durTotal / tradesConHoras.length) : 0; var durMediaG = cG > 0 ? Math.round(durGan / cG) : 0; var durMediaP = cP > 0 ? Math.round(durPer / cP) : 0; document.getElementById('metricas-cards').innerHTML = '<div class="stat-card clickable" onclick="mostrarDesglose(\'ganadores\')"><div class="lbl">🟢 Ganadores</div><div class="val green">' + ganados.length + '</div></div>' + '<div class="stat-card clickable" onclick="mostrarDesglose(\'perdedores\')"><div class="lbl">🔴 Perdedores</div><div class="val red">' + perdidos.length + '</div></div>' + '<div class="stat-card clickable" onclick="mostrarDetalleTrade(\'' + (mejorTradeObj ? 'ganador' : '') + '\')"><div class="lbl">Mejor Trade</div><div class="val green">+$' + mejorTrade.toFixed(2) + '</div>' + (mejorTradeObj ? '<div style="font-size:0.55rem;color:#888;">' + mejorTradeObj.activo + ' | ' + mejorTradeObj.fecha + '</div>' : '') + '</div>' + '<div class="stat-card clickable" onclick="mostrarDetalleTrade(\'' + (peorTradeObj ? 'perdedor' : '') + '\')"><div class="lbl">Peor Trade</div><div class="val red">-$' + Math.abs(peorTrade).toFixed(2) + '</div>' + (peorTradeObj ? '<div style="font-size:0.55rem;color:#888;">' + peorTradeObj.activo + ' | ' + peorTradeObj.fecha + '</div>' : '') + '</div>' + '<div class="stat-card"><div class="lbl">Prom Ganancia</div><div class="val green">$' + promGanancia.toFixed(2) + '</div></div>' + '<div class="stat-card"><div class="lbl">Prom Pérdida</div><div class="val red">-$' + promPerdida.toFixed(2) + '</div></div>' + '<div class="stat-card"><div class="lbl">Dur. Media Trade</div><div class="val neon">' + (durMedia > 0 ? durMedia + 'm' : 'N/A') + '</div></div>' + '<div class="stat-card"><div class="lbl">Dur. Media Win</div><div class="val green">' + (durMediaG > 0 ? durMediaG + 'm' : 'N/A') + '</div></div>' + '<div class="stat-card"><div class="lbl">Dur. Media Loss</div><div class="val red">' + (durMediaP > 0 ? durMediaP + 'm' : 'N/A') + '</div></div>' + '<div class="stat-card"><div class="lbl">Max Racha G</div><div class="val green">' + maxRachaG + '</div></div>' + '<div class="stat-card"><div class="lbl">Max Racha P</div><div class="val red">' + maxRachaP + '</div></div>'; var mensual = {}; t.forEach(function(tr) { var d = new Date(tr.fecha + 'T00:00:00'); var key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); if (!mensual[key]) mensual[key] = { pnl: 0, count: 0 }; mensual[key].pnl += tr.resultado; mensual[key].count++; }); var c = cuentaActiva(), tam = c ? c.tamano : 50000; var mesesNombres = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']; var htmlRend = '<table><thead><tr><th>Año</th>'; for (var i = 0; i < 12; i++) htmlRend += '<th>' + mesesNombres[i] + '</th>'; htmlRend += '</tr></thead><tbody>'; var years = Object.keys(mensual).map(function(k) { return k.split('-')[0]; }).filter(function(v, i, a) { return a.indexOf(v) === i; }).sort(); years.forEach(function(year) { htmlRend += '<tr><td><b>' + year + '</b></td>'; for (var m = 1; m <= 12; m++) { var key = year + '-' + String(m).padStart(2, '0'); var d = mensual[key]; var pct = d && tam > 0 ? (d.pnl / tam * 100) : null; htmlRend += '<td class="' + (pct !== null ? (pct >= 0 ? 'green' : 'red') : '') + '">' + (pct !== null ? (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%' : '-') + '</td>'; } htmlRend += '</tr>'; }); htmlRend += '</tbody></table>'; document.getElementById('rendimiento-mensual').innerHTML = htmlRend; var diasSem = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']; var porDia = {}; t.forEach(function(tr) { var d = new Date(tr.fecha + 'T00:00:00').getDay(); porDia[d] = (porDia[d] || 0) + 1; }); var ctxF = document.getElementById('frecuenciaChart').getContext('2d'); if (frecuenciaChart) frecuenciaChart.destroy(); frecuenciaChart = new Chart(ctxF, { type: 'bar', data: { labels: diasSem, datasets: [{ label: 'Trades', data: diasSem.map(function(d, i) { return porDia[i] || 0; }), backgroundColor: 'rgba(0,255,255,0.3)', borderColor: '#00ffff', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#8888a0', stepSize: 1 }, grid: { color: 'rgba(0,255,255,0.06)' } }, x: { ticks: { color: '#8888a0' }, grid: { color: 'rgba(0,255,255,0.06)' } } } } }); renderDuracionContent(tradesConHoras); renderDuracionChart(tradesConHoras); }
 
@@ -960,3 +897,6 @@ window.addEventListener('DOMContentLoaded', function() {
         document.getElementById('app').style.display = 'none';
     }
 });
+</script>
+</body>
+</html>
