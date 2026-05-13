@@ -334,6 +334,12 @@
 </style>
 
 <script>
+    function abrirLogin(){document.getElementById('modal-login').classList.remove('hidden');document.getElementById('login-error').textContent='';}
+function cerrarLogin(){document.getElementById('modal-login').classList.add('hidden');}
+function abrirRegistro(){document.getElementById('modal-registro').classList.remove('hidden');document.getElementById('reg-error').textContent='';}
+function cerrarRegistro(){document.getElementById('modal-registro').classList.add('hidden');}
+function cambiarALogin(){cerrarRegistro();abrirLogin();}
+function cambiarARegistro(){cerrarLogin();abrirRegistro();}
 // ============================================
 // SISTEMA DE AUTENTICACIÓN (SHA-256)
 // ============================================
