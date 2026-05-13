@@ -377,6 +377,13 @@ function setUsuarios(arr) { localStorage.setItem('crt_usuarios', JSON.stringify(
 function getUsuarioActual() { try { return JSON.parse(localStorage.getItem('crt_usuario_actual')); } catch (e) { return null; } }
 function setUsuarioActual(obj) { localStorage.setItem('crt_usuario_actual', JSON.stringify(obj)); }
 
+  function abrirRegistro() { document.getElementById('modal-registro').classList.remove('hidden'); document.getElementById('reg-error').textContent = ''; }
+function cerrarRegistro() { document.getElementById('modal-registro').classList.add('hidden'); }
+function abrirLogin() { document.getElementById('modal-login').classList.remove('hidden'); document.getElementById('login-error').textContent = ''; }
+function cerrarLogin() { document.getElementById('modal-login').classList.add('hidden'); }
+function cambiarALogin() { cerrarRegistro(); abrirLogin(); }
+function cambiarARegistro() { cerrarLogin(); abrirRegistro(); }
+
 function precargarAdmin() {
     var usuarios = getUsuarios();
     if (!usuarios.some(function(u) { return u.email === 'cesar@crtjournal.com'; })) {
