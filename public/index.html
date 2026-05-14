@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CRT JOURNAL - Journal Profesional de Trading</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #0a0a0a; --sidebar: rgba(10,10,10,0.85); --card: rgba(18,18,22,0.7); --card2: rgba(24,24,30,0.6); --border: rgba(0,255,255,0.15); --text: #e0e0e8; --text2: #7a7a8a; --green: #00ff88; --red: #ff3355; --neon: #00ffff; --neon-glow: rgba(0,255,255,0.25); --neon-strong: rgba(0,255,255,0.5); --radius: 14px; --radius-sm: 8px; --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -14,8 +16,6 @@
         @keyframes gridScroll { 0% { transform: translate(0,0); } 100% { transform: translate(40px,40px); } }
         body::after { content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 50% 0%, rgba(0,255,255,0.04) 0%, transparent 70%); pointer-events: none; z-index: 0; }
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(0,255,255,0.3); border-radius: 2px; }
-
-        /* ========== LANDING PAGE ========== */
         #landing-page { position: relative; z-index: 1; min-height: 100vh; }
         .landing-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; position: relative; z-index: 2; background: rgba(10,10,10,0.7); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
         .landing-nav .logo-landing { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 30px var(--neon-glow); letter-spacing: 3px; text-decoration: none; }
@@ -46,8 +46,6 @@
         .hero-stat .stat-label { font-size: 0.7rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; font-family: 'Inter', sans-serif; }
         .section-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 12px; letter-spacing: 1px; }
         .section-subtitle { text-align: center; color: var(--text2); font-size: 0.9rem; margin-bottom: 40px; font-family: 'Inter', sans-serif; }
-
-        /* Para quién es */
         .who-for { padding: 60px 20px; max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
         .who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .who-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; transition: var(--transition); backdrop-filter: blur(8px); }
@@ -55,7 +53,6 @@
         .who-card .who-icon { font-size: 2rem; margin-bottom: 10px; }
         .who-card h3 { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: #fff; margin-bottom: 6px; }
         .who-card p { font-size: 0.75rem; color: var(--text2); font-family: 'Inter', sans-serif; line-height: 1.5; }
-
         .features { padding: 60px 20px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
         .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; text-align: center; transition: var(--transition); backdrop-filter: blur(8px); }
@@ -63,17 +60,21 @@
         .feature-icon { font-size: 2.4rem; margin-bottom: 14px; display: block; }
         .feature-card h3 { font-family: 'Orbitron', sans-serif; font-size: 1rem; color: #fff; margin-bottom: 8px; letter-spacing: 0.5px; }
         .feature-card p { font-size: 0.8rem; color: var(--text2); line-height: 1.6; font-family: 'Inter', sans-serif; }
-        .plans { padding: 60px 20px 40px; max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
-        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-        .plan-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 24px; text-align: center; transition: var(--transition); position: relative; backdrop-filter: blur(8px); }
+        .plans { padding: 60px 20px 40px; max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
+        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .plan-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px; text-align: center; transition: var(--transition); position: relative; backdrop-filter: blur(8px); }
         .plan-card.popular { border-color: var(--neon); box-shadow: 0 0 40px var(--neon-glow); }
         .plan-card.popular::before { content: 'MÁS POPULAR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 4px 16px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; font-family: 'Inter', sans-serif; }
+        .plan-card.savings::before { content: '🔥 AHORRA 17%'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #f0b90b; color: #000; padding: 4px 16px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; font-family: 'Inter', sans-serif; }
+        .plan-card.best-value { border-color: #f0b90b; box-shadow: 0 0 40px rgba(240,185,11,0.3); }
+        .plan-card.best-value::before { content: '💎 MEJOR VALOR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #f0b90b; color: #000; padding: 4px 16px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; font-family: 'Inter', sans-serif; }
         .plan-card h3 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: #fff; margin-bottom: 8px; }
-        .plan-card .plan-price { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 25px var(--neon-glow); margin-bottom: 16px; }
-        .plan-card .plan-price small { font-size: 0.7rem; color: var(--text2); font-family: 'Inter', sans-serif; font-weight: 400; text-shadow: none; }
+        .plan-card .plan-price { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 25px var(--neon-glow); margin-bottom: 8px; }
+        .plan-card .plan-price small { font-size: 0.65rem; color: var(--text2); font-family: 'Inter', sans-serif; font-weight: 400; text-shadow: none; }
+        .plan-card .plan-saving { color: #f0b90b; font-size: 0.7rem; margin-bottom: 8px; font-family: 'Inter', sans-serif; font-weight: 600; }
         .plan-card .plan-trial { color: var(--green); font-size: 0.8rem; margin-bottom: 12px; font-family: 'Inter', sans-serif; font-weight: 600; }
-        .plan-card ul { list-style: none; padding: 0; margin-bottom: 24px; text-align: left; }
-        .plan-card ul li { padding: 8px 0; font-size: 0.82rem; color: var(--text2); border-bottom: 1px solid rgba(255,255,255,0.03); font-family: 'Inter', sans-serif; }
+        .plan-card ul { list-style: none; padding: 0; margin-bottom: 20px; text-align: left; }
+        .plan-card ul li { padding: 7px 0; font-size: 0.78rem; color: var(--text2); border-bottom: 1px solid rgba(255,255,255,0.03); font-family: 'Inter', sans-serif; }
         .plan-card ul li::before { content: '✓ '; color: var(--green); font-weight: 700; }
         .plan-card ul li.disabled { opacity: 0.4; }
         .plan-card ul li.disabled::before { content: '✗ '; color: var(--red); }
@@ -81,8 +82,8 @@
         .btn-plan:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon-glow); }
         .btn-plan-pro { background: var(--neon); color: #000; }
         .btn-plan-pro:hover { box-shadow: 0 0 40px var(--neon-glow); transform: translateY(-2px); }
-
-        /* FAQ */
+        .btn-plan-gold { background: #f0b90b; color: #000; border-color: #f0b90b; }
+        .btn-plan-gold:hover { box-shadow: 0 0 40px rgba(240,185,11,0.4); transform: translateY(-2px); }
         .faq { padding: 40px 20px 60px; max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
         .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px 20px; margin-bottom: 10px; cursor: pointer; transition: var(--transition); }
         .faq-item:hover { border-color: var(--neon); }
@@ -90,12 +91,8 @@
         .faq-item p { font-size: 0.75rem; color: var(--text2); font-family: 'Inter', sans-serif; line-height: 1.5; display: none; }
         .faq-item.open p { display: block; }
         .faq-item.open { border-color: var(--neon); box-shadow: 0 0 15px var(--neon-glow); }
-
-        /* Sobre CRT */
         .about { padding: 40px 20px 60px; max-width: 800px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
         .about p { color: var(--text2); font-family: 'Inter', sans-serif; font-size: 0.9rem; line-height: 1.7; max-width: 600px; margin: 0 auto; }
-
-        /* Footer */
         .landing-footer { background: rgba(10,10,10,0.8); border-top: 1px solid var(--border); padding: 40px 20px 20px; position: relative; z-index: 1; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto 30px; }
         .footer-col h4 { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--neon); margin-bottom: 12px; letter-spacing: 1px; }
@@ -103,8 +100,6 @@
         .footer-col a:hover { color: #fff; }
         .footer-bottom { text-align: center; color: var(--text2); font-size: 0.65rem; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); font-family: 'Inter', sans-serif; }
         .footer-bottom a { color: var(--neon); text-decoration: none; }
-
-        /* ========== MODALS ========== */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(8px); }
         .modal-panel { background: rgba(18,18,22,0.95); border: 1px solid var(--neon-strong); border-radius: var(--radius); padding: 36px 28px; width: 90%; max-width: 420px; box-shadow: 0 0 60px var(--neon-glow); position: relative; animation: modalIn 0.3s ease; backdrop-filter: blur(24px); }
         @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -122,14 +117,14 @@
         .modal-panel .modal-link a { color: var(--neon); cursor: pointer; font-weight: 600; text-decoration: none; }
         .modal-panel .modal-link a:hover { text-decoration: underline; }
         .hidden { display: none !important; }
-
-        /* Modal Pago QR */
         .modal-qr { text-align: center; padding: 20px; }
-        .modal-qr img { max-width: 200px; border-radius: 12px; border: 1px solid var(--border); margin: 16px 0; }
+        .modal-qr img { max-width: 200px; border-radius: 12px; border: 1px solid var(--border); margin: 12px 0; }
         .modal-qr .qr-info { font-size: 0.75rem; color: var(--text2); margin: 8px 0; font-family: 'Inter', sans-serif; }
         .modal-qr .qr-amount { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--neon); text-shadow: 0 0 15px var(--neon-glow); }
         .modal-qr .qr-network { display: inline-block; background: rgba(0,255,255,0.1); color: var(--neon); padding: 4px 10px; border-radius: 10px; font-size: 0.65rem; margin: 8px 0; }
-
+        .modal-qr .plan-options { display: flex; gap: 8px; justify-content: center; margin: 12px 0; flex-wrap: wrap; }
+        .modal-qr .plan-option { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.7rem; transition: var(--transition); font-family: 'Inter', sans-serif; color: var(--text2); }
+        .modal-qr .plan-option:hover, .modal-qr .plan-option.active { border-color: var(--neon); color: var(--neon); background: rgba(0,255,255,0.05); }
         @media (max-width: 768px) { .landing-nav { padding: 14px 16px; flex-wrap: wrap; gap: 10px; } .hero h1 { font-size: 1.8rem; } .hero-stats { gap: 20px; padding: 16px; } .hero-stat .stat-num { font-size: 1.3rem; } }
     </style>
 </head>
@@ -197,7 +192,7 @@
                 <div class="plan-card">
                     <h3>Básico</h3>
                     <div class="plan-price">$0<small>/mes</small></div>
-                    <div class="plan-trial">✅ Incluye 1 semana de prueba Pro</div>
+                    <div class="plan-trial">✅ 1 semana de prueba Pro</div>
                     <ul>
                         <li>Hasta 50 trades</li>
                         <li>1 cuenta</li>
@@ -208,7 +203,7 @@
                     <button class="btn-plan" onclick="abrirRegistro()">Empezar gratis</button>
                 </div>
                 <div class="plan-card popular">
-                    <h3>Pro</h3>
+                    <h3>Pro Mensual</h3>
                     <div class="plan-price">$10<small>/mes</small></div>
                     <div class="plan-trial">🎁 1 semana de prueba gratis</div>
                     <ul>
@@ -218,7 +213,33 @@
                         <li>Chat IA</li>
                         <li>Exportar CSV</li>
                     </ul>
-                    <button class="btn-plan btn-plan-pro" onclick="abrirPagoQR()">Suscribirse - $10/mes</button>
+                    <button class="btn-plan btn-plan-pro" onclick="abrirPagoQR('mensual')">Suscribirse - $10/mes</button>
+                </div>
+                <div class="plan-card savings">
+                    <h3>Pro Semestral</h3>
+                    <div class="plan-price">$50<small>/6 meses</small></div>
+                    <div class="plan-saving">💡 Ahorras $10 (1 mes gratis)</div>
+                    <ul>
+                        <li>Trades ilimitados</li>
+                        <li>5 cuentas</li>
+                        <li>Métricas avanzadas</li>
+                        <li>Chat IA</li>
+                        <li>Exportar CSV</li>
+                    </ul>
+                    <button class="btn-plan btn-plan-pro" onclick="abrirPagoQR('semestral')">Suscribirse - $50/6 meses</button>
+                </div>
+                <div class="plan-card best-value">
+                    <h3>Pro Anual</h3>
+                    <div class="plan-price">$100<small>/año</small></div>
+                    <div class="plan-saving">💡 Ahorras $20 (2 meses gratis)</div>
+                    <ul>
+                        <li>Trades ilimitados</li>
+                        <li>5 cuentas</li>
+                        <li>Métricas avanzadas</li>
+                        <li>Chat IA</li>
+                        <li>Exportar CSV</li>
+                    </ul>
+                    <button class="btn-plan btn-plan-gold" onclick="abrirPagoQR('anual')">Suscribirse - $100/año</button>
                 </div>
             </div>
         </section>
@@ -226,11 +247,11 @@
         <section class="faq" id="faq">
             <div class="section-title">Preguntas Frecuentes</div>
             <div class="section-subtitle">Resolvemos tus dudas</div>
-            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>💡 ¿Cómo funciona la prueba gratis?</h4><p>Al registrarte, obtienes 7 días del plan Pro sin costo. Puedes usar todas las funciones. Al terminar la prueba, vuelves al plan Básico automáticamente.</p></div>
-            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>💳 ¿Qué métodos de pago aceptan?</h4><p>Aceptamos criptomonedas (USDT a través de Binance Pay). Es rápido, seguro y sin complicaciones bancarias.</p></div>
-            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>🔒 ¿Mis datos están seguros?</h4><p>Tus datos se guardan cifrados con SHA-256. Nadie más que tú puede ver tu journal de trading.</p></div>
-            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>❌ ¿Puedo cancelar cuando quiera?</h4><p>Sí, no hay permanencia. Si cancelas, sigues con el plan Básico gratuito.</p></div>
-            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>📊 ¿Puedo exportar mis datos?</h4><p>El plan Pro incluye exportación a CSV para que puedas analizar tus trades en Excel o donde prefieras.</p></div>
+            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>💡 ¿Cómo funciona la prueba gratis?</h4><p>Al registrarte, obtienes 7 días del plan Pro sin costo. Al terminar, vuelves al plan Básico.</p></div>
+            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>💳 ¿Qué métodos de pago aceptan?</h4><p>Aceptamos criptomonedas (USDT a través de Binance Pay, red TRC-20). Es rápido y seguro.</p></div>
+            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>🔒 ¿Mis datos están seguros?</h4><p>Tus datos se guardan cifrados con SHA-256. Nadie más puede ver tu journal.</p></div>
+            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>❌ ¿Puedo cancelar cuando quiera?</h4><p>Sí, no hay permanencia. Si cancelas, vuelves al plan Básico gratuito.</p></div>
+            <div class="faq-item" onclick="this.classList.toggle('open')"><h4>📊 ¿Puedo exportar mis datos?</h4><p>El plan Pro incluye exportación a CSV para analizar tus trades donde prefieras.</p></div>
         </section>
 
         <section class="about" id="about">
@@ -241,37 +262,16 @@
 
         <footer class="landing-footer">
             <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>CRT JOURNAL</h4>
-                    <p>Journal profesional de trading. Hecho para traders disciplinados.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Producto</h4>
-                    <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Características</a>
-                    <a onclick="document.getElementById('plans').scrollIntoView({behavior:'smooth'})">Planes</a>
-                    <a onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">FAQ</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Contacto</h4>
-                    <p>📧 cesar@crtjournal.com</p>
-                    <p>💬 Soporte por email 24/48h</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Legal</h4>
-                    <a onclick="alert('Términos de uso: Al usar CRT Journal aceptas que es una herramienta de registro. No nos hacemos responsables de decisiones de trading.')">Términos de uso</a>
-                    <a onclick="alert('Política de privacidad: Tus datos se guardan cifrados. No compartimos información con terceros.')">Política de privacidad</a>
-                    <a onclick="alert('Disclaimer: CRT Journal no constituye asesoramiento financiero. El trading conlleva riesgos. Opera con responsabilidad.')">Disclaimer</a>
-                </div>
+                <div class="footer-col"><h4>CRT JOURNAL</h4><p>Journal profesional de trading.</p></div>
+                <div class="footer-col"><h4>Producto</h4><a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Características</a><a onclick="document.getElementById('plans').scrollIntoView({behavior:'smooth'})">Planes</a><a onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">FAQ</a></div>
+                <div class="footer-col"><h4>Contacto</h4><p>📧 soporte@crtjournal.com</p><p>💬 Soporte 24/48h</p></div>
+                <div class="footer-col"><h4>Legal</h4><a onclick="alert('Términos de uso: Al usar CRT Journal aceptas que es una herramienta de registro.')">Términos de uso</a><a onclick="alert('Política de privacidad: Tus datos se guardan cifrados.')">Privacidad</a><a onclick="alert('Disclaimer: No constituye asesoramiento financiero.')">Disclaimer</a></div>
             </div>
-            <div class="footer-bottom">
-                © 2026 CRT JOURNAL · TODOS LOS DERECHOS RESERVADOS · <a onclick="alert('Disclaimer: CRT Journal es una herramienta de registro de operaciones. No constituye asesoramiento financiero. El trading conlleva riesgos.')">Disclaimer</a>
-            </div>
+            <div class="footer-bottom">© 2026 CRT JOURNAL · TODOS LOS DERECHOS RESERVADOS · <a onclick="alert('Disclaimer: CRT Journal es una herramienta de registro. No constituye asesoramiento financiero.')">Disclaimer</a></div>
         </footer>
     </div>
 
-    <!-- ============================================ -->
     <!-- MODAL REGISTRO -->
-    <!-- ============================================ -->
     <div class="modal-overlay hidden" id="modal-registro">
         <div class="modal-panel">
             <button class="modal-close" onclick="cerrarRegistro()">✕</button>
@@ -285,9 +285,7 @@
         </div>
     </div>
 
-    <!-- ============================================ -->
     <!-- MODAL LOGIN -->
-    <!-- ============================================ -->
     <div class="modal-overlay hidden" id="modal-login">
         <div class="modal-panel">
             <button class="modal-close" onclick="cerrarLogin()">✕</button>
@@ -300,21 +298,25 @@
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- MODAL PAGO QR (BINANCE) -->
-    <!-- ============================================ -->
+    <!-- MODAL PAGO QR -->
     <div class="modal-overlay hidden" id="modal-pago-qr">
-        <div class="modal-panel" style="max-width:440px;">
+        <div class="modal-panel" style="max-width:460px;">
             <button class="modal-close" onclick="cerrarPagoQR()">✕</button>
             <h2>Activar Plan Pro</h2>
-            <div class="modal-subtitle">Pago único mensual</div>
+            <div class="modal-subtitle" id="pago-titulo">Elige tu plan</div>
             <div class="modal-qr">
-                <div class="qr-amount">10 USDT</div>
-                <<div class="qr-network">Red TRC-20 (Tron)</div>><img src="https://i.ibb.co/kgpVpdpM/qr-pago-binance.jpg" alt="QR Binance Pay" style="max-width:200px;border-radius:12px;border:1px solid var(--border);margin:12px 0;">
+                <div class="plan-options">
+                    <button class="plan-option active" onclick="seleccionarPlanPago('mensual',10,'USDT','mensual')">Mensual - $10</button>
+                    <button class="plan-option" onclick="seleccionarPlanPago('semestral',50,'USDT','6 meses')">Semestral - $50</button>
+                    <button class="plan-option" onclick="seleccionarPlanPago('anual',100,'USDT','12 meses')">Anual - $100</button>
+                </div>
+                <div class="qr-amount" id="qr-monto">10 USDT</div>
+                <div class="qr-network">Red TRC-20 (Tron)</div>
+                <img src="https://i.ibb.co/kgpVpdpM/qr-pago-binance.jpg" alt="QR Binance Pay" style="max-width:200px;border-radius:12px;border:1px solid var(--border);margin:12px 0;">
                 <p class="qr-info">📱 Escanea el QR con tu app de cripto</p>
-                <p class="qr-info">💼 O envía 10 USDT a la dirección:</p>
+                <p class="qr-info">💼 O envía <span id="qr-monto-txt">10 USDT</span> a la dirección:</p>
                 <p style="font-size:0.6rem;word-break:break-all;background:rgba(0,0,0,0.5);padding:8px;border-radius:6px;margin:8px 0;">TDaiyUQq7mQDdaf1u8jLGSuS2DtKDwyjtK</p>
-                <p class="qr-info" style="color:var(--green);">✅ Tras el pago, el plan se activa automáticamente.</p>
+                <p class="qr-info" style="color:var(--green);" id="qr-msg-ahorro"></p>
             </div>
         </div>
     </div>    <!-- ============================================ -->
@@ -323,7 +325,7 @@
     <div id="app" style="display:none;">
 
         <aside class="sidebar">
-            <div class="sidebar-header"><div class="logo" id="journal-logo" onclick="cambiarLogo()" title="Click para cambiar nombre">CRT JOURNAL</div><div class="user" id="nombre-usuario" onclick="cambiarNombre()">Cesar</div></div>
+            <div class="user" id="nombre-usuario" onclick="cambiarNombre()">Admin</div>
             <div class="sidebar-footer"><select id="cuenta-selector" onchange="cambiarCuenta()"></select><button class="btn-logout" onclick="cerrarSesion()" style="width:100%;margin-top:8px;padding:8px;background:transparent;color:var(--red);border:1px solid var(--red);border-radius:6px;font-size:0.72rem;cursor:pointer;font-weight:600;font-family:'JetBrains Mono',monospace;">🔒 Cerrar sesión</button></div>
             <nav class="sidebar-nav">
                 <a onclick="showPage('dashboard',this)" class="active">📊 <span>Dashboard</span></a>
@@ -455,6 +457,20 @@
         @media (max-width: 768px) { .sidebar { width: 60px; } .sidebar-header .logo, .sidebar-header .user, .sidebar-nav a span, .sidebar-footer select, .sidebar-footer .btn-logout { display: none; } .sidebar-nav a { justify-content: center; padding: 14px; font-size: 1.2rem; } .main { margin-left: 60px; padding: 16px; } .trades-layout { flex-direction: column; } .trades-layout .semanas-column { width: 100%; } .cal-day { min-height: 65px; font-size: 0.75rem; padding: 6px 2px; } }
     </style><script>
 // ============================================
+// CONFIGURACIÓN DE FIREBASE
+// ============================================
+const firebaseConfig = {
+  apiKey: "AIzaSyCxtKvOQTNz_OdA-njw1Sgo2sntx-lNv88",
+  authDomain: "crt-journal-f8ae3.firebaseapp.com",
+  projectId: "crt-journal-f8ae3",
+  storageBucket: "crt-journal-f8ae3.firebasestorage.app",
+  messagingSenderId: "629465653592",
+  appId: "1:629465653592:web:7dae95dc7958f31695c52d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ============================================
 // FUNCIONES DE MODALES (AL INICIO - PARA EVITAR ERRORES)
 // ============================================
 function abrirLogin(){document.getElementById('modal-login').classList.remove('hidden');document.getElementById('login-error').textContent='';}
@@ -463,11 +479,42 @@ function abrirRegistro(){document.getElementById('modal-registro').classList.rem
 function cerrarRegistro(){document.getElementById('modal-registro').classList.add('hidden');}
 function cambiarALogin(){cerrarRegistro();abrirLogin();}
 function cambiarARegistro(){cerrarLogin();abrirRegistro();}
-function abrirPagoQR(){document.getElementById('modal-pago-qr').classList.remove('hidden');}
+
+var planSeleccionado = 'mensual';
+var montoSeleccionado = 10;
+function abrirPagoQR(plan){
+    planSeleccionado = plan || 'mensual';
+    if(plan === 'mensual'){montoSeleccionado = 10;}
+    else if(plan === 'semestral'){montoSeleccionado = 50;}
+    else if(plan === 'anual'){montoSeleccionado = 100;}
+    document.getElementById('qr-monto').textContent = montoSeleccionado + ' USDT';
+    document.getElementById('qr-monto-txt').textContent = montoSeleccionado + ' USDT';
+    if(plan === 'semestral'){document.getElementById('qr-msg-ahorro').textContent = '💡 Ahorras $10 (1 mes gratis)';}
+    else if(plan === 'anual'){document.getElementById('qr-msg-ahorro').textContent = '💡 Ahorras $20 (2 meses gratis)';}
+    else{document.getElementById('qr-msg-ahorro').textContent = '';}
+    var btns = document.querySelectorAll('#modal-pago-qr .plan-option');
+    btns.forEach(function(b){b.classList.remove('active');});
+    if(plan === 'mensual' && btns[0]) btns[0].classList.add('active');
+    if(plan === 'semestral' && btns[1]) btns[1].classList.add('active');
+    if(plan === 'anual' && btns[2]) btns[2].classList.add('active');
+    document.getElementById('modal-pago-qr').classList.remove('hidden');
+}
 function cerrarPagoQR(){document.getElementById('modal-pago-qr').classList.add('hidden');}
+function seleccionarPlanPago(plan,monto){
+    planSeleccionado = plan;
+    montoSeleccionado = monto;
+    document.getElementById('qr-monto').textContent = monto + ' USDT';
+    document.getElementById('qr-monto-txt').textContent = monto + ' USDT';
+    if(plan === 'semestral'){document.getElementById('qr-msg-ahorro').textContent = '💡 Ahorras $10 (1 mes gratis)';}
+    else if(plan === 'anual'){document.getElementById('qr-msg-ahorro').textContent = '💡 Ahorras $20 (2 meses gratis)';}
+    else{document.getElementById('qr-msg-ahorro').textContent = '';}
+    var btns = document.querySelectorAll('#modal-pago-qr .plan-option');
+    btns.forEach(function(b){b.classList.remove('active');});
+    event.target.classList.add('active');
+}
 
 // ============================================
-// SISTEMA DE AUTENTICACIÓN (SHA-256)
+// SISTEMA DE AUTENTICACIÓN (SHA-256 + FIREBASE)
 // ============================================
 function sha256(str) {
     function rotr(x, n) { return (x >>> n) | (x << (32 - n)); }
@@ -504,120 +551,131 @@ function sha256(str) {
     return hex;
 }
 
-function getUsuarios() { try { return JSON.parse(localStorage.getItem('crt_usuarios')) || []; } catch (e) { return []; } }
-function setUsuarios(arr) { localStorage.setItem('crt_usuarios', JSON.stringify(arr)); }
-function getUsuarioActual() { try { return JSON.parse(localStorage.getItem('crt_usuario_actual')); } catch (e) { return null; } }
-function setUsuarioActual(obj) { localStorage.setItem('crt_usuario_actual', JSON.stringify(obj)); }
+function getUsuarioActual(){try{return JSON.parse(localStorage.getItem('crt_usuario_actual'));}catch(e){return null;}}
+function setUsuarioActual(obj){localStorage.setItem('crt_usuario_actual',JSON.stringify(obj));}
 
-function precargarAdmin() {
-    var usuarios = getUsuarios();
-    if (!usuarios.some(function(u) { return u.email === 'cesar@crtjournal.com'; })) {
-        usuarios.push({ nombre: 'Cesar', email: 'cesar@crtjournal.com', password: sha256('admin2026'), plan: 'pro', fechaRegistro: new Date().toISOString(), pruebaGratis: false });
-        setUsuarios(usuarios);
-        if (!localStorage.getItem('crt_data_cesar@crtjournal.com')) {
-            var datosEjemplo = {
-                cuentas: [{id:1,nombre:'50K Instant Pro',empresa:'Elevate',tamano:50000,invertido:0,objetivo:1250,diasmin:10,consistenciaPct:35}],
-                retiros: [],
-                trades: [
+async function precargarAdmin(){
+    var ref = db.collection('usuarios').doc('admin@crtjournal.com');
+    var doc = await ref.get();
+    if(!doc.exists){
+        await ref.set({
+            nombre:'Admin',email:'admin@crtjournal.com',
+            plan:'pro',fechaRegistro:new Date().toISOString(),pruebaGratis:false
+        });
+        var datosRef = db.collection('datos').doc('admin@crtjournal.com');
+        var datosExiste = await datosRef.get();
+        if(!datosExiste.exists){
+            await datosRef.set({
+                cuentas:[{id:1,nombre:'50K Instant Pro',empresa:'Elevate',tamano:50000,invertido:0,objetivo:1250,diasmin:10,consistenciaPct:35}],
+                retiros:[],
+                trades:[
                     {id:1,fecha:'2026-05-01',hora_entrada:'00:00',hora_salida:'00:00',activo:'EURUSD',tipo:'Largo',cierre:'TP',resultado:120,resultado_pct:0.24,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
                     {id:2,fecha:'2026-05-02',hora_entrada:'00:00',hora_salida:'00:00',activo:'GBPUSD',tipo:'Corto',cierre:'SL',resultado:-45,resultado_pct:-0.09,notas:'',imagen:'',checklist:[true,false,true,true,true,true,true],cuenta_id:1},
                     {id:3,fecha:'2026-05-03',hora_entrada:'00:00',hora_salida:'00:00',activo:'XAUUSD',tipo:'Largo',cierre:'TP',resultado:350,resultado_pct:0.7,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
                     {id:4,fecha:'2026-05-04',hora_entrada:'00:00',hora_salida:'00:00',activo:'BTCUSD',tipo:'Largo',cierre:'Manual',resultado:820,resultado_pct:1.64,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
                     {id:5,fecha:'2026-05-05',hora_entrada:'00:00',hora_salida:'00:00',activo:'EURUSD',tipo:'Corto',cierre:'SL',resultado:-60,resultado_pct:-0.12,notas:'',imagen:'',checklist:[true,true,false,true,true,true,true],cuenta_id:1}
                 ],
-                nextId: {cuenta:2,retiro:1,trade:6},
-                planReglas: ['Analizar Bias en diario/6h+','Esperar confirmacion M15/M30','Entrar solo al cierre del OB','SL detras del OB validado','Ratio minimo 1:2','No operar antes de las 7h','No operar fuera de casa']
-            };
-            localStorage.setItem('crt_data_cesar@crtjournal.com', JSON.stringify(datosEjemplo));
+                nextId:{cuenta:2,retiro:1,trade:6},
+                planReglas:['Analizar Bias en diario/6h+','Esperar confirmacion M15/M30','Entrar solo al cierre del OB','SL detras del OB validado','Ratio minimo 1:2','No operar antes de las 7h','No operar fuera de casa']
+            });
         }
     }
 }
 
-function getDatosUsuario(email) {
-    var key = 'crt_data_' + email;
-    try { return JSON.parse(localStorage.getItem(key)) || { cuentas: [], trades: [], retiros: [], nextId: {cuenta:1,retiro:1,trade:1}, planReglas: ['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2'] }; } catch (e) { return { cuentas: [], trades: [], retiros: [], nextId: {cuenta:1,retiro:1,trade:1}, planReglas: ['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2'] }; }
+async function getDatosUsuario(email){
+    var ref = db.collection('datos').doc(email);
+    var doc = await ref.get();
+    if(doc.exists) return doc.data();
+    return {cuentas:[],trades:[],retiros:[],nextId:{cuenta:1,retiro:1,trade:1},planReglas:['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2']};
 }
-function setDatosUsuario(email, datos) { localStorage.setItem('crt_data_' + email, JSON.stringify(datos)); }
 
-precargarAdmin();
+async function setDatosUsuario(email,datos){
+    await db.collection('datos').doc(email).set(datos,{merge:true});
+}
 
-function registrar() {
+async function registrar(){
     var nombre = document.getElementById('reg-nombre').value.trim();
     var email = document.getElementById('reg-email').value.trim().toLowerCase();
     var password = document.getElementById('reg-password').value;
     var errorEl = document.getElementById('reg-error');
-    if (!nombre || !email || !password) { errorEl.textContent = '❌ Todos los campos son obligatorios'; return; }
-    if (password.length < 6) { errorEl.textContent = '❌ Mínimo 6 caracteres'; return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errorEl.textContent = '❌ Email no válido'; return; }
-    var usuarios = getUsuarios();
-    if (usuarios.some(function(u) { return u.email === email; })) { errorEl.textContent = '❌ Email ya registrado'; return; }
-    usuarios.push({ nombre: nombre, email: email, password: sha256(password), plan: 'basico', fechaRegistro: new Date().toISOString(), pruebaGratis: true, fechaPrueba: new Date().toISOString() });
-    setUsuarios(usuarios);
-    setDatosUsuario(email, { cuentas: [], trades: [], retiros: [], nextId: {cuenta:1,retiro:1,trade:1}, planReglas: ['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2'] });
-    setUsuarioActual({ nombre: nombre, email: email, plan: 'pro', pruebaGratis: true });
+    if(!nombre||!email||!password){errorEl.textContent='❌ Todos los campos son obligatorios';return;}
+    if(password.length<6){errorEl.textContent='❌ Mínimo 6 caracteres';return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errorEl.textContent='❌ Email no válido';return;}
+    var ref = db.collection('usuarios').doc(email);
+    var doc = await ref.get();
+    if(doc.exists){errorEl.textContent='❌ Email ya registrado';return;}
+    await ref.set({
+        nombre:nombre,email:email,password:sha256(password),
+        plan:'basico',fechaRegistro:new Date().toISOString(),pruebaGratis:true,fechaPrueba:new Date().toISOString()
+    });
+    await db.collection('datos').doc(email).set({
+        cuentas:[],trades:[],retiros:[],nextId:{cuenta:1,retiro:1,trade:1},planReglas:['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2']
+    });
+    setUsuarioActual({nombre:nombre,email:email,plan:'pro',pruebaGratis:true});
     cerrarRegistro();
     mostrarDashboard();
 }
 
-function iniciarSesion() {
+async function iniciarSesion(){
     var email = document.getElementById('login-email').value.trim().toLowerCase();
     var password = document.getElementById('login-password').value;
     var errorEl = document.getElementById('login-error');
-    if (!email || !password) { errorEl.textContent = '❌ Todos los campos son obligatorios'; return; }
-    var usuarios = getUsuarios();
-    var usuario = usuarios.find(function(u) { return u.email === email; });
-    if (!usuario) { errorEl.textContent = '❌ Email no encontrado'; return; }
-    if (usuario.password !== sha256(password)) { errorEl.textContent = '❌ Contraseña incorrecta'; return; }
+    if(!email||!password){errorEl.textContent='❌ Todos los campos son obligatorios';return;}
+    var ref = db.collection('usuarios').doc(email);
+    var doc = await ref.get();
+    if(!doc.exists){errorEl.textContent='❌ Email no encontrado';return;}
+    var usuario = doc.data();
+    if(usuario.password !== sha256(password)){errorEl.textContent='❌ Contraseña incorrecta';return;}
     var planEfectivo = usuario.plan || 'basico';
-    if (usuario.pruebaGratis) {
+    if(usuario.pruebaGratis){
         var fechaPrueba = new Date(usuario.fechaPrueba || usuario.fechaRegistro);
-        var diasPrueba = Math.floor((new Date() - fechaPrueba) / (1000 * 60 * 60 * 24));
-        if (diasPrueba <= 7) { planEfectivo = 'pro'; }
-        else { planEfectivo = usuario.plan || 'basico'; usuario.pruebaGratis = false; setUsuarios(usuarios); }
+        var diasPrueba = Math.floor((new Date() - fechaPrueba) / (1000*60*60*24));
+        if(diasPrueba <= 7){planEfectivo = 'pro';}
+        else{planEfectivo = usuario.plan || 'basico';usuario.pruebaGratis = false;await ref.set({pruebaGratis:false},{merge:true});}
     }
-    setUsuarioActual({ nombre: usuario.nombre, email: usuario.email, plan: planEfectivo, pruebaGratis: usuario.pruebaGratis || false });
+    setUsuarioActual({nombre:usuario.nombre,email:usuario.email,plan:planEfectivo,pruebaGratis:usuario.pruebaGratis||false});
     cerrarLogin();
     mostrarDashboard();
 }
 
-function cerrarSesion() {
+function cerrarSesion(){
     localStorage.removeItem('crt_usuario_actual');
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('landing-page').style.display = '';
-    document.getElementById('login-email').value = '';
-    document.getElementById('login-password').value = '';
-    cuentaActivaId = null;
-    data = { cuentas: [], trades: [], retiros: [], nextId: {cuenta:1,retiro:1,trade:1}, planReglas: [] };
+    document.getElementById('app').style.display='none';
+    document.getElementById('landing-page').style.display='';
+    document.getElementById('login-email').value='';
+    document.getElementById('login-password').value='';
+    cuentaActivaId=null;
+    data={cuentas:[],trades:[],retiros:[],nextId:{cuenta:1,retiro:1,trade:1},planReglas:[]};
 }
 
-function mostrarDashboard() {
-    document.getElementById('landing-page').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    document.getElementById('login-email').value = '';
-    document.getElementById('login-password').value = '';
-    document.getElementById('reg-nombre').value = '';
-    document.getElementById('reg-email').value = '';
-    document.getElementById('reg-password').value = '';
+function mostrarDashboard(){
+    document.getElementById('landing-page').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('login-email').value='';
+    document.getElementById('login-password').value='';
+    document.getElementById('reg-nombre').value='';
+    document.getElementById('reg-email').value='';
+    document.getElementById('reg-password').value='';
     cargarDatosUsuario();
 }
 
-function cargarDatosUsuario() {
+async function cargarDatosUsuario(){
     var usuario = getUsuarioActual();
-    if (!usuario) return;
-    data = getDatosUsuario(usuario.email);
-    if (!data.planReglas) data.planReglas = ['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2'];
-    if (!data.nextId) data.nextId = {cuenta: (data.cuentas.length > 0 ? Math.max.apply(null, data.cuentas.map(function(c){return c.id;})) + 1 : 1), retiro: (data.retiros.length > 0 ? Math.max.apply(null, data.retiros.map(function(r){return r.id;})) + 1 : 1), trade: (data.trades.length > 0 ? Math.max.apply(null, data.trades.map(function(t){return t.id;})) + 1 : 1)};
-    document.getElementById('nombre-usuario').textContent = usuario.nombre;
-    cuentaActivaId = data.cuentas[0]?.id || 1;
-    document.getElementById('cuenta-selector').innerHTML = data.cuentas.map(function(c){return'<option value="'+c.id+'"'+(c.id===cuentaActivaId?' selected':'')+'>'+c.nombre+'</option>';}).join('');
-    if (data.cuentas.length === 0) document.getElementById('cuenta-selector').innerHTML = '<option value="">Sin cuentas</option>';
-    showPage('dashboard', document.querySelector('.sidebar-nav a'));
+    if(!usuario)return;
+    data = await getDatosUsuario(usuario.email);
+    if(!data.planReglas)data.planReglas=['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2'];
+    if(!data.nextId)data.nextId={cuenta:(data.cuentas.length>0?Math.max.apply(null,data.cuentas.map(function(c){return c.id;}))+1:1),retiro:(data.retiros.length>0?Math.max.apply(null,data.retiros.map(function(r){return r.id;}))+1:1),trade:(data.trades.length>0?Math.max.apply(null,data.trades.map(function(t){return t.id;}))+1:1)};
+    document.getElementById('nombre-usuario').textContent=usuario.nombre;
+    cuentaActivaId=data.cuentas[0]?.id||1;
+    document.getElementById('cuenta-selector').innerHTML=data.cuentas.map(function(c){return'<option value="'+c.id+'"'+(c.id===cuentaActivaId?' selected':'')+'>'+c.nombre+'</option>';}).join('');
+    if(data.cuentas.length===0)document.getElementById('cuenta-selector').innerHTML='<option value="">Sin cuentas</option>';
+    showPage('dashboard',document.querySelector('.sidebar-nav a'));
 }
 
-function saveData() {
+async function saveData(){
     var usuario = getUsuarioActual();
-    if (!usuario) return;
-    setDatosUsuario(usuario.email, data);
+    if(!usuario)return;
+    await setDatosUsuario(usuario.email,data);
 }
 
 // ============================================
@@ -670,7 +728,6 @@ function cambiarCuenta() {
     else showPage('dashboard', document.querySelector('.sidebar-nav a'));
 }
 
-// ============ VERIFICACIÓN DE PLAN (NUEVO - SIN TOCAR DASHBOARD) ============
 function verificarPlan() {
     var usuario = getUsuarioActual();
     if (!usuario) return 'basico';
@@ -1281,13 +1338,15 @@ function refreshActive(){var p=document.querySelector('.page.active');if(!p)retu
 
 // ============ INICIALIZACIÓN ============
 window.addEventListener('DOMContentLoaded', function() {
-    var usuario = getUsuarioActual();
-    if (usuario) {
-        mostrarDashboard();
-    } else {
-        document.getElementById('landing-page').style.display = '';
-        document.getElementById('app').style.display = 'none';
-    }
+    precargarAdmin().then(function(){
+        var usuario = getUsuarioActual();
+        if (usuario) {
+            mostrarDashboard();
+        } else {
+            document.getElementById('landing-page').style.display = '';
+            document.getElementById('app').style.display = 'none';
+        }
+    });
 });
 </script>
 </body>
