@@ -657,15 +657,6 @@ function mostrarDashboard(){
     document.getElementById('reg-email').value='';
     document.getElementById('reg-password').value='';
     cargarDatosUsuario();  
-    var usuario = getUsuarioActual();
-    if (usuario && usuario.pruebaGratis) {
-        var fechaPrueba = new Date(usuario.fechaPrueba || usuario.fechaRegistro);
-        var diasRestantes = 7 - Math.floor((new Date() - fechaPrueba) / (1000 * 60 * 60 * 24));
-        if (diasRestantes > 0 && diasRestantes <= 7) {
-            document.getElementById('coach-tip-container').innerHTML = '<div class="coach-tip" style="background:rgba(0,255,136,0.08);border:1px solid var(--green);">🎁 Te quedan <b>' + diasRestantes + ' días</b> de prueba Pro. ¡Disfruta todas las funciones!</div>';
-        }
-    }
-    iniciarVerificacionPlan();
 }
 
 async function cargarDatosUsuario(){
@@ -678,7 +669,17 @@ async function cargarDatosUsuario(){
     cuentaActivaId=data.cuentas[0]?.id||1;
     document.getElementById('cuenta-selector').innerHTML=data.cuentas.map(function(c){return'<option value="'+c.id+'"'+(c.id===cuentaActivaId?' selected':'')+'>'+c.nombre+'</option>';}).join('');
     if(data.cuentas.length===0)document.getElementById('cuenta-selector').innerHTML='<option value="">Sin cuentas</option>';
-    showPage('dashboard',document.querySelector('.sidebar-nav a'));
+    showPage('dashboard',document.querySelector('.sidebar-nav a'));    var usuario = getUsuarioActual();
+    if (usuario && usuario.pruebaGratis) {
+        var fechaPrueba = new Date(usuario.fechaPrueba || usuario.fechaRegistro);
+        var diasRestantes = 7 - Math.floor((new Date() - fechaPrueba) / (1000 * 60 * 60 * 24));
+        if (diasRestantes > 0 && diasRestantes <= 7) {
+            setTimeout(function(){
+                document.getElementById('coach-tip-container').innerHTML = '<div class="coach-tip" style="background:rgba(0,255,136,0.08);border:1px solid var(--green);">🎁 Te quedan <b>' + diasRestantes + ' días</b> de prueba Pro. ¡Disfruta todas las funciones!</div>';
+            }, 500);
+        }
+    }
+    iniciarVerificacionPlan();
 }
 
 async function saveData(){
