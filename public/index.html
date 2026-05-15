@@ -611,7 +611,7 @@ async function registrar(){
     await db.collection('datos').doc(email).set({
         cuentas:[],trades:[],retiros:[],nextId:{cuenta:1,retiro:1,trade:1},planReglas:['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2']
     });
-    setUsuarioActual({nombre:nombre,email:email,plan:'pro',pruebaGratis:true});
+    setUsuarioActual({nombre:nombre,email:email,plan:'pro',pruebaGratis:true,fechaPrueba:new Date().toISOString()});
     cerrarRegistro();
     mostrarDashboard();
 }
