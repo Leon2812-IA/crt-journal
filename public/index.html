@@ -185,6 +185,44 @@
             </div>
         </section>
 
+                <!-- ============================================ -->
+        <!-- GALERÍA: CONOCE TUS NÚMEROS -->
+        <!-- ============================================ -->
+        <section class="gallery" id="gallery">
+            <div class="section-title">Conoce tus números, <span style="color:var(--neon);">conócete a ti mismo</span></div>
+            <div class="section-subtitle">Descubre todo lo que CRT Journal puede hacer por tu trading</div>
+            <div class="gallery-container" id="gallery-container">
+                <button class="gallery-nav gallery-prev" onclick="cambiarSlide(-1)">◀</button>
+                <button class="gallery-nav gallery-next" onclick="cambiarSlide(1)">▶</button>
+                <div class="gallery-slide active">
+                    <img src="https://i.ibb.co/Y76QqzC6/Captura-de-pantalla-2026-05-15-111218.png" alt="Dashboard CRT Journal" loading="lazy">
+                    <div class="gallery-caption"><span class="highlight">"El que no conoce sus números en trading, es como no conocerse a sí mismo."</span> — Visualiza tu P&L, Win Rate, Profit Factor y más métricas en tiempo real.</div>
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://i.ibb.co/4ZSrjPsV/Captura-de-pantalla-2026-05-15-111306.png" alt="Calendario de trades" loading="lazy">
+                    <div class="gallery-caption"><span class="highlight">Importa tus trades directamente desde tu broker o empresa de fondeo.</span> Sin esfuerzo. Sin errores. Solo arrastra tu CSV y listo.</div>
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://i.ibb.co/1fGSfhfB/Captura-de-pantalla-2026-05-15-111323.png" alt="Métricas avanzadas" loading="lazy">
+                    <div class="gallery-caption"><span class="highlight">Win rate, profit factor, rachas, duración media.</span> Métricas avanzadas calculadas automáticamente para que sepas exactamente dónde mejorar.</div>
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://i.ibb.co/wFxMQ0QG/Captura-de-pantalla-2026-05-15-111343.png" alt="Chat IA integrado" loading="lazy">
+                    <div class="gallery-caption"><span class="highlight">IA integrada que analiza tus operaciones y te da recomendaciones personalizadas.</span> Como tener un coach de trading disponible 24/7.</div>
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://i.ibb.co/B5C2SvZC/Captura-de-pantalla-2026-05-15-111422.png" alt="Curva de equity" loading="lazy">
+                    <div class="gallery-caption"><span class="highlight">Visualiza tu evolución. La curva de equity no miente.</span> Comprueba tu progreso y detecta tus puntos débiles al instante.</div>
+                </div>
+            </div>
+            <div class="gallery-dots" id="gallery-dots">
+                <div class="gallery-dot active" onclick="irASlide(0)"></div>
+                <div class="gallery-dot" onclick="irASlide(1)"></div>
+                <div class="gallery-dot" onclick="irASlide(2)"></div>
+                <div class="gallery-dot" onclick="irASlide(3)"></div>
+                <div class="gallery-dot" onclick="irASlide(4)"></div>
+            </div>
+        </section>
         <section class="plans" id="plans">
             <div class="section-title">Planes</div>
             <div class="section-subtitle">Elige el plan que mejor se adapte a tu operativa</div>
@@ -455,6 +493,22 @@
         .toggle-group { display: flex; gap: 4px; } .toggle-btn { padding: 7px 14px; border: 1px solid var(--border); background: rgba(24,24,30,0.6); color: var(--text2); border-radius: 5px; cursor: pointer; font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
         .toggle-btn.active { background: rgba(0,255,255,0.15); color: var(--neon); border-color: var(--neon); box-shadow: 0 0 12px var(--neon-glow); }
         @media (max-width: 768px) { .sidebar { width: 60px; } .sidebar-header .logo, .sidebar-header .user, .sidebar-nav a span, .sidebar-footer select, .sidebar-footer .btn-logout { display: none; } .sidebar-nav a { justify-content: center; padding: 14px; font-size: 1.2rem; } .main { margin-left: 60px; padding: 16px; } .trades-layout { flex-direction: column; } .trades-layout .semanas-column { width: 100%; } .cal-day { min-height: 65px; font-size: 0.75rem; padding: 6px 2px; } }
+           /* ========== GALERÍA DE IMÁGENES ========== */
+        .gallery { padding: 60px 20px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+        .gallery-container { position: relative; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); backdrop-filter: blur(12px); }
+        .gallery-slide { display: none; text-align: center; padding: 10px; }
+        .gallery-slide.active { display: block; animation: fadeIn 0.5s ease; }
+        .gallery-slide img { width: 100%; max-height: 500px; object-fit: contain; border-radius: 8px; }
+        .gallery-caption { padding: 16px 20px; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text); text-align: center; font-style: italic; }
+        .gallery-caption .highlight { color: var(--neon); font-weight: 600; }
+        .gallery-dots { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+        .gallery-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); cursor: pointer; transition: var(--transition); }
+        .gallery-dot.active { background: var(--neon); box-shadow: 0 0 10px var(--neon-glow); }
+        .gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); border: 1px solid var(--border); color: #fff; font-size: 1.5rem; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 2; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .gallery-nav:hover { background: var(--neon); color: #000; }
+        .gallery-prev { left: 10px; }
+        .gallery-next { right: 10px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style><script>
 // ============================================
 // CONFIGURACIÓN DE FIREBASE
@@ -1367,6 +1421,28 @@ function abrirModal(id){document.getElementById(id).classList.remove('hidden');}
 function cerrarModal(id){document.getElementById(id).classList.add('hidden');}
 function refreshActive(){var p=document.querySelector('.page.active');if(!p)return;var pageName=p.id.replace('page-','');if(pageName==='dashboard'){renderDashboard();renderCoachTip();}if(pageName==='trades')renderCalendar();if(pageName==='cuentas')renderCuentas();if(pageName==='reglas')renderReglas();if(pageName==='retiros')renderRetiros();if(pageName==='plan')renderPlan();if(pageName==='metricas')renderMetricas();if(pageName==='rendimiento')renderRendimientoDiario();if(pageName==='stats'){renderStats();renderRiesgo();renderAI();renderDistChart();}}
 
+// ============ GALERÍA DE IMÁGENES ============
+var slideActual = 0;
+var totalSlides = 5;
+function cambiarSlide(dir) {
+    var slides = document.querySelectorAll('.gallery-slide');
+    var dots = document.querySelectorAll('.gallery-dot');
+    slides[slideActual].classList.remove('active');
+    dots[slideActual].classList.remove('active');
+    slideActual = (slideActual + dir + totalSlides) % totalSlides;
+    slides[slideActual].classList.add('active');
+    dots[slideActual].classList.add('active');
+}
+function irASlide(n) {
+    var slides = document.querySelectorAll('.gallery-slide');
+    var dots = document.querySelectorAll('.gallery-dot');
+    slides[slideActual].classList.remove('active');
+    dots[slideActual].classList.remove('active');
+    slideActual = n;
+    slides[slideActual].classList.add('active');
+    dots[slideActual].classList.add('active');
+}
+setInterval(function(){ cambiarSlide(1); }, 5000);        
 // ============ INICIALIZACIÓN ============
 window.addEventListener('DOMContentLoaded', function() {
     precargarAdmin().then(function(){
