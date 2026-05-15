@@ -656,7 +656,15 @@ function mostrarDashboard(){
     document.getElementById('reg-nombre').value='';
     document.getElementById('reg-email').value='';
     document.getElementById('reg-password').value='';
-    cargarDatosUsuario();
+    cargarDatosUsuario();    var usuario = getUsuarioActual();
+    if (usuario && usuario.pruebaGratis) {
+        var fechaPrueba = new Date(usuario.fechaPrueba || usuario.fechaRegistro);
+        var diasRestantes = 7 - Math.floor((new Date() - fechaPrueba) / (1000 * 60 * 60 * 24));
+        if (diasRestantes > 0 && diasRestantes <= 7) {
+            document.getElementById('coach-tip-container').innerHTML = '<div class="coach-tip" style="background:rgba(0,255,136,0.08);border:1px solid var(--green);">🎁 Te quedan <b>' + diasRestantes + ' días</b> de prueba Pro. ¡Disfruta todas las funciones!</div>';
+        }
+    }
+    iniciarVerificacionPlan();
 }
 
 async function cargarDatosUsuario(){
@@ -742,6 +750,27 @@ function verificarLimiteTrades() {
     return true;
 }
 
+var verificacionPlanActiva = false;
+function iniciarVerificacionPlan() {
+    if (verificacionPlanActiva) return;
+    verificacionPlanActiva = true;
+    setInterval(function() {
+        var usuario = getUsuarioActual();
+        if (!usuario) return;
+        if (usuario.pruebaGratis && usuario.plan === 'pro') {
+            var fechaPrueba = new Date(usuario.fechaPrueba || usuario.fechaRegistro);
+            var diasPrueba = Math.floor((new Date() - fechaPrueba) / (1000 * 60 * 60 * 24));
+            if (diasPrueba > 7) {
+                usuario.plan = 'basico';
+                usuario.pruebaGratis = false;
+                setUsuarioActual(usuario);
+                db.collection('usuarios').doc(usuario.email).set({plan: 'basico', pruebaGratis: false}, {merge: true});
+                alert('⚠️ Tu prueba gratis de 7 días ha terminado. Has vuelto al plan Básico. Actualiza a Pro para seguir disfrutando de todas las funciones.');
+                location.reload();
+            }
+        }
+    }, 30 * 60 * 1000);
+}        
 function verificarLimiteCuentas() {
     var plan = verificarPlan();
     if (plan === 'pro') return true;
