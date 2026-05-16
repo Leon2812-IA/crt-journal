@@ -11,13 +11,20 @@
     <meta property="og:title" content="CRT Journal - Journal Profesional de Trading">
     <meta property="og:description" content="El journal de trading hecho para traders que quieren mejorar. Métricas, gráficos, chat IA y plan gratis.">
     <meta property="og:type" content="website">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/kgpVpdpM/qr-pago-binance.jpg">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CRT Journal">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/5gkfzBXN/Whats-App-Image-2026-05-16-at-18-50-39.jpg">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNSVCBKb3VybmFsIiwKICAic2hvcnRfbmFtZSI6ICJDUlQiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwYTBhMGEiLAogICJ0aGVtZV9jb2xvciI6ICIjMGEwYTBhIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9pLmliYi5jby81Z2tmekJYTi9XaGF0cy1BcHAtSW1hZ2UtMjAyNi0wNS0xNi1hdC0xOC01MC0zOS5qcGciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL2pwZWciCiAgICB9CiAgXQp9">
+    <link rel="icon" type="image/jpeg" href="https://i.ibb.co/5gkfzBXN/Whats-App-Image-2026-05-16-at-18-50-39.jpg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0a0a0a; --sidebar: rgba(10,10,10,0.85); --card: rgba(18,18,22,0.7); --card2: rgba(24,24,30,0.6); --border: rgba(0,255,255,0.15); --text: #e0e0e8; --text2: #7a7a8a; --green: #00ff88; --red: #ff3355; --neon: #00ffff; --neon-glow: rgba(0,255,255,0.25); --neon-strong: rgba(0,255,255,0.5); --radius: 14px; --radius-sm: 8px; --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        :root { --bg: #0a0a0a; --sidebar: rgba(10,10,10,0.85); --card: rgba(18,18,22,0.7); --card2: rgba(24,24,30,0.6); --border: rgba(0,255,255,0.15); --text: #e0e0e8; --text2: #7a7a8a; --green: #00ff88; --red: #ff3355; --neon: #00ffff; --neon-glow: rgba(0,255,255,0.25); --neon-strong: rgba(0,255,255,0.5); --gold: #f0b90b; --radius: 14px; --radius-sm: 8px; --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; min-height: 100vh; overflow-x: hidden; position: relative; }
         body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; animation: gridScroll 20s linear infinite; }
@@ -26,7 +33,8 @@
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(0,255,255,0.3); border-radius: 2px; }
         #landing-page { position: relative; z-index: 1; min-height: 100vh; }
         .landing-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; position: relative; z-index: 2; background: rgba(10,10,10,0.7); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-        .landing-nav .logo-landing { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 30px var(--neon-glow); letter-spacing: 3px; text-decoration: none; }
+        .landing-nav .logo-landing { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 30px var(--neon-glow); letter-spacing: 3px; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .landing-nav .logo-landing img { height: 32px; width: 32px; border-radius: 50%; object-fit: cover; }
         .landing-nav .nav-links { display: flex; gap: 24px; align-items: center; }
         .landing-nav .nav-links a { color: var(--text2); text-decoration: none; font-size: 0.78rem; transition: var(--transition); cursor: pointer; font-family: 'Inter', sans-serif; }
         .landing-nav .nav-links a:hover { color: var(--neon); }
@@ -73,13 +81,13 @@
         .plan-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 20px; text-align: center; transition: var(--transition); position: relative; backdrop-filter: blur(8px); }
         .plan-card.popular { border-color: var(--neon); box-shadow: 0 0 40px var(--neon-glow); }
         .plan-card.popular::before { content: 'MÁS POPULAR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 4px 16px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; font-family: 'Inter', sans-serif; }
-        .plan-card.savings::before { content: '🔥 AHORRA 17%'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #f0b90b; color: #000; padding: 4px 16px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; font-family: 'Inter', sans-serif; }
-        .plan-card.best-value { border-color: #f0b90b; box-shadow: 0 0 40px rgba(240,185,11,0.3); }
-        .plan-card.best-value::before { content: '💎 MEJOR VALOR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #f0b90b; color: #000; padding: 4px 16px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; font-family: 'Inter', sans-serif; }
+        .plan-card.savings::before { content: '🔥 AHORRA 17%'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; padding: 4px 16px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; font-family: 'Inter', sans-serif; }
+        .plan-card.best-value { border-color: var(--gold); box-shadow: 0 0 40px rgba(240,185,11,0.3); }
+        .plan-card.best-value::before { content: '💎 MEJOR VALOR'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; padding: 4px 16px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; font-family: 'Inter', sans-serif; }
         .plan-card h3 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: #fff; margin-bottom: 8px; }
         .plan-card .plan-price { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 25px var(--neon-glow); margin-bottom: 8px; }
         .plan-card .plan-price small { font-size: 0.65rem; color: var(--text2); font-family: 'Inter', sans-serif; font-weight: 400; text-shadow: none; }
-        .plan-card .plan-saving { color: #f0b90b; font-size: 0.7rem; margin-bottom: 8px; font-family: 'Inter', sans-serif; font-weight: 600; }
+        .plan-card .plan-saving { color: var(--gold); font-size: 0.7rem; margin-bottom: 8px; font-family: 'Inter', sans-serif; font-weight: 600; }
         .plan-card .plan-trial { color: var(--green); font-size: 0.8rem; margin-bottom: 12px; font-family: 'Inter', sans-serif; font-weight: 600; }
         .plan-card ul { list-style: none; padding: 0; margin-bottom: 20px; text-align: left; }
         .plan-card ul li { padding: 7px 0; font-size: 0.78rem; color: var(--text2); border-bottom: 1px solid rgba(255,255,255,0.03); font-family: 'Inter', sans-serif; }
@@ -90,7 +98,7 @@
         .btn-plan:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon-glow); }
         .btn-plan-pro { background: var(--neon); color: #000; }
         .btn-plan-pro:hover { box-shadow: 0 0 40px var(--neon-glow); transform: translateY(-2px); }
-        .btn-plan-gold { background: #f0b90b; color: #000; border-color: #f0b90b; }
+        .btn-plan-gold { background: var(--gold); color: #000; border-color: var(--gold); }
         .btn-plan-gold:hover { box-shadow: 0 0 40px rgba(240,185,11,0.4); transform: translateY(-2px); }
         .faq { padding: 40px 20px 60px; max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
         .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px 20px; margin-bottom: 10px; cursor: pointer; transition: var(--transition); }
@@ -133,6 +141,9 @@
         .modal-qr .plan-options { display: flex; gap: 8px; justify-content: center; margin: 12px 0; flex-wrap: wrap; }
         .modal-qr .plan-option { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.7rem; transition: var(--transition); font-family: 'Inter', sans-serif; color: var(--text2); }
         .modal-qr .plan-option:hover, .modal-qr .plan-option.active { border-color: var(--neon); color: var(--neon); background: rgba(0,255,255,0.05); }
+        .modal-gracias { text-align: center; padding: 20px; }
+        .modal-gracias .gracias-icon { font-size: 4rem; margin-bottom: 16px; }
+        .modal-gracias .gracias-text { font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--text2); line-height: 1.6; }
         @media (max-width: 768px) { .landing-nav { padding: 14px 16px; flex-wrap: wrap; gap: 10px; } .hero h1 { font-size: 1.8rem; } .hero-stats { gap: 20px; padding: 16px; } .hero-stat .stat-num { font-size: 1.3rem; } }
     </style>
 </head>
@@ -141,7 +152,7 @@
     <!-- ============================================ -->
     <div id="landing-page">
         <nav class="landing-nav">
-            <a href="#" class="logo-landing">CRT JOURNAL</a>
+            <a href="#" class="logo-landing"><img src="https://i.ibb.co/5gkfzBXN/Whats-App-Image-2026-05-16-at-18-50-39.jpg" alt="CRT Journal"> CRT JOURNAL</a>
             <div class="nav-links">
                 <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Características</a>
                 <a onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">Galería</a>
@@ -386,7 +397,24 @@
                 <p class="qr-info">📱 Escanea el QR con tu app de cripto</p>
                 <p class="qr-info">💼 O envía <span id="qr-monto-txt">10 USDT</span> a la dirección:</p>
                 <p style="font-size:0.6rem;word-break:break-all;background:rgba(0,0,0,0.5);padding:8px;border-radius:6px;margin:8px 0;">TDaiyUQq7mQDdaf1u8jLGSuS2DtKDwyjtK</p>
+                <button class="btn-submit" onclick="mostrarGracias()" style="margin-top:12px;">✅ Ya he pagado</button>
                 <p class="qr-info" style="color:var(--green);" id="qr-msg-ahorro"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL GRACIAS -->
+    <div class="modal-overlay hidden" id="modal-gracias">
+        <div class="modal-panel" style="max-width:440px;text-align:center;">
+            <button class="modal-close" onclick="cerrarGracias()">✕</button>
+            <div class="modal-gracias">
+                <div class="gracias-icon">✅</div>
+                <h2>¡Pago Registrado!</h2>
+                <div class="modal-subtitle">Gracias por confiar en CRT Journal</div>
+                <p class="gracias-text">Tu solicitud de activación del plan <strong>Pro</strong> ha sido recibida.</p>
+                <p class="gracias-text">En las próximas <strong>horas</strong> se activará tu plan y recibirás una confirmación.</p>
+                <p class="gracias-text" style="color:var(--neon);">Mientras tanto, puedes seguir usando tu journal.</p>
+                <button class="btn-submit" onclick="cerrarGracias()" style="margin-top:16px;">Entendido</button>
             </div>
         </div>
     </div>
@@ -440,7 +468,7 @@
             
             <div id="page-stats" class="page"><h2>Estadísticas</h2><div class="cards" id="stats-cards"></div><div class="card"><div class="card-title">🛡️ Gestión de Riesgo</div><div id="riesgo-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Distribución de Resultados</div><div style="height:280px;"><canvas id="distChart"></canvas></div></div><div class="card"><div class="card-title">🧠 Análisis</div><div id="ai-observations" class="ai-box">Cargando...</div></div><div class="card"><div class="card-title">💬 Chat IA</div><div id="chat-messages" class="ai-box" style="min-height:150px;"><p style="color:#888;">Pregúntame sobre tus trades. Ej: "¿cómo voy con el plan?", "¿qué día tuve mejor gestión de riesgo?", "¿cuál es mi punto más débil?"</p></div><div class="chat-input-row"><input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')preguntarAI()"><button onclick="preguntarAI()">➤</button></div></div></div>
 
-            <div id="page-admin" class="page"><h2>🔐 Panel de Administrador</h2><div class="cards" id="admin-cards"></div><div class="card"><div class="card-title">👥 Usuarios Registrados</div><div id="admin-tabla-usuarios"><p style="color:var(--text2);">Cargando...</p></div></div></div>
+            <div id="page-admin" class="page"><h2>🔐 Panel de Administrador</h2><div class="cards" id="admin-cards"></div><div class="card"><div class="card-title">💰 Ingresos del Mes</div><div id="admin-ingresos"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">👥 Usuarios Registrados</div><div id="admin-tabla-usuarios"><p style="color:var(--text2);">Cargando...</p></div></div></div>
         </main>
     </div>
 
@@ -492,6 +520,10 @@
         .btn:hover { box-shadow: 0 0 20px var(--neon-glow); border-color: var(--neon); color: #fff; }
         .btn-blue { background: rgba(0,255,255,0.15); border-color: var(--neon); color: var(--neon); font-weight: 700; } .btn-blue:hover { background: rgba(0,255,255,0.25); box-shadow: 0 0 30px var(--neon-glow); }
         .btn-outline { background: transparent; } .btn-sm { padding: 5px 10px; font-size: 0.7rem; }
+        .btn-danger { background: rgba(255,51,85,0.1); color: var(--red); border-color: var(--red); }
+        .btn-danger:hover { background: rgba(255,51,85,0.3); box-shadow: 0 0 15px rgba(255,51,85,0.3); }
+        .btn-success { background: rgba(0,255,136,0.1); color: var(--green); border-color: var(--green); }
+        .btn-success:hover { background: rgba(0,255,136,0.3); box-shadow: 0 0 15px rgba(0,255,136,0.3); }
         .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px; }
         .badge-green { background: rgba(0,255,136,0.12); color: var(--green); border: 1px solid rgba(0,255,136,0.25); }
         .badge-red { background: rgba(255,51,85,0.12); color: var(--red); border: 1px solid rgba(255,51,85,0.25); }
@@ -517,7 +549,7 @@
         .semana-dia .dia-num { font-weight: 600; font-size: 0.7rem; } .semana-dia .dia-pnl { font-size: 0.58rem; }
         .hidden { display: none !important; }
         .ai-box { background: rgba(10,10,15,0.9); border: 1px solid rgba(0,255,255,0.12); border-radius: 10px; padding: 16px; margin-top: 8px; color: #c0c0d0; font-size: 0.78rem; line-height: 1.5; max-height: 400px; overflow-y: auto; backdrop-filter: blur(12px); }
-        .ai-box .alerta { color: var(--red); font-weight: 600; } .ai-box .ok { color: var(--green); font-weight: 600; } .ai-box .warning { color: #f0b90b; font-weight: 600; }
+        .ai-box .alerta { color: var(--red); font-weight: 600; } .ai-box .ok { color: var(--green); font-weight: 600; } .ai-box .warning { color: var(--gold); font-weight: 600; }
         .chat-input-row { display: flex; gap: 8px; margin-top: 8px; } .chat-input-row input { flex: 1; padding: 10px; background: rgba(10,10,10,0.8); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
         .chat-input-row input:focus { border-color: var(--neon); box-shadow: 0 0 15px var(--neon-glow); outline: none; }
         .chat-input-row button { padding: 10px 16px; background: rgba(0,255,255,0.12); border: 1px solid var(--neon); color: var(--neon); border-radius: 6px; cursor: pointer; font-weight: 700; font-family: 'Orbitron', sans-serif; transition: all 0.3s; }
@@ -540,7 +572,7 @@
         .toggle-group { display: flex; gap: 4px; } .toggle-btn { padding: 7px 14px; border: 1px solid var(--border); background: rgba(24,24,30,0.6); color: var(--text2); border-radius: 5px; cursor: pointer; font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
         .toggle-btn.active { background: rgba(0,255,255,0.15); color: var(--neon); border-color: var(--neon); box-shadow: 0 0 12px var(--neon-glow); }
         @media (max-width: 768px) { .sidebar { width: 60px; } .sidebar-header .logo, .sidebar-header .user, .sidebar-nav a span, .sidebar-footer select, .sidebar-footer .btn-logout { display: none; } .sidebar-nav a { justify-content: center; padding: 14px; font-size: 1.2rem; } .main { margin-left: 60px; padding: 16px; } .trades-layout { flex-direction: column; } .trades-layout .semanas-column { width: 100%; } .cal-day { min-height: 65px; font-size: 0.75rem; padding: 6px 2px; } }
-           /* ========== GALERÍA DE IMÁGENES ========== */
+        /* ========== GALERÍA DE IMÁGENES ========== */
         .gallery { padding: 60px 20px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
         .gallery-container { position: relative; overflow: hidden; border-radius: var(--radius); border: 1px solid var(--border); background: var(--card); backdrop-filter: blur(12px); }
         .gallery-slide { display: none; text-align: center; padding: 10px; }
@@ -557,7 +589,7 @@
         .gallery-next { right: 10px; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style><script>// ============================================
-// CONFIGURACIÓN DE FIREBASE
+// CONFIGURACIÓN DE FIREBASE + EMAILJS
 // ============================================
 const firebaseConfig = {
   apiKey: "AIzaSyCxtKvOQTNz_OdA-njw1Sgo2sntx-lNv88",
@@ -568,6 +600,7 @@ const firebaseConfig = {
   appId: "1:629465653592:web:7dae95dc7958f31695c52d"
 };
 firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 emailjs.init('h_Wh0jRq4rxTGllr7');
 
 // ============================================
@@ -579,6 +612,8 @@ function abrirRegistro(){document.getElementById('modal-registro').classList.rem
 function cerrarRegistro(){document.getElementById('modal-registro').classList.add('hidden');}
 function cambiarALogin(){cerrarRegistro();abrirLogin();}
 function cambiarARegistro(){cerrarLogin();abrirRegistro();}
+function mostrarGracias(){cerrarPagoQR();document.getElementById('modal-gracias').classList.remove('hidden');}
+function cerrarGracias(){document.getElementById('modal-gracias').classList.add('hidden');}
 
 var planSeleccionado = 'mensual';
 var montoSeleccionado = 10;
@@ -750,7 +785,8 @@ async function registrar(){
     });
     setUsuarioActual({nombre:nombre,email:email,plan:'pro',pruebaGratis:true,fechaPrueba:new Date().toISOString()});
     cerrarRegistro();
-    mostrarDashboard();emailjs.send('service_bbqvqm4','template_ag1nfcl',{nombre:nombre,email:email,plan:'Pro (prueba 7 días)',fecha:new Date().toLocaleDateString()});
+    mostrarDashboard();
+    emailjs.send('service_bbqvqm4','template_ag1nfcl',{nombre:nombre,email:email,plan:'Pro (prueba 7 días)',fecha:new Date().toLocaleDateString()});
 }
 
 async function iniciarSesion(){
@@ -768,7 +804,12 @@ async function iniciarSesion(){
         var fechaPrueba = new Date(usuario.fechaPrueba || usuario.fechaRegistro);
         var diasPrueba = Math.floor((new Date() - fechaPrueba) / (1000*60*60*24));
         if(diasPrueba <= 7){planEfectivo = 'pro';}
-        else{planEfectivo = usuario.plan || 'basico';usuario.pruebaGratis = false;await ref.set({pruebaGratis:false},{merge:true});}
+        else{
+            planEfectivo = usuario.plan || 'basico';
+            usuario.pruebaGratis = false;
+            await ref.set({pruebaGratis:false},{merge:true});
+            emailjs.send('service_bbqvqm4','template_w0ua5qm',{nombre:usuario.nombre,email:usuario.email});
+        }
     }
     setUsuarioActual({nombre:usuario.nombre,email:usuario.email,plan:planEfectivo,pruebaGratis:usuario.pruebaGratis||false});
     cerrarLogin();
@@ -914,6 +955,7 @@ function iniciarVerificacionPlan() {
                 usuario.pruebaGratis = false;
                 setUsuarioActual(usuario);
                 db.collection('usuarios').doc(usuario.email).set({plan: 'basico', pruebaGratis: false}, {merge: true});
+                emailjs.send('service_bbqvqm4','template_w0ua5qm',{nombre:usuario.nombre,email:usuario.email});
                 alert('⚠️ Tu prueba gratis de 7 días ha terminado. Has vuelto al plan Básico. Actualiza a Pro para seguir disfrutando de todas las funciones.');
                 location.reload();
             }
@@ -941,19 +983,46 @@ async function renderAdmin() {
     var basicos = usuarios.filter(function(u) { return u.plan === 'basico' && !u.pruebaGratis; }).length;
     var pros = usuarios.filter(function(u) { return u.plan === 'pro' && !u.pruebaGratis; }).length;
     var enPrueba = usuarios.filter(function(u) { return u.pruebaGratis; }).length;
+    var ingresosMes = pros * 10;
     document.getElementById('admin-cards').innerHTML =
         '<div class="stat-card"><div class="lbl">Total Usuarios</div><div class="val neon">' + total + '</div></div>' +
         '<div class="stat-card"><div class="lbl">Plan Pro</div><div class="val green">' + pros + '</div></div>' +
         '<div class="stat-card"><div class="lbl">Plan Básico</div><div class="val">' + basicos + '</div></div>' +
         '<div class="stat-card"><div class="lbl">En Prueba</div><div class="val" style="color:#f0b90b;">' + enPrueba + '</div></div>';
-    var html = '<table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Prueba</th><th>Fecha Registro</th></tr></thead><tbody>';
+    document.getElementById('admin-ingresos').innerHTML =
+        '<div class="stat-card" style="display:inline-block;margin-right:12px;"><div class="lbl">Ingresos estimados / mes</div><div class="val green">$' + ingresosMes + '</div></div>' +
+        '<p style="color:var(--text2);font-size:0.7rem;margin-top:8px;">*Estimación basada en usuarios Pro activos ($10/mes c/u)</p>';
+    var html = '<table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Prueba</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>';
     usuarios.forEach(function(u) {
         var planColor = u.plan === 'pro' ? 'green' : '';
         var pruebaTexto = u.pruebaGratis ? '🟡 Activa' : '⚪ No';
-        html += '<tr><td>' + u.nombre + '</td><td>' + u.email + '</td><td class="' + planColor + '">' + (u.plan || 'basico') + '</td><td>' + pruebaTexto + '</td><td>' + (u.fechaRegistro ? new Date(u.fechaRegistro).toLocaleDateString() : 'N/A') + '</td></tr>';
+        var btnPro = u.plan === 'pro' ? '<button class="btn btn-outline btn-sm" onclick="quitarPro(\''+u.email+'\')" style="color:var(--red);border-color:var(--red);">Quitar Pro</button>' : '<button class="btn btn-sm" onclick="activarPro(\''+u.email+'\')" style="background:rgba(0,255,136,0.1);color:var(--green);border-color:var(--green);">Activar Pro</button>';
+        html += '<tr><td>' + u.nombre + '</td><td>' + u.email + '</td><td class="' + planColor + '">' + (u.plan || 'basico') + '</td><td>' + pruebaTexto + '</td><td>' + (u.fechaRegistro ? new Date(u.fechaRegistro).toLocaleDateString() : 'N/A') + '</td><td style="display:flex;gap:6px;">' + btnPro + '<button class="btn btn-outline btn-sm" onclick="eliminarUsuario(\''+u.email+'\')" style="color:var(--red);border-color:var(--red);">🗑️</button></td></tr>';
     });
     html += '</tbody></table>';
     document.getElementById('admin-tabla-usuarios').innerHTML = html;
+}
+
+async function activarPro(email){
+    if(!confirm('¿Activar plan Pro para ' + email + '?')) return;
+    await db.collection('usuarios').doc(email).set({plan:'pro',pruebaGratis:false},{merge:true});
+    alert('✅ Plan Pro activado para ' + email);
+    renderAdmin();
+}
+
+async function quitarPro(email){
+    if(!confirm('¿Quitar plan Pro a ' + email + '? Volverá a plan Básico.')) return;
+    await db.collection('usuarios').doc(email).set({plan:'basico'},{merge:true});
+    alert('⚠️ Plan Pro desactivado para ' + email);
+    renderAdmin();
+}
+
+async function eliminarUsuario(email){
+    if(!confirm('¿Eliminar DEFINITIVAMENTE a ' + email + '? Se borrarán todos sus datos.')) return;
+    await db.collection('usuarios').doc(email).delete();
+    await db.collection('datos').doc(email).delete();
+    alert('🗑️ Usuario eliminado: ' + email);
+    renderAdmin();
 }// ============ PREVIEW IMAGEN ============
 function previewImagen(input){
     var preview=document.getElementById('trade-imagen-preview');
