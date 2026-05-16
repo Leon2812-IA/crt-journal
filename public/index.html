@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CRT JOURNAL - Journal Profesional de Trading</title>
+    <meta name="description" content="CRT Journal es el journal de trading definitivo para traders de prop firms e independientes. Métricas avanzadas, gestión de riesgo, chat IA y más.">
+    <meta name="keywords" content="trading, journal, prop firm, métricas, diario de trading, gestor de riesgo, bitácora, day trading, forex, futuros">
+    <meta name="author" content="CRT Journal">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="CRT Journal - Journal Profesional de Trading">
+    <meta property="og:description" content="El journal de trading hecho para traders que quieren mejorar. Métricas, gráficos, chat IA y plan gratis.">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/kgpVpdpM/qr-pago-binance.jpg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -128,9 +136,7 @@
         @media (max-width: 768px) { .landing-nav { padding: 14px 16px; flex-wrap: wrap; gap: 10px; } .hero h1 { font-size: 1.8rem; } .hero-stats { gap: 20px; padding: 16px; } .hero-stat .stat-num { font-size: 1.3rem; } }
     </style>
 </head>
-<body>
-
-    <!-- ============================================ -->
+<body>    <!-- ============================================ -->
     <!-- LANDING PAGE -->
     <!-- ============================================ -->
     <div id="landing-page">
@@ -138,7 +144,9 @@
             <a href="#" class="logo-landing">CRT JOURNAL</a>
             <div class="nav-links">
                 <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Características</a>
+                <a onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">Galería</a>
                 <a onclick="document.getElementById('plans').scrollIntoView({behavior:'smooth'})">Planes</a>
+                <a onclick="document.getElementById('testimonios').scrollIntoView({behavior:'smooth'})">Testimonios</a>
                 <a onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">FAQ</a>
                 <a onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Sobre CRT</a>
             </div>
@@ -185,7 +193,7 @@
             </div>
         </section>
 
-                <!-- ============================================ -->
+        <!-- ============================================ -->
         <!-- GALERÍA: CONOCE TUS NÚMEROS -->
         <!-- ============================================ -->
         <section class="gallery" id="gallery">
@@ -223,6 +231,32 @@
                 <div class="gallery-dot" onclick="irASlide(4)"></div>
             </div>
         </section>
+
+        <!-- ============================================ -->
+        <!-- TESTIMONIOS -->
+        <!-- ============================================ -->
+        <section class="testimonials" id="testimonios" style="padding:60px 20px;max-width:1000px;margin:0 auto;position:relative;z-index:1;">
+            <div class="section-title">Lo que dicen los traders</div>
+            <div class="section-subtitle">Resultados reales de traders que ya usan CRT Journal</div>
+            <div class="testimonials-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+                <div class="testimonial-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;backdrop-filter:blur(8px);transition:var(--transition);">
+                    <div style="font-size:2rem;margin-bottom:10px;">🏆</div>
+                    <p style="font-size:0.82rem;color:var(--text);font-style:italic;margin-bottom:12px;font-family:'Inter',sans-serif;line-height:1.5;">"Gracias a CRT Journal pasé mi desafío de 50K en 3 semanas. Las métricas de consistencia me ayudaron a no sobreoperar y cumplir las reglas."</p>
+                    <p style="font-size:0.7rem;color:var(--neon);font-weight:600;">— Carlos M., Trader de Prop Firm</p>
+                </div>
+                <div class="testimonial-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;backdrop-filter:blur(8px);transition:var(--transition);">
+                    <div style="font-size:2rem;margin-bottom:10px;">📈</div>
+                    <p style="font-size:0.82rem;color:var(--text);font-style:italic;margin-bottom:12px;font-family:'Inter',sans-serif;line-height:1.5;">"Llevaba meses sin saber por qué perdía. Con CRT Journal descubrí que operaba los lunes sin confirmación. Cambié eso y mi win rate subió del 38% al 62%."</p>
+                    <p style="font-size:0.7rem;color:var(--neon);font-weight:600;">— Laura G., Trader Independiente</p>
+                </div>
+                <div class="testimonial-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;backdrop-filter:blur(8px);transition:var(--transition);">
+                    <div style="font-size:2rem;margin-bottom:10px;">🤖</div>
+                    <p style="font-size:0.82rem;color:var(--text);font-style:italic;margin-bottom:12px;font-family:'Inter',sans-serif;line-height:1.5;">"El chat IA es como tener un coach 24/7. Me avisó que mi drawdown estaba subiendo y me frenó a tiempo. Vale cada centavo."</p>
+                    <p style="font-size:0.7rem;color:var(--neon);font-weight:600;">— Miguel R., Trader de Forex</p>
+                </div>
+            </div>
+        </section>
+
         <section class="plans" id="plans">
             <div class="section-title">Planes</div>
             <div class="section-subtitle">Elige el plan que mejor se adapte a tu operativa</div>
@@ -303,13 +337,11 @@
                 <div class="footer-col"><h4>CRT JOURNAL</h4><p>Journal profesional de trading.</p></div>
                 <div class="footer-col"><h4>Producto</h4><a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Características</a><a onclick="document.getElementById('plans').scrollIntoView({behavior:'smooth'})">Planes</a><a onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">FAQ</a></div>
                 <div class="footer-col"><h4>Contacto</h4><p>📧 soporte@crtjournal.com</p><p>💬 Soporte 24/48h</p></div>
-                <div class="footer-col"><h4>Legal</h4><a onclick="alert('Términos de uso: Al usar CRT Journal aceptas que es una herramienta de registro.')">Términos de uso</a><a onclick="alert('Política de privacidad: Tus datos se guardan cifrados.')">Privacidad</a><a onclick="alert('Disclaimer: No constituye asesoramiento financiero.')">Disclaimer</a></div>
+                <div class="footer-col"><h4>Legal</h4><a onclick="abrirLegal('terminos')">Términos de uso</a><a onclick="abrirLegal('privacidad')">Privacidad</a><a onclick="abrirLegal('disclaimer')">Disclaimer</a></div>
             </div>
-            <div class="footer-bottom">© 2026 CRT JOURNAL · TODOS LOS DERECHOS RESERVADOS · <a onclick="alert('Disclaimer: CRT Journal es una herramienta de registro. No constituye asesoramiento financiero.')">Disclaimer</a></div>
+            <div class="footer-bottom">© 2026 CRT JOURNAL · TODOS LOS DERECHOS RESERVADOS · <a onclick="abrirLegal('disclaimer')">Disclaimer</a></div>
         </footer>
-    </div>
-
-    <!-- MODAL REGISTRO -->
+    </div>    <!-- MODAL REGISTRO -->
     <div class="modal-overlay hidden" id="modal-registro">
         <div class="modal-panel">
             <button class="modal-close" onclick="cerrarRegistro()">✕</button>
@@ -357,13 +389,24 @@
                 <p class="qr-info" style="color:var(--green);" id="qr-msg-ahorro"></p>
             </div>
         </div>
-    </div>    <!-- ============================================ -->
+    </div>
+
+    <!-- MODAL LEGAL -->
+    <div class="modal-overlay hidden" id="modal-legal">
+        <div class="modal-panel" style="max-width:600px;max-height:80vh;overflow-y:auto;">
+            <button class="modal-close" onclick="cerrarLegal()">✕</button>
+            <h2 id="legal-titulo">Términos de Uso</h2>
+            <div id="legal-contenido" style="font-family:'Inter',sans-serif;font-size:0.8rem;color:var(--text2);line-height:1.6;"></div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
     <!-- DASHBOARD (OCULTO HASTA LOGIN) -->
     <!-- ============================================ -->
     <div id="app" style="display:none;">
 
         <aside class="sidebar">
-            <div class="user" id="nombre-usuario" onclick="cambiarNombre()">Admin</div>
+            <div class="sidebar-header"><div class="logo" id="journal-logo" onclick="cambiarLogo()" title="Click para cambiar nombre">CRT JOURNAL</div><div class="user" id="nombre-usuario" onclick="cambiarNombre()">Admin</div></div>
             <div class="sidebar-footer"><select id="cuenta-selector" onchange="cambiarCuenta()"></select><button class="btn-logout" onclick="cerrarSesion()" style="width:100%;margin-top:8px;padding:8px;background:transparent;color:var(--red);border:1px solid var(--red);border-radius:6px;font-size:0.72rem;cursor:pointer;font-weight:600;font-family:'JetBrains Mono',monospace;">🔒 Cerrar sesión</button></div>
             <nav class="sidebar-nav">
                 <a onclick="showPage('dashboard',this)" class="active">📊 <span>Dashboard</span></a>
@@ -375,6 +418,8 @@
                 <a onclick="showPage('metricas',this)">📊 <span>Métricas</span></a>
                 <a onclick="showPage('rendimiento',this)">📈 <span>Rend. Diario</span></a>
                 <a onclick="showPage('stats',this)">📈 <span>Estadísticas</span></a>
+                <a onclick="showPage('admin',this)" id="nav-admin" style="display:none;">👑 <span>Admin</span></a>
+                <a onclick="irAInicio()" style="margin-top:10px;border-top:1px solid var(--border);padding-top:10px;">🏠 <span>Volver al inicio</span></a>
             </nav>
         </aside>
 
@@ -394,6 +439,8 @@
             <div id="page-rendimiento" class="page"><h2>📈 Rendimiento Diario</h2><div class="cards" id="rendimiento-daily-cards"></div><div class="card"><div class="card-title">Balance Diario Acumulado</div><div style="height:300px;"><canvas id="balanceDiarioChart"></canvas></div></div><div class="card"><div class="card-title">Desglose por Día</div><div id="desglose-diario-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
             
             <div id="page-stats" class="page"><h2>Estadísticas</h2><div class="cards" id="stats-cards"></div><div class="card"><div class="card-title">🛡️ Gestión de Riesgo</div><div id="riesgo-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Distribución de Resultados</div><div style="height:280px;"><canvas id="distChart"></canvas></div></div><div class="card"><div class="card-title">🧠 Análisis</div><div id="ai-observations" class="ai-box">Cargando...</div></div><div class="card"><div class="card-title">💬 Chat IA</div><div id="chat-messages" class="ai-box" style="min-height:150px;"><p style="color:#888;">Pregúntame sobre tus trades. Ej: "¿cómo voy con el plan?", "¿qué día tuve mejor gestión de riesgo?", "¿cuál es mi punto más débil?"</p></div><div class="chat-input-row"><input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')preguntarAI()"><button onclick="preguntarAI()">➤</button></div></div></div>
+
+            <div id="page-admin" class="page"><h2>🔐 Panel de Administrador</h2><div class="cards" id="admin-cards"></div><div class="card"><div class="card-title">👥 Usuarios Registrados</div><div id="admin-tabla-usuarios"><p style="color:var(--text2);">Cargando...</p></div></div></div>
         </main>
     </div>
 
@@ -509,8 +556,7 @@
         .gallery-prev { left: 10px; }
         .gallery-next { right: 10px; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style><script>
-// ============================================
+    </style><script>// ============================================
 // CONFIGURACIÓN DE FIREBASE
 // ============================================
 const firebaseConfig = {
@@ -566,6 +612,43 @@ function seleccionarPlanPago(plan,monto){
     btns.forEach(function(b){b.classList.remove('active');});
     event.target.classList.add('active');
 }
+
+// ============================================
+// FUNCIONES LEGALES
+// ============================================
+function abrirLegal(tipo){
+    var titulo = document.getElementById('legal-titulo');
+    var contenido = document.getElementById('legal-contenido');
+    if(tipo === 'terminos'){
+        titulo.textContent = 'Términos de Uso';
+        contenido.innerHTML = '<p><strong>Última actualización: Mayo 2026</strong></p><br>'+
+        '<p>Al acceder y utilizar CRT Journal, usted acepta los siguientes términos y condiciones.</p><br>'+
+        '<p><strong>1. Uso del servicio:</strong> CRT Journal es una herramienta de registro y análisis de operaciones de trading. No constituye asesoramiento financiero ni recomendaciones de inversión.</p><br>'+
+        '<p><strong>2. Responsabilidad:</strong> El usuario es el único responsable de sus decisiones de trading. CRT Journal no se hace responsable de pérdidas financieras derivadas del uso de esta herramienta.</p><br>'+
+        '<p><strong>3. Cuenta de usuario:</strong> El usuario es responsable de mantener la confidencialidad de sus credenciales de acceso.</p><br>'+
+        '<p><strong>4. Suscripciones:</strong> Los pagos son no reembolsables. El usuario puede cancelar su suscripción en cualquier momento.</p><br>'+
+        '<p><strong>5. Modificaciones:</strong> Nos reservamos el derecho de modificar estos términos en cualquier momento.</p>';
+    } else if(tipo === 'privacidad'){
+        titulo.textContent = 'Política de Privacidad';
+        contenido.innerHTML = '<p><strong>Última actualización: Mayo 2026</strong></p><br>'+
+        '<p>En CRT Journal nos tomamos muy en serio la privacidad de sus datos.</p><br>'+
+        '<p><strong>1. Datos recopilados:</strong> Recopilamos su nombre, correo electrónico y datos de trading que usted registra voluntariamente.</p><br>'+
+        '<p><strong>2. Uso de datos:</strong> Sus datos se utilizan exclusivamente para proporcionar el servicio de journal de trading. No compartimos información con terceros.</p><br>'+
+        '<p><strong>3. Seguridad:</strong> Las contraseñas se almacenan cifradas con SHA-256. Implementamos medidas de seguridad para proteger su información.</p><br>'+
+        '<p><strong>4. Cookies:</strong> Utilizamos cookies técnicas necesarias para el funcionamiento del servicio.</p><br>'+
+        '<p><strong>5. Contacto:</strong> Para cualquier duda sobre privacidad, escríbanos a soporte@crtjournal.com</p>';
+    } else if(tipo === 'disclaimer'){
+        titulo.textContent = 'Disclaimer';
+        contenido.innerHTML = '<p><strong>AVISO IMPORTANTE:</strong></p><br>'+
+        '<p>CRT Journal es una herramienta de registro y análisis de operaciones de trading.</p><br>'+
+        '<p><strong>NO constituye asesoramiento financiero.</strong> La información proporcionada por esta plataforma no debe interpretarse como recomendaciones de compra o venta de instrumentos financieros.</p><br>'+
+        '<p><strong>El trading conlleva riesgos.</strong> Existe la posibilidad de pérdida total o parcial del capital invertido. Opere solo con dinero que pueda permitirse perder.</p><br>'+
+        '<p><strong>Rendimientos pasados no garantizan resultados futuros.</strong> Las métricas y estadísticas mostradas son informativas y no predictivas.</p><br>'+
+        '<p>Al utilizar CRT Journal, usted reconoce que es el único responsable de sus decisiones financieras.</p>';
+    }
+    document.getElementById('modal-legal').classList.remove('hidden');
+}
+function cerrarLegal(){document.getElementById('modal-legal').classList.add('hidden');}
 
 // ============================================
 // SISTEMA DE AUTENTICACIÓN (SHA-256 + FIREBASE)
@@ -710,7 +793,11 @@ function mostrarDashboard(){
     document.getElementById('reg-nombre').value='';
     document.getElementById('reg-email').value='';
     document.getElementById('reg-password').value='';
-    cargarDatosUsuario();  
+    cargarDatosUsuario();
+    var u = getUsuarioActual();
+    if(u && u.email === 'admin@crtjournal.com'){
+        document.getElementById('nav-admin').style.display = '';
+    }
 }
 
 async function cargarDatosUsuario(){
@@ -723,7 +810,8 @@ async function cargarDatosUsuario(){
     cuentaActivaId=data.cuentas[0]?.id||1;
     document.getElementById('cuenta-selector').innerHTML=data.cuentas.map(function(c){return'<option value="'+c.id+'"'+(c.id===cuentaActivaId?' selected':'')+'>'+c.nombre+'</option>';}).join('');
     if(data.cuentas.length===0)document.getElementById('cuenta-selector').innerHTML='<option value="">Sin cuentas</option>';
-    showPage('dashboard',document.querySelector('.sidebar-nav a'));    var usuario = getUsuarioActual();
+    showPage('dashboard',document.querySelector('.sidebar-nav a'));
+    var usuario = getUsuarioActual();
     if (usuario && usuario.pruebaGratis) {
         var fechaPrueba = new Date(usuario.fechaPrueba || usuario.fechaRegistro);
         var diasRestantes = 7 - Math.floor((new Date() - fechaPrueba) / (1000 * 60 * 60 * 24));
@@ -768,6 +856,10 @@ function cambiarLogo() {
     if (nuevo && nuevo.trim()) { document.getElementById('journal-logo').textContent = nuevo.trim(); }
 }
 
+function irAInicio(){
+    cerrarSesion();
+}
+
 function showPage(page, el) {
     document.querySelectorAll('.sidebar-nav a').forEach(function(a) { a.classList.remove('active'); });
     if (el) el.classList.add('active');
@@ -783,6 +875,7 @@ function showPage(page, el) {
     if (page === 'metricas') renderMetricas();
     if (page === 'rendimiento') renderRendimientoDiario();
     if (page === 'stats') { renderStats(); renderRiesgo(); renderAI(); renderDistChart(); }
+    if (page === 'admin') { renderAdmin(); }
 }
 
 function cambiarCuenta() {
@@ -832,6 +925,35 @@ function verificarLimiteCuentas() {
     if (plan === 'pro') return true;
     if (data.cuentas.length >= 1) { alert('⚠️ El plan Básico solo permite 1 cuenta. Actualiza a Pro para hasta 5 cuentas.'); return false; }
     return true;
+}
+
+// ============ PANEL ADMIN ============
+async function renderAdmin() {
+    var usuario = getUsuarioActual();
+    if (!usuario || usuario.email !== 'admin@crtjournal.com') {
+        document.getElementById('page-admin').innerHTML = '<h2>🔐 Acceso Denegado</h2><p style="color:var(--red);">Solo el administrador puede ver esta página.</p>';
+        return;
+    }
+    var snapshot = await db.collection('usuarios').get();
+    var usuarios = [];
+    snapshot.forEach(function(doc) { usuarios.push(doc.data()); });
+    var total = usuarios.length;
+    var basicos = usuarios.filter(function(u) { return u.plan === 'basico' && !u.pruebaGratis; }).length;
+    var pros = usuarios.filter(function(u) { return u.plan === 'pro' && !u.pruebaGratis; }).length;
+    var enPrueba = usuarios.filter(function(u) { return u.pruebaGratis; }).length;
+    document.getElementById('admin-cards').innerHTML =
+        '<div class="stat-card"><div class="lbl">Total Usuarios</div><div class="val neon">' + total + '</div></div>' +
+        '<div class="stat-card"><div class="lbl">Plan Pro</div><div class="val green">' + pros + '</div></div>' +
+        '<div class="stat-card"><div class="lbl">Plan Básico</div><div class="val">' + basicos + '</div></div>' +
+        '<div class="stat-card"><div class="lbl">En Prueba</div><div class="val" style="color:#f0b90b;">' + enPrueba + '</div></div>';
+    var html = '<table><thead><tr><th>Nombre</th><th>Email</th><th>Plan</th><th>Prueba</th><th>Fecha Registro</th></tr></thead><tbody>';
+    usuarios.forEach(function(u) {
+        var planColor = u.plan === 'pro' ? 'green' : '';
+        var pruebaTexto = u.pruebaGratis ? '🟡 Activa' : '⚪ No';
+        html += '<tr><td>' + u.nombre + '</td><td>' + u.email + '</td><td class="' + planColor + '">' + (u.plan || 'basico') + '</td><td>' + pruebaTexto + '</td><td>' + (u.fechaRegistro ? new Date(u.fechaRegistro).toLocaleDateString() : 'N/A') + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('admin-tabla-usuarios').innerHTML = html;
 }// ============ PREVIEW IMAGEN ============
 function previewImagen(input){
     var preview=document.getElementById('trade-imagen-preview');
