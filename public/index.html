@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" href="https://i.ibb.co/kgpVpdpM/qr-pago-binance.jpg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #0a0a0a; --sidebar: rgba(10,10,10,0.85); --card: rgba(18,18,22,0.7); --card2: rgba(24,24,30,0.6); --border: rgba(0,255,255,0.15); --text: #e0e0e8; --text2: #7a7a8a; --green: #00ff88; --red: #ff3355; --neon: #00ffff; --neon-glow: rgba(0,255,255,0.25); --neon-strong: rgba(0,255,255,0.5); --radius: 14px; --radius-sm: 8px; --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -568,7 +568,7 @@ const firebaseConfig = {
   appId: "1:629465653592:web:7dae95dc7958f31695c52d"
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+emailjs.init('h_Wh0jRq4rxTGllr7');
 
 // ============================================
 // FUNCIONES DE MODALES (AL INICIO - PARA EVITAR ERRORES)
@@ -750,7 +750,7 @@ async function registrar(){
     });
     setUsuarioActual({nombre:nombre,email:email,plan:'pro',pruebaGratis:true,fechaPrueba:new Date().toISOString()});
     cerrarRegistro();
-    mostrarDashboard();
+    mostrarDashboard();emailjs.send('service_bbqvqm4','template_ag1nfcl',{nombre:nombre,email:email,plan:'Pro (prueba 7 días)',fecha:new Date().toLocaleDateString()});
 }
 
 async function iniciarSesion(){
