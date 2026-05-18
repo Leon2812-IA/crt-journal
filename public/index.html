@@ -1119,7 +1119,7 @@ var fecha = partesFecha[2] + '-' + partesFecha[1].padStart(2,'0') + '-' + partes
             if (textos.length >= 8 && textos[1] && textos[7] && !isNaN(parseFloat(textos[7]))) {
                 var simbolo = textos[1];
                 var direccion = textos[2];
-                var fechaHora = textos[3];
+                var fechaHora = textos[3];var horaSalidaWSF = fechaHora.split(' ')[1]?.split('.')[0] || '00:00';
                 var beneficio = parseFloat(textos[7]) || 0;
                 var fecha = fechaHora.split(' ')[0];
                 if (fecha.includes('/')) {
@@ -1138,7 +1138,7 @@ var fecha = partesFecha[2] + '-' + partesFecha[1].padStart(2,'0') + '-' + partes
                         imagen: '',
                         checklist: [],
                         hora_entrada: '00:00',
-                        hora_salida: '00:00'
+                        hora_salida: horaSalidaWSF
                     });
                 }
             }
@@ -1496,9 +1496,9 @@ function renderMetricas(){
         '<div class="stat-card clickable" onclick="mostrarDetalleTrade(\''+(peorTradeObj?'perdedor':'')+'\')"><div class="lbl">Peor Trade</div><div class="val red">-$'+Math.abs(peorTrade).toFixed(2)+'</div>'+(peorTradeObj?'<div style="font-size:0.55rem;color:#888;">'+peorTradeObj.activo+' | '+peorTradeObj.fecha+'</div>':'')+'</div>'+
         '<div class="stat-card"><div class="lbl">Prom Ganancia</div><div class="val green">$'+promGanancia.toFixed(2)+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Prom Pérdida</div><div class="val red">-$'+promPerdida.toFixed(2)+'</div></div>'+
-        '<div class="stat-card"><div class="lbl">Dur. Media Trade</div><div class="val neon">'+(durMedia>0?durMedia+'m':'N/A')+'</div></div>'+
-        '<div class="stat-card"><div class="lbl">Dur. Media Win</div><div class="val green">'+(durMediaG>0?durMediaG+'m':'N/A')+'</div></div>'+
-        '<div class="stat-card"><div class="lbl">Dur. Media Loss</div><div class="val red">'+(durMediaP>0?durMediaP+'m':'N/A')+'</div></div>'+
+        '<div class="stat-card"><div class="lbl">Dur. Media Trade</div><div class="val neon">'+(durMedia>0?durMedia+'m':'--')+'</div><div style="font-size:0.5rem;color:var(--text2);">'+(durMedia>0?'':'⏱️ Doble clic en trade → editar horas')+'</div></div>'+
+        '<div class="stat-card"><div class="lbl">Dur. Media Win</div><div class="val green">'+(durMediaG>0?durMediaG+'m':'--')+'</div><div style="font-size:0.5rem;color:var(--text2);">'+(durMediaG>0?'':'⏱️ Doble clic en trade → editar horas')+'</div></div>'+
+        '<div class="stat-card"><div class="lbl">Dur. Media Loss</div><div class="val red">'+(durMediaP>0?durMediaP+'m':'--')+'</div><div style="font-size:0.5rem;color:var(--text2);">'+(durMediaP>0?'':'⏱️ Doble clic en trade → editar horas')+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Max Racha G</div><div class="val green">'+maxRachaG+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Max Racha P</div><div class="val red">'+maxRachaP+'</div></div>';
     
