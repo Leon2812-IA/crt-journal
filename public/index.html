@@ -1076,39 +1076,29 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
         // Formato cTrader (WSF con columnas diferentes)
     var tieneCTrader = htmlContent.includes('USD neto') && htmlContent.includes('Saldo USD');
     if (tieneCTrader && tradesEncontrados.length === 0) {
-        for (var i = 0; i < filas.length; i++) {
-            var celdas = filas[i].querySelectorAll('td');
-            var textos = [];
-            for (var c = 0; c < celdas.length; c++) {
-                textos.push(celdas[c].textContent.trim());
-            }
-            if (textos.length >= 7 && textos[0] && textos[0] !== 'Totales' && textos[0] !== 'Símbolo' && textos[6] && !isNaN(parseFloat(textos[6])) && parseFloat(textos[6]) !== 0) {
-                var simbolo = textos[0];
-                var direccion = textos[1];
-                var fechaHora = textos[2];
-                var beneficio = parseFloat(textos[6]) || parseFloat(textos[7]) || 0;
-                var fecha = fechaHora.split(' ')[0];
-                fecha = fecha.split('.')[0];
-                fecha = fecha.replace(/\//g, '-');
-                if (fecha.includes('/')) {
-                    var partes = fecha.split('/');
-                    if (partes.length === 3) fecha = partes[2] + '-' + partes[1].padStart(2,'0') + '-' + partes[0].padStart(2,'0');
-                }
-                if (simbolo && beneficio !== 0 && fecha) {
-                    tradesEncontrados.push({
-                        fecha: fecha,
-                        activo: simbolo,
-                        tipo: direccion.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
-                        cierre: beneficio > 0 ? 'TP' : 'SL',
-                        resultado: beneficio,
-                        resultado_pct: 0,
-                        notas: 'Importado de ' + fileName,
-                        imagen: '',
-                        checklist: [],
-                        hora_entrada: '00:00',
-                        hora_salida: '00:00'
-                    });
-                }
+        var regex = /(\w+)\s+(Buy|Sell)\s+(\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}:\d{2})\.\d+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+Lotes\s+([-\d.]+)\s+[\d\s,.]+/g;
+        var match;
+        while ((match = regex.exec(htmlContent)) !== null) {
+            var simbolo = match[1];
+            var direccion = match[2];
+            var fechaHora = match[3];
+            var beneficio = parseFloat(match[4]);
+            var fecha = fechaHora.split(' ')[0];
+            fecha = fecha.replace(/\//g, '-');
+            if (simbolo && !isNaN(beneficio)) {
+                tradesEncontrados.push({
+                    fecha: fecha,
+                    activo: simbolo,
+                    tipo: direccion.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
+                    cierre: beneficio > 0 ? 'TP' : 'SL',
+                    resultado: beneficio,
+                    resultado_pct: 0,
+                    notas: 'Importado de ' + fileName,
+                    imagen: '',
+                    checklist: [],
+                    hora_entrada: '00:00',
+                    hora_salida: '00:00'
+                });
             }
         }
     }
