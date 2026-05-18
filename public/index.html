@@ -1073,23 +1073,20 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
         }
     }
     if (tradesEncontrados.length > 0) return tradesEncontrados;
-        // Formato cTrader (WSF con columnas diferentes)
-    var tieneCTrader = htmlContent.includes('USD neto') && htmlContent.includes('Saldo USD');
-    if (tieneCTrader && tradesEncontrados.length === 0) {
-        var regex = /(\w+)\s+(Buy|Sell)\s+(\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}:\d{2})\.\d+\s+[\d.]+\s+[\d.]+\s+[\d.]+\s+Lotes\s+([-\d.]+)\s+[\d\s,.]+/g;
+          // Formato cTrader
+    if (htmlContent.includes('USD neto') && htmlContent.includes('Saldo USD') && tradesEncontrados.length === 0) {
+        var regexCTrader = /(\w+)\s+(Buy|Sell)\s+(\d{2}\/\d{2}\/\d{4})\s+(\d{2}:\d{2}:\d{2})\.\d+\s+[-\d.]+\s+[-\d.]+\s+[\d.]+\s+Lotes\s+([-\d.]+)/g;
         var match;
-        while ((match = regex.exec(htmlContent)) !== null) {
+        while ((match = regexCTrader.exec(htmlContent)) !== null) {
             var simbolo = match[1];
-            var direccion = match[2];
-            var fechaHora = match[3];
-            var beneficio = parseFloat(match[4]);
-            var fecha = fechaHora.split(' ')[0];
-            fecha = fecha.replace(/\//g, '-');
-            if (simbolo && !isNaN(beneficio)) {
+            var tipo = match[2] === 'Sell' ? 'Corto' : 'Largo';
+            var fecha = match[3].replace(/\//g, '-');
+            var beneficio = parseFloat(match[5]);
+            if (simbolo && fecha && !isNaN(beneficio)) {
                 tradesEncontrados.push({
                     fecha: fecha,
                     activo: simbolo,
-                    tipo: direccion.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
+                    tipo: tipo,
                     cierre: beneficio > 0 ? 'TP' : 'SL',
                     resultado: beneficio,
                     resultado_pct: 0,
