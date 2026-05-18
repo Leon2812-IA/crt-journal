@@ -1092,7 +1092,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
     // Si no, intentar formato antiguo (WSF/FTMO)
     var tieneTablaHistorial = htmlContent.includes('Historial</b>') || htmlContent.includes('Historial</B>');
     if (tieneTablaHistorial) {
-        dentroTabla = false;
+     var  dentroTabla = false;
         for (var i = 0; i < lines.length; i++) {
             var linea = lines[i];
             if (linea.includes('Historial</b>') || linea.includes('Historial</B>')) { dentroTabla = true; continue; }
