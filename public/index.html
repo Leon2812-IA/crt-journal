@@ -1036,60 +1036,83 @@ async function eliminarUsuario(email){
 function abrirModalImportar(){document.getElementById('import-file').value='';abrirModal('modal-importar');}
 
 function parsearMetaTraderHTML(htmlContent, fileName) {
+  function parsearMetaTraderHTML(htmlContent, fileName) {
     var tradesEncontrados = [];
     var lines = htmlContent.split('\n');
-    var tieneTablaPosiciones = htmlContent.includes('Posiciones</b>') || htmlContent.includes('Positions</b>');
-    var tieneTablaHistorial = htmlContent.includes('Historial</b>') && htmlContent.includes('Símbolo') && htmlContent.includes('USD neto');
-    if (tieneTablaPosiciones) {
-        var dentroPosiciones = false;
-        for (var i = 0; i < lines.length; i++) {
-            var linea = lines[i];
-            if (linea.includes('Posiciones</b>') || linea.includes('Positions</b>')) { dentroPosiciones = true; continue; }
-            if (dentroPosiciones && linea.includes('</table>')) { dentroPosiciones = false; }
-            if (dentroPosiciones && (linea.includes('<tr bgcolor=') || linea.includes('<tr>'))) {
-                var celdas = linea.match(/<td[^>]*>(.*?)<\/td>/gi);
-                if (celdas && celdas.length >= 13) {
-                    var fechaApertura = celdas[0]?.replace(/<[^>]*>/g, '').trim();
-                    var simbolo = celdas[2]?.replace(/<[^>]*>/g, '').trim();
-                    var tipo = celdas[3]?.replace(/<[^>]*>/g, '').trim();
-                   var beneficio = parseFloat(celdas[12]?.replace(/<[^>]*>/g, '').trim()) || 0;
-if (beneficio === 0) { beneficio = parseFloat(celdas[13]?.replace(/<[^>]*>/g, '').trim()) || 0; }
-                    if (simbolo && beneficio !== 0 && fechaApertura) {
-                        tradesEncontrados.push({
-                            fecha: fechaApertura.split(' ')[0],
-                            activo: simbolo,
-                            tipo: tipo === 'sell' ? 'Corto' : 'Largo',
-                            cierre: 'Manual',
-                            resultado: beneficio,
-                            resultado_pct: 0,
-                            notas: 'Importado de ' + fileName,
-                            imagen: '',
-                            checklist: [],
-                            hora_entrada: '00:00',
-                            hora_salida: '00:00'
-                        });
+    
+    // Formato Funding Pips: buscar filas con <tr> que tengan 13+ celdas
+    var dentroTabla = false;
+    for (var i = 0; i < lines.length; i++) {
+        var linea = lines[i];
+        if (linea.includes('<table') || linea.includes('<TABLE')) { dentroTabla = true; continue; }
+        if (linea.includes('</table>') || linea.includes('</TABLE>')) { dentroTabla = false; }
+        if (dentroTabla && (linea.includes('<tr') || linea.includes('<TR'))) {
+            var celdas = linea.match(/<td[^>]*>(.*?)<\/td>/gi);
+            if (!celdas) celdas = linea.match(/<TD[^>]*>(.*?)<\/TD>/gi);
+            if (celdas && celdas.length >= 10) {
+                var textoCeldas = [];
+                for (var c = 0; c < celdas.length; c++) {
+                    textoCeldas.push(celdas[c].replace(/<[^>]*>/g, '').trim());
+                }
+                var fechaHora = textoCeldas[0] || '';
+                var simbolo = textoCeldas[2] || '';
+                var tipo = textoCeldas[3] || '';
+                var beneficio = 0;
+                for (var b = textoCeldas.length - 1; b >= textoCeldas.length - 3; b--) {
+                    var val = parseFloat(textoCeldas[b]);
+                    if (!isNaN(val) && val !== 0 && Math.abs(val) < 999999) {
+                        beneficio = val;
+                        break;
                     }
+                }
+                if (simbolo && fechaHora && !isNaN(beneficio)) {
+                    var fecha = fechaHora.split(' ')[0];
+                    fecha = fecha.replace(/\./g, '-');
+                    tradesEncontrados.push({
+                        fecha: fecha,
+                        activo: simbolo,
+                        tipo: tipo.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
+                        cierre: beneficio > 0 ? 'TP' : 'SL',
+                        resultado: beneficio,
+                        resultado_pct: 0,
+                        notas: 'Importado de ' + fileName,
+                        imagen: '',
+                        checklist: [],
+                        hora_entrada: '00:00',
+                        hora_salida: '00:00'
+                    });
                 }
             }
         }
     }
-    else if (tieneTablaHistorial) {
-        var dentroHistorial = false;
+    
+    // Si encontró trades, devolverlos
+    if (tradesEncontrados.length > 0) return tradesEncontrados;
+    
+    // Si no, intentar formato antiguo (WSF/FTMO)
+    var tieneTablaHistorial = htmlContent.includes('Historial</b>') || htmlContent.includes('Historial</B>');
+    if (tieneTablaHistorial) {
+        dentroTabla = false;
         for (var i = 0; i < lines.length; i++) {
             var linea = lines[i];
-            if (linea.includes('Historial</b>')) { dentroHistorial = true; continue; }
-            if (dentroHistorial && linea.includes('</table>')) { dentroHistorial = false; }
-            if (dentroHistorial && (linea.includes('<tr') && !linea.includes('cell-header'))) {
+            if (linea.includes('Historial</b>') || linea.includes('Historial</B>')) { dentroTabla = true; continue; }
+            if (dentroTabla && (linea.includes('</table>') || linea.includes('</TABLE>'))) { dentroTabla = false; }
+            if (dentroTabla && (linea.includes('<tr') || linea.includes('<TR'))) {
                 var celdas = linea.match(/<td[^>]*>(.*?)<\/td>/gi);
-                if (celdas && celdas.length >= 9) {
-                    var simbolo = celdas[1]?.replace(/<[^>]*>/g, '').replace(/nobr|<\/?nobr>/g, '').trim();
-                    var direccion = celdas[2]?.replace(/<[^>]*>/g, '').replace(/nobr|<\/?nobr>/g, '').trim();
-                    var fechaHora = celdas[3]?.replace(/<[^>]*>/g, '').replace(/nobr|<\/?nobr>/g, '').trim();
-                    var beneficio = parseFloat(celdas[7]?.replace(/<[^>]*>/g, '').replace(/nobr|<\/?nobr>/g, '').trim()) || 0;
+                if (!celdas) celdas = linea.match(/<TD[^>]*>(.*?)<\/TD>/gi);
+                if (celdas && celdas.length >= 8) {
+                    var textoCeldas = [];
+                    for (var c = 0; c < celdas.length; c++) {
+                        textoCeldas.push(celdas[c].replace(/<[^>]*>/g, '').replace(/nobr|<\/?nobr>/g, '').trim());
+                    }
+                    var simbolo = textoCeldas[1] || '';
+                    var direccion = textoCeldas[2] || '';
+                    var fechaHora = textoCeldas[3] || '';
+                    var beneficio = parseFloat(textoCeldas[7]) || 0;
                     var fecha = fechaHora.split(' ')[0];
                     if (fecha.includes('/')) {
                         var partes = fecha.split('/');
-                        if (partes.length === 3) { fecha = partes[2] + '-' + partes[1].padStart(2,'0') + '-' + partes[0].padStart(2,'0'); }
+                        if (partes.length === 3) fecha = partes[2] + '-' + partes[1].padStart(2,'0') + '-' + partes[0].padStart(2,'0');
                     }
                     if (simbolo && beneficio !== 0 && fecha) {
                         tradesEncontrados.push({
@@ -1110,9 +1133,9 @@ if (beneficio === 0) { beneficio = parseFloat(celdas[13]?.replace(/<[^>]*>/g, ''
             }
         }
     }
+    
     return tradesEncontrados;
-}
-
+} 
 function importarArchivo() {
     var file = document.getElementById('import-file').files[0];
     if (!file) return;
