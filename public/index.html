@@ -1034,6 +1034,43 @@ async function eliminarUsuario(email){
 
 // ============ IMPORTACIÓN DE ARCHIVOS (CSV + HTML) ============
 function abrirModalImportar(){document.getElementById('import-file').value='';abrirModal('modal-importar');}
+// Helper para extraer hora de entrada/salida de cualquier fila importada (HTML).
+// Escanea TODAS las celdas buscando patrones datetime y devuelve la min como entrada y max como salida.
+// Soporta formatos: "YYYY.MM.DD HH:MM[:SS]", "YYYY-MM-DD HH:MM[:SS]", "DD/MM/YYYY HH:MM[:SS]".
+// No modifica datos existentes: si no encuentra match, devuelve null y los importadores usan su fallback original.
+function extraerFechaHoras(textos) {
+    var rx = /(\d{4}[.\-\/]\d{2}[.\-\/]\d{2}|\d{2}\/\d{2}\/\d{4})[\sT](\d{2}):(\d{2})(?::\d{2})?/;
+    var encontradas = [];
+    for (var i = 0; i < textos.length; i++) {
+        var t = textos[i];
+        var m = t && t.match(rx);
+        if (m) {
+            var fechaStr = m[1];
+            var fechaISO;
+            if (fechaStr.indexOf('/') > -1) {
+                var p = fechaStr.split('/');
+                fechaISO = p[2] + '-' + p[1].padStart(2, '0') + '-' + p[0].padStart(2, '0');
+            } else {
+                fechaISO = fechaStr.replace(/\./g, '-');
+            }
+            encontradas.push({
+                iso: fechaISO + 'T' + m[2] + ':' + m[3],
+                fecha: fechaISO,
+                hora: m[2] + ':' + m[3]
+            });
+        }
+    }
+    if (encontradas.length === 0) return null;
+    encontradas.sort(function (a, b) { return a.iso.localeCompare(b.iso); });
+    var primera = encontradas[0], ultima = encontradas[encontradas.length - 1];
+    return {
+        fecha: primera.fecha,
+        horaEntrada: encontradas.length >= 2 ? primera.hora : null,
+        horaSalida: ultima.hora
+    };
+}
+
+
 function parsearMetaTraderHTML(htmlContent, fileName) {
     var tradesEncontrados = [];
     var div = document.createElement('div');
@@ -1055,6 +1092,8 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
             var beneficio = parseFloat(textos[12]) || 0;
             var fecha = fechaHora.split(' ')[0];
             fecha = fecha.replace(/\./g, '-');
+            var dh_fp = extraerFechaHoras(textos);
+            if (dh_fp) fecha = dh_fp.fecha;
             if (simbolo && fecha && !isNaN(beneficio)) {
                 tradesEncontrados.push({
                     fecha: fecha,
@@ -1066,8 +1105,8 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
                     notas: 'Importado de ' + fileName,
                     imagen: '',
                     checklist: [],
-                    hora_entrada: '00:00',
-                    hora_salida: '00:00'
+                    hora_entrada: dh_fp && dh_fp.horaEntrada ? dh_fp.horaEntrada : '00:00',
+                    hora_salida: dh_fp && dh_fp.horaSalida ? dh_fp.horaSalida : '00:00'
                 });
             }
         }
@@ -1083,6 +1122,9 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
                 var direccion = celdas[2]?.textContent.trim() || '';
                 var fechaHora = celdas[3]?.textContent.trim() || '';
                 var horaSalida = fechaHora.split(' ')[1]?.split('.')[0] || '00:00';
+                var textos_ct = [];
+                for (var c2 = 0; c2 < celdas.length; c2++) textos_ct.push(celdas[c2]?.textContent.trim() || '');
+                var dh_ct = extraerFechaHoras(textos_ct);
                 var usdNeto = celdas[7]?.textContent.trim() || '';
                 if (simbolo && (direccion === 'Sell' || direccion === 'Buy') && fechaHora && usdNeto) {
                     var beneficio = parseFloat(usdNeto);
@@ -1099,8 +1141,8 @@ var fecha = partesFecha[2] + '-' + partesFecha[1].padStart(2,'0') + '-' + partes
                             notas: 'Importado de ' + fileName,
                             imagen: '',
                             checklist: [],
-                            hora_entrada: '00:00',
-                            hora_salida: horaSalida
+                            hora_entrada: dh_ct && dh_ct.horaEntrada ? dh_ct.horaEntrada : '00:00',
+                            hora_salida: dh_ct && dh_ct.horaSalida ? dh_ct.horaSalida : horaSalida
                         });
                     }
                 }
@@ -1120,6 +1162,7 @@ var fecha = partesFecha[2] + '-' + partesFecha[1].padStart(2,'0') + '-' + partes
                 var simbolo = textos[1];
                 var direccion = textos[2];
                 var fechaHora = textos[3];var horaSalidaWSF = fechaHora.split(' ')[1]?.split('.')[0] || '00:00';
+                var dh_wsf = extraerFechaHoras(textos);
                 var beneficio = parseFloat(textos[7]) || 0;
                 var fecha = fechaHora.split(' ')[0];
                 if (fecha.includes('/')) {
@@ -1137,8 +1180,8 @@ var fecha = partesFecha[2] + '-' + partesFecha[1].padStart(2,'0') + '-' + partes
                         notas: 'Importado de ' + fileName,
                         imagen: '',
                         checklist: [],
-                        hora_entrada: '00:00',
-                        hora_salida: horaSalidaWSF
+                        hora_entrada: dh_wsf && dh_wsf.horaEntrada ? dh_wsf.horaEntrada : '00:00',
+                        hora_salida: dh_wsf && dh_wsf.horaSalida ? dh_wsf.horaSalida : horaSalidaWSF
                     });
                 }
             }
@@ -1496,7 +1539,7 @@ function renderMetricas(){
         '<div class="stat-card clickable" onclick="mostrarDetalleTrade(\''+(peorTradeObj?'perdedor':'')+'\')"><div class="lbl">Peor Trade</div><div class="val red">-$'+Math.abs(peorTrade).toFixed(2)+'</div>'+(peorTradeObj?'<div style="font-size:0.55rem;color:#888;">'+peorTradeObj.activo+' | '+peorTradeObj.fecha+'</div>':'')+'</div>'+
         '<div class="stat-card"><div class="lbl">Prom Ganancia</div><div class="val green">$'+promGanancia.toFixed(2)+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Prom Pérdida</div><div class="val red">-$'+promPerdida.toFixed(2)+'</div></div>'+
-        '<div class="stat-card"><div class="lbl">Dur. Media Trade</div><div class="val neon">'+(durMedia>0?durMedia+'m':'--')+'</div><div style="font-size:0.5rem;color:var(--text2);">'+(durMedia>0?'':'⏱️ Doble clic en trade → editar horas')+'</div></div>'+
+        '<div class="stat-card"><div class="lbl">Dur. Media Trade</div><div class="val neon">'+(durMedia>0?durMedia+'m':'--')+'</div><div style="font-size:0.5rem;color:var(--text2);">'+(durMedia>0?(tradesConHoras.length<total?'('+tradesConHoras.length+'/'+total+' con horas)':''):'⏱️ Doble clic en trade → editar horas')+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Dur. Media Win</div><div class="val green">'+(durMediaG>0?durMediaG+'m':'--')+'</div><div style="font-size:0.5rem;color:var(--text2);">'+(durMediaG>0?'':'⏱️ Doble clic en trade → editar horas')+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Dur. Media Loss</div><div class="val red">'+(durMediaP>0?durMediaP+'m':'--')+'</div><div style="font-size:0.5rem;color:var(--text2);">'+(durMediaP>0?'':'⏱️ Doble clic en trade → editar horas')+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Max Racha G</div><div class="val green">'+maxRachaG+'</div></div>'+
