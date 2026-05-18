@@ -1082,6 +1082,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
                 var simbolo = celdas[1]?.textContent.trim() || '';
                 var direccion = celdas[2]?.textContent.trim() || '';
                 var fechaHora = celdas[3]?.textContent.trim() || '';
+                var horaSalida = fechaHora.split(' ')[1]?.split('.')[0] || '00:00';
                 var usdNeto = celdas[7]?.textContent.trim() || '';
                 if (simbolo && (direccion === 'Sell' || direccion === 'Buy') && fechaHora && usdNeto) {
                     var beneficio = parseFloat(usdNeto);
@@ -1099,7 +1100,7 @@ var fecha = partesFecha[2] + '-' + partesFecha[1].padStart(2,'0') + '-' + partes
                             imagen: '',
                             checklist: [],
                             hora_entrada: '00:00',
-                            hora_salida: '00:00'
+                            hora_salida: horaSalida
                         });
                     }
                 }
