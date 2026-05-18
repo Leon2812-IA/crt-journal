@@ -1048,11 +1048,12 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
             if (dentroPosiciones && linea.includes('</table>')) { dentroPosiciones = false; }
             if (dentroPosiciones && (linea.includes('<tr bgcolor=') || linea.includes('<tr>'))) {
                 var celdas = linea.match(/<td[^>]*>(.*?)<\/td>/gi);
-                if (celdas && celdas.length >= 14) {
+                if (celdas && celdas.length >= 13) {
                     var fechaApertura = celdas[0]?.replace(/<[^>]*>/g, '').trim();
                     var simbolo = celdas[2]?.replace(/<[^>]*>/g, '').trim();
                     var tipo = celdas[3]?.replace(/<[^>]*>/g, '').trim();
-                    var beneficio = parseFloat(celdas[13]?.replace(/<[^>]*>/g, '').trim()) || 0;
+                   var beneficio = parseFloat(celdas[12]?.replace(/<[^>]*>/g, '').trim()) || 0;
+if (beneficio === 0) { beneficio = parseFloat(celdas[13]?.replace(/<[^>]*>/g, '').trim()) || 0; }
                     if (simbolo && beneficio !== 0 && fechaApertura) {
                         tradesEncontrados.push({
                             fecha: fechaApertura.split(' ')[0],
