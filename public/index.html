@@ -1073,6 +1073,44 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
         }
     }
     if (tradesEncontrados.length > 0) return tradesEncontrados;
+        // Formato cTrader (WSF con columnas diferentes)
+    var tieneCTrader = htmlContent.includes('USD neto') && htmlContent.includes('Saldo USD');
+    if (tieneCTrader && tradesEncontrados.length === 0) {
+        for (var i = 0; i < filas.length; i++) {
+            var celdas = filas[i].querySelectorAll('td');
+            var textos = [];
+            for (var c = 0; c < celdas.length; c++) {
+                textos.push(celdas[c].textContent.trim());
+            }
+            if (textos.length >= 7 && textos[0] && textos[6] && !isNaN(parseFloat(textos[6]))) {
+                var simbolo = textos[0];
+                var direccion = textos[1];
+                var fechaHora = textos[2];
+                var beneficio = parseFloat(textos[6]) || 0;
+                var fecha = fechaHora.split(' ')[0];
+                if (fecha.includes('/')) {
+                    var partes = fecha.split('/');
+                    if (partes.length === 3) fecha = partes[2] + '-' + partes[1].padStart(2,'0') + '-' + partes[0].padStart(2,'0');
+                }
+                if (simbolo && beneficio !== 0 && fecha) {
+                    tradesEncontrados.push({
+                        fecha: fecha,
+                        activo: simbolo,
+                        tipo: direccion.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
+                        cierre: beneficio > 0 ? 'TP' : 'SL',
+                        resultado: beneficio,
+                        resultado_pct: 0,
+                        notas: 'Importado de ' + fileName,
+                        imagen: '',
+                        checklist: [],
+                        hora_entrada: '00:00',
+                        hora_salida: '00:00'
+                    });
+                }
+            }
+        }
+    }
+    if (tradesEncontrados.length > 0) return tradesEncontrados;
     var tieneHistorial = htmlContent.includes('Historial</b>') || htmlContent.includes('Historial</B>');
     if (tieneHistorial) {
         for (var i = 0; i < filas.length; i++) {
