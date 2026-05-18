@@ -457,7 +457,7 @@
         </aside>
 
         <main class="main" style="margin-left:220px;flex:1;padding:24px 28px;position:relative;z-index:1;overflow-x:auto;-webkit-overflow-scrolling:touch;">
-            <div id="page-dashboard" class="page active"><h2>Dashboard</h2><div id="coach-tip-container"></div><div class="cards" id="dash-cards"></div><div class="card"><div class="card-title">Curva de Equity</div><div style="height:300px;"><canvas id="equityChart"></canvas></div></div></div>
+            <div id="page-dashboard" class="page active"><h2>Dashboard</h2><div id="dashboard-alert"></div><div id="coach-tip-container"></div><div class="cards" id="dash-cards"></div><div class="card"><div class="card-title">Curva de Equity</div><div style="height:300px;"><canvas id="equityChart"></canvas></div></div></div>
             
             <div id="page-trades" class="page"><h2>Trades</h2><div class="card"><div class="cal-nav"><button onclick="cambiarMes(-1)">◀</button><span class="month-label" id="cal-label"></span><button onclick="cambiarMes(1)">▶</button><span style="margin-left:16px;font-weight:600;font-family:'Orbitron',sans-serif;font-size:0.8rem;" id="cal-total"></span><button class="btn btn-blue btn-sm" onclick="nuevoTrade()" style="margin-left:auto;">+ Trade</button><button class="btn btn-blue btn-sm" onclick="abrirModalImportar()">📤 Importar CSV/HTML</button><button class="btn btn-outline btn-sm" onclick="exportarCSV()">📥 Exportar CSV</button></div><div class="trades-layout"><div class="cal-column"><div class="cal-grid" id="cal-grid"></div></div><div class="semanas-column" id="semanas-column"></div></div></div><div class="card"><div class="card-title" id="hist-title">Historial</div><table><thead><tr><th>Fecha</th><th>Activo</th><th>Tipo</th><th>Cierre</th><th>$</th><th>%</th><th>Img</th><th>Plan</th><th></th></tr></thead><tbody id="trades-tbody"></tbody></table></div></div>
             
@@ -480,7 +480,7 @@
     <!-- MODALES DEL DASHBOARD -->
     <div class="modal-overlay hidden" id="modal-dia-trades"><div class="modal" style="background:rgba(18,18,22,0.95);border:1px solid var(--neon-strong);border-radius:14px;padding:28px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-dia-titulo">Trades del día</h3><div id="modal-dia-lista"></div><div class="btn-group"><button class="btn btn-blue btn-sm" onclick="nuevoTradeEnDia()">+ Añadir trade</button><button class="btn btn-outline btn-sm" onclick="cerrarModal('modal-dia-trades')">Cerrar</button></div></div></div>
     <div class="modal-overlay hidden" id="modal-trade"><div class="modal" style="background:rgba(18,18,22,0.95);border:1px solid var(--neon-strong);border-radius:14px;padding:28px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-trade-title">Nuevo Trade</h3><form id="trade-form"><input type="hidden" id="trade-id"><div class="form-group"><label>Fecha</label><input type="date" id="trade-fecha" required></div><div class="form-row"><div class="form-group"><label>Hora Entrada</label><input type="time" id="trade-hora-entrada" value="00:00"></div><div class="form-group"><label>Hora Salida</label><input type="time" id="trade-hora-salida" value="00:00"></div></div><div class="form-row"><div class="form-group"><label>Activo</label><select id="trade-activo"><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>XAUUSD</option><option>BTCUSD</option><option>SPX</option><option>NAS100</option><option>US30</option></select></div><div class="form-group"><label>Tipo</label><select id="trade-tipo"><option>Largo</option><option>Corto</option></select></div></div><div class="form-group"><label>Cierre</label><div class="toggle-group" id="cierre-toggle"><button type="button" class="toggle-btn active" data-val="Manual">Manual</button><button type="button" class="toggle-btn" data-val="TP">TP</button><button type="button" class="toggle-btn" data-val="SL">SL</button><button type="button" class="toggle-btn" data-val="BE">BE</button></div><input type="hidden" id="trade-cierre" value="Manual"></div><div class="form-row"><div class="form-group"><label>Resultado ($)</label><input type="number" id="trade-resultado" step="0.01"></div><div class="form-group"><label>Resultado (%)</label><input type="number" id="trade-resultado-pct" step="0.01"></div></div><div class="form-group"><label>Notas</label><textarea id="trade-notas"></textarea></div><div class="form-group"><label>🖼️ Imagen (URL o archivo)</label><input type="text" id="trade-imagen" placeholder="https://... o pega URL de TradingView"><input type="file" id="trade-imagen-file" accept="image/*" style="margin-top:6px;" onchange="previewImagen(this)"><img id="trade-imagen-preview" class="img-preview hidden" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:8px;border:1px solid var(--border);"></div><div class="form-group"><label>📋 Checklist del Plan</label><div id="trade-checklist"></div></div><div class="btn-group"><button type="submit" class="btn btn-blue">Guardar</button><button type="button" class="btn btn-outline" onclick="cerrarModal('modal-trade')">Cancelar</button><button type="button" class="btn btn-outline hidden" id="btn-del-trade" onclick="eliminarTrade()" style="color:var(--red);border-color:var(--red);">Eliminar</button></div></form></div></div>
-    <div class="modal-overlay hidden" id="modal-cuenta"><div class="modal" style="background:rgba(18,18,22,0.95);border:1px solid var(--neon-strong);border-radius:14px;padding:28px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-cuenta-titulo">Nueva Cuenta</h3><input type="hidden" id="cuenta-edit-id"><div class="form-row"><div class="form-group"><label>Nombre</label><input type="text" id="cuenta-edit-nombre" placeholder="Ej: 50K"></div><div class="form-group"><label>Empresa</label><input type="text" id="cuenta-edit-empresa" placeholder="Ej: Elevate"></div></div><div class="form-row"><div class="form-group"><label>Tamaño ($)</label><input type="number" id="cuenta-edit-tamano" value="50000"></div><div class="form-group"><label>Invertido ($)</label><input type="number" id="cuenta-edit-invertido" value="0" step="0.01"></div></div><div class="form-row"><div class="form-group"><label>Objetivo ($)</label><input type="number" id="cuenta-edit-objetivo" value="1250"></div><div class="form-group"><label>Días Mínimos</label><input type="number" id="cuenta-edit-diasmin" value="10" min="0" step="1"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin mínimo de días</div></div></div><div class="form-group"><label>Consistencia (%)</label><input type="number" id="cuenta-edit-consistencia" value="35" min="0" step="1"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin regla de consistencia</div></div><div class="btn-group"><button class="btn btn-blue" onclick="guardarCuenta()">Guardar</button><button class="btn btn-outline" onclick="cerrarModal('modal-cuenta')">Cancelar</button></div></div></div>
+    <div class="modal-overlay hidden" id="modal-cuenta"><div class="modal" style="background:rgba(18,18,22,0.95);border:1px solid var(--neon-strong);border-radius:14px;padding:28px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-cuenta-titulo">Nueva Cuenta</h3><input type="hidden" id="cuenta-edit-id"><div class="form-row"><div class="form-group"><label>Nombre</label><input type="text" id="cuenta-edit-nombre" placeholder="Ej: 50K"></div><div class="form-group"><label>Empresa</label><input type="text" id="cuenta-edit-empresa" placeholder="Ej: Elevate"></div></div><div class="form-row"><div class="form-group"><label>Tamaño ($)</label><input type="number" id="cuenta-edit-tamano" value="50000"></div><div class="form-group"><label>Invertido ($)</label><input type="number" id="cuenta-edit-invertido" value="0" step="0.01"></div></div><div class="form-row"><div class="form-group"><label>Objetivo ($)</label><input type="number" id="cuenta-edit-objetivo" value="1250"></div><div class="form-group"><label>Días Mínimos</label><input type="number" id="cuenta-edit-diasmin" value="10" min="0" step="1"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin mínimo de días</div></div></div><div class="form-group"><label>Consistencia (%)</label><input type="number" id="cuenta-edit-consistencia" value="35" min="0" step="1"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin regla de consistencia</div></div><div class="form-row"><div class="form-group"><label>Drawdown Máximo ($)</label><input type="number" id="cuenta-edit-ddmax" value="5000" min="0" step="0.01"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">Límite total de pérdida permitido por la prop firm</div></div><div class="form-group"><label>Pérdida Diaria Máx ($)</label><input type="number" id="cuenta-edit-dddiario" value="2500" min="0" step="0.01"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin límite diario</div></div></div><div class="form-group"><label>Tipo de Drawdown</label><select id="cuenta-edit-tipodd" style="width:100%;padding:8px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:8px;color:var(--text);"><option value="balance">Balance-based (sobre balance inicial)</option><option value="equity">Equity-based (sobre balance + ganancias)</option></select><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">Tipo de cálculo del drawdown según la prop firm</div></div><div class="btn-group"><button class="btn btn-blue" onclick="guardarCuenta()">Guardar</button><button class="btn btn-outline" onclick="cerrarModal('modal-cuenta')">Cancelar</button></div></div></div>
     <div class="modal-overlay hidden" id="modal-retiro"><div class="modal" style="background:rgba(18,18,22,0.95);border:1px solid var(--neon-strong);border-radius:14px;padding:28px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3>Registrar Retiro</h3><div class="form-row"><div class="form-group"><label>Monto ($)</label><input type="number" id="retiro-monto" step="0.01"></div><div class="form-group"><label>Fecha</label><input type="date" id="retiro-fecha"></div></div><div class="form-group"><label>Notas</label><input type="text" id="retiro-notas"></div><div class="btn-group"><button class="btn btn-blue" onclick="guardarRetiro()">Registrar</button><button class="btn btn-outline" onclick="cerrarModal('modal-retiro')">Cancelar</button></div></div></div>
     <div class="modal-overlay hidden" id="modal-importar"><div class="modal" style="background:rgba(18,18,22,0.95);border:1px solid var(--neon-strong);border-radius:14px;padding:28px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3>Importar Archivo</h3><p style="color:var(--text2);font-size:0.7rem;margin-bottom:12px;font-family:'Inter',sans-serif;">Formatos aceptados: CSV, HTML (Funding Pips, WSF, FTMO, cTrader, etc.)</p><div class="form-group"><label>Archivo</label><input type="file" id="import-file" accept=".csv,.html,.htm"></div><div class="btn-group"><button class="btn btn-blue" onclick="importarArchivo()">Importar</button><button class="btn btn-outline" onclick="cerrarModal('modal-importar')">Cancelar</button></div></div></div>
     <div class="modal-overlay hidden" id="modal-desglose"><div class="modal" style="background:rgba(18,18,22,0.95);border:1px solid var(--neon-strong);border-radius:14px;padding:28px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-desglose-titulo">Desglose</h3><div id="modal-desglose-content"></div><div class="btn-group"><button class="btn btn-outline" onclick="cerrarModal('modal-desglose')">Cerrar</button></div></div></div>
@@ -746,11 +746,11 @@ async function precargarAdmin(){
                 cuentas:[{id:1,nombre:'50K Instant Pro',empresa:'Elevate',tamano:50000,invertido:0,objetivo:1250,diasmin:10,consistenciaPct:35}],
                 retiros:[],
                 trades:[
-                    {id:1,fecha:'2026-05-01',hora_entrada:'00:00',hora_salida:'00:00',activo:'EURUSD',tipo:'Largo',cierre:'TP',resultado:120,resultado_pct:0.24,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
-                    {id:2,fecha:'2026-05-02',hora_entrada:'00:00',hora_salida:'00:00',activo:'GBPUSD',tipo:'Corto',cierre:'SL',resultado:-45,resultado_pct:-0.09,notas:'',imagen:'',checklist:[true,false,true,true,true,true,true],cuenta_id:1},
-                    {id:3,fecha:'2026-05-03',hora_entrada:'00:00',hora_salida:'00:00',activo:'XAUUSD',tipo:'Largo',cierre:'TP',resultado:350,resultado_pct:0.7,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
-                    {id:4,fecha:'2026-05-04',hora_entrada:'00:00',hora_salida:'00:00',activo:'BTCUSD',tipo:'Largo',cierre:'Manual',resultado:820,resultado_pct:1.64,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
-                    {id:5,fecha:'2026-05-05',hora_entrada:'00:00',hora_salida:'00:00',activo:'EURUSD',tipo:'Corto',cierre:'SL',resultado:-60,resultado_pct:-0.12,notas:'',imagen:'',checklist:[true,true,false,true,true,true,true],cuenta_id:1}
+                    {id:1,fecha:'2026-05-01',hora_entrada:'09:15',hora_salida:'10:42',activo:'EURUSD',tipo:'Largo',cierre:'TP',resultado:120,resultado_pct:0.24,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
+                    {id:2,fecha:'2026-05-02',hora_entrada:'14:20',hora_salida:'14:38',activo:'GBPUSD',tipo:'Corto',cierre:'SL',resultado:-45,resultado_pct:-0.09,notas:'',imagen:'',checklist:[true,false,true,true,true,true,true],cuenta_id:1},
+                    {id:3,fecha:'2026-05-03',hora_entrada:'08:05',hora_salida:'12:31',activo:'XAUUSD',tipo:'Largo',cierre:'TP',resultado:350,resultado_pct:0.7,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
+                    {id:4,fecha:'2026-05-04',hora_entrada:'16:10',hora_salida:'18:45',activo:'BTCUSD',tipo:'Largo',cierre:'Manual',resultado:820,resultado_pct:1.64,notas:'',imagen:'',checklist:[true,true,true,true,true,true,true],cuenta_id:1},
+                    {id:5,fecha:'2026-05-05',hora_entrada:'11:33',hora_salida:'11:51',activo:'EURUSD',tipo:'Corto',cierre:'SL',resultado:-60,resultado_pct:-0.12,notas:'',imagen:'',checklist:[true,true,false,true,true,true,true],cuenta_id:1}
                 ],
                 nextId:{cuenta:2,retiro:1,trade:6},
                 planReglas:['Analizar Bias en diario/6h+','Esperar confirmacion M15/M30','Entrar solo al cierre del OB','SL detras del OB validado','Ratio minimo 1:2','No operar antes de las 7h','No operar fuera de casa']
@@ -1084,12 +1084,12 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
         for (var c = 0; c < celdas.length; c++) {
             textos.push(celdas[c].textContent.trim());
         }
-        if (textos.length >= 10 && textos[0].includes('.') && (textos[3] === 'buy' || textos[3] === 'sell') && !isNaN(parseFloat(textos[12])) && parseFloat(textos[12]) !== 0) {
+        if (textos.length >= 14 && textos[0].includes('.') && (textos[3] === 'buy' || textos[3] === 'sell') && !isNaN(parseFloat(textos[13])) && parseFloat(textos[13]) !== 0) {
             esFundingPips = true;
             var fechaHora = textos[0];
             var simbolo = textos[2];
             var tipo = textos[3];
-            var beneficio = parseFloat(textos[12]) || 0;
+            var beneficio = parseFloat(textos[13]) || 0;
             var fecha = fechaHora.split(' ')[0];
             fecha = fecha.replace(/\./g, '-');
             var dh_fp = extraerFechaHoras(textos);
@@ -1150,6 +1150,42 @@ var fecha = partesFecha[2] + '-' + partesFecha[1].padStart(2,'0') + '-' + partes
         }
     }
     if (tradesEncontrados.length > 0) return tradesEncontrados;  
+    // Formato WSF/Elevate "Posiciones cerradas" — distinto al MT4 "Historial"
+    // Estructura típica: ID | Símbolo | Hora apertura | Volumen | Tipo (BUY/SELL) | Hora cierre | Precio ap | Precio ci | SL | TP | Swap | Comisión | Beneficio | Razón
+    var esPosicionesCerradas = htmlContent.includes('Posiciones cerradas') ||
+                                htmlContent.includes('CLOSED_POSITIONS') ||
+                                htmlContent.includes('Elevate Challenge');
+    if (esPosicionesCerradas && tradesEncontrados.length === 0) {
+        for (var iPC = 0; iPC < filas.length; iPC++) {
+            var celdasPC = filas[iPC].querySelectorAll('td');
+            if (celdasPC.length < 13) continue;
+            var textosPC = [];
+            for (var cPC = 0; cPC < celdasPC.length; cPC++) {
+                textosPC.push(celdasPC[cPC].textContent.trim());
+            }
+            var tipoPC = (textosPC[4] || '').toUpperCase();
+            if (tipoPC !== 'BUY' && tipoPC !== 'SELL') continue;
+            var simboloPC = textosPC[1];
+            var beneficioPC = parseFloat(textosPC[12]);
+            if (!simboloPC || isNaN(beneficioPC)) continue;
+            var dh_pc = extraerFechaHoras(textosPC);
+            if (!dh_pc) continue;
+            tradesEncontrados.push({
+                fecha: dh_pc.fecha,
+                activo: simboloPC,
+                tipo: tipoPC === 'SELL' ? 'Corto' : 'Largo',
+                cierre: beneficioPC > 0 ? 'TP' : 'SL',
+                resultado: beneficioPC,
+                resultado_pct: 0,
+                notas: 'Importado de ' + fileName,
+                imagen: '',
+                checklist: [],
+                hora_entrada: dh_pc.horaEntrada || '00:00',
+                hora_salida: dh_pc.horaSalida || '00:00'
+            });
+        }
+        if (tradesEncontrados.length > 0) return tradesEncontrados;
+    }
     var tieneHistorial = htmlContent.includes('Historial</b>') || htmlContent.includes('Historial</B>');
     if (tieneHistorial) {
         for (var i = 0; i < filas.length; i++) {
@@ -1193,6 +1229,20 @@ function importarArchivo() {
     var file = document.getElementById('import-file').files[0];
     if (!file) return;
     var reader = new FileReader();
+    // Detección de encoding (UTF-16 vs UTF-8) — algunos brokers (Funding Pips MT4) exportan en UTF-16
+    var detectarEncodingYLeer = function() {
+        var headReader = new FileReader();
+        headReader.onload = function(ev) {
+            var bytes = new Uint8Array(ev.target.result);
+            var enc = 'utf-8';
+            if (bytes.length >= 2 && ((bytes[0] === 0xFF && bytes[1] === 0xFE) || (bytes[0] === 0xFE && bytes[1] === 0xFF))) {
+                enc = 'utf-16';
+            }
+            reader.readAsText(file, enc);
+        };
+        headReader.onerror = function(){ reader.readAsText(file); };
+        headReader.readAsArrayBuffer(file.slice(0, 4));
+    };
     reader.onload = function(e) {
         var content = e.target.result;
         if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
@@ -1234,7 +1284,7 @@ function importarArchivo() {
         var headers = lines[hi].split(',');
         var iS = headers.findIndex(function(h) { return h.indexOf('Símbolo') > -1 || h.indexOf('símbolo') > -1; }), iB = headers.findIndex(function(h) { return h.indexOf('Beneficio') > -1 || h.indexOf('beneficio') > -1; });
         if (iS >= 0 && iB >= 0) {
-            var iH = headers.findIndex(function(h) { return h.indexOf('Hora de cierre') > -1; }), iO = headers.findIndex(function(h) { return h.indexOf('Operación') > -1; });
+            var iH = headers.findIndex(function(h) { return h.indexOf('Hora de cierre') > -1; }), iO = headers.findIndex(function(h) { return h.indexOf('Operación') > -1; }), iHA = headers.findIndex(function(h) { return h.indexOf('Hora de apertura') > -1; });
             var c = 0;
             for (var i = hi + 1; i < lines.length; i++) {
                 if (lines[i].toLowerCase().indexOf('total') > -1) continue;
@@ -1248,7 +1298,15 @@ function importarArchivo() {
                 if (!fm) continue;
                 var f = fm[3] + '-' + fm[2] + '-' + fm[1];
                 var op = cols[iO]?.trim().toUpperCase() === 'BUY' ? 'Largo' : 'Corto';
-                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: '00:00', hora_salida: '00:00', activo: s, tipo: op, cierre: 'Manual', resultado: bv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId });
+                // Extracción de horas (apertura del CSV si existe, cierre siempre del campo h)
+                var heCSV = '00:00', hsCSV = '00:00';
+                var mhCsvSalida = h.match(/(\d{1,2}):(\d{2})/);
+                if (mhCsvSalida) hsCSV = mhCsvSalida[1].padStart(2,'0') + ':' + mhCsvSalida[2];
+                if (iHA >= 0 && cols[iHA]) {
+                    var mhCsvEntrada = cols[iHA].match(/(\d{1,2}):(\d{2})/);
+                    if (mhCsvEntrada) heCSV = mhCsvEntrada[1].padStart(2,'0') + ':' + mhCsvEntrada[2];
+                }
+                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: heCSV, hora_salida: hsCSV, activo: s, tipo: op, cierre: 'Manual', resultado: bv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId });
                 data.nextId.trade++;
                 c++;
             }
@@ -1281,7 +1339,7 @@ function importarArchivo() {
             refreshActive();
         }
     };
-    reader.readAsText(file);
+    detectarEncodingYLeer();
 }// ============ PREVIEW IMAGEN ============
 function previewImagen(input){
     var preview=document.getElementById('trade-imagen-preview');
@@ -1333,6 +1391,43 @@ function renderCoachTip(){
 }
 
 // ============ DASHBOARD ============
+// ============ DRAWDOWN & RIESGO PARA PROP FIRMS ============
+// Calcula DD actual, DD máximo histórico y P&L del día actual.
+// trades: array de trades de la cuenta activa.
+// tamCuenta: balance inicial de la cuenta.
+function calcularDrawdown(trades, tamCuenta) {
+    if (!trades || trades.length === 0) {
+        return {ddActual:0, ddMax:0, ddActualPct:0, ddMaxPct:0, pnlHoy:0, pnlHoyPct:0, peakEquity:tamCuenta, currentEquity:tamCuenta};
+    }
+    var ordenados = trades.slice().sort(function(a,b){
+        var ka = (a.fecha||'') + ' ' + (a.hora_salida||a.hora_entrada||'00:00');
+        var kb = (b.fecha||'') + ' ' + (b.hora_salida||b.hora_entrada||'00:00');
+        return ka.localeCompare(kb);
+    });
+    var equity = tamCuenta, peak = tamCuenta, ddMax = 0;
+    ordenados.forEach(function(tr) {
+        equity += (tr.resultado || 0);
+        if (equity > peak) peak = equity;
+        var dd = peak - equity;
+        if (dd > ddMax) ddMax = dd;
+    });
+    var ddActual = peak - equity;
+    var hoyISO = new Date().toISOString().split('T')[0];
+    var pnlHoy = ordenados
+        .filter(function(tr){return tr.fecha === hoyISO;})
+        .reduce(function(s,tr){return s + (tr.resultado||0);}, 0);
+    return {
+        ddActual: ddActual,
+        ddMax: ddMax,
+        ddActualPct: tamCuenta > 0 ? (ddActual / tamCuenta * 100) : 0,
+        ddMaxPct: tamCuenta > 0 ? (ddMax / tamCuenta * 100) : 0,
+        pnlHoy: pnlHoy,
+        pnlHoyPct: tamCuenta > 0 ? (pnlHoy / tamCuenta * 100) : 0,
+        peakEquity: peak,
+        currentEquity: equity
+    };
+}
+
 function renderDashboard(){
     var t=tradesCuenta(),total=t.length,ganados=t.filter(function(tr){return tr.resultado>0;}).length,perdidos=t.filter(function(tr){return tr.resultado<0;}).length;
     var wr=total>0?((ganados/total)*100).toFixed(1):0,pnl=t.reduce(function(s,tr){return s+tr.resultado;},0);
@@ -1360,17 +1455,42 @@ function renderDashboard(){
         bestDayPct=bestDayPnl>0?((bestDayPnl/pnl)*100).toFixed(1):0;
     }
     
+    // === Sprint 2: Cálculo de drawdown y estado de la cuenta ===
+    var dd = calcularDrawdown(t, tam);
+    var ddMaxLimite = (c && c.dd_max) ? c.dd_max : 0;
+    var ddDiarioLimite = (c && c.dd_diario) ? c.dd_diario : 0;
+    var ddActualPctLimite = ddMaxLimite > 0 ? (dd.ddActual / ddMaxLimite * 100) : 0;
+    var pnlHoyAbs = Math.abs(dd.pnlHoy);
+    var pnlHoyPctLimite = (ddDiarioLimite > 0 && dd.pnlHoy < 0) ? (pnlHoyAbs / ddDiarioLimite * 100) : 0;
+    var estado = 'SAFE', estadoColor = 'green', estadoIcono = '🟢';
+    if (ddActualPctLimite >= 80 || pnlHoyPctLimite >= 80) { estado='DANGER'; estadoColor='red'; estadoIcono='🔴'; }
+    else if (ddActualPctLimite >= 50 || pnlHoyPctLimite >= 50) { estado='WARNING'; estadoColor='neon'; estadoIcono='🟡'; }
+    
+    // Alert banner crítico (solo si DD warning/danger activo)
+    var alertHtml = '';
+    if (estado === 'DANGER') {
+        alertHtml = '<div style="background:rgba(255,51,85,0.15);border:1px solid var(--red);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;animation:modalIn 0.3s ease;"><span style="font-size:1.8rem;">🚨</span><div><div style="font-weight:700;color:var(--red);font-family:\'Orbitron\',sans-serif;letter-spacing:0.5px;">¡ALERTA CRÍTICA — A PUNTO DE VIOLAR LA REGLA!</div><div style="font-size:0.7rem;color:var(--text2);margin-top:2px;">Estás al '+Math.max(ddActualPctLimite, pnlHoyPctLimite).toFixed(0)+'% del límite. Considera detener la operativa hoy.</div></div></div>';
+    } else if (estado === 'WARNING') {
+        alertHtml = '<div style="background:rgba(0,255,255,0.10);border:1px solid var(--neon);border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;"><span style="font-size:1.4rem;">⚠️</span><div><div style="font-weight:600;color:var(--neon);">Atención: Te acercas al límite</div><div style="font-size:0.65rem;color:var(--text2);margin-top:2px;">Has consumido el '+Math.max(ddActualPctLimite, pnlHoyPctLimite).toFixed(0)+'% de tu margen. Gestiona el riesgo con disciplina.</div></div></div>';
+    }
+    var alertEl = document.getElementById('dashboard-alert');
+    if (alertEl) alertEl.innerHTML = alertHtml;
+    
     document.getElementById('dash-cards').innerHTML=
-        '<div class="stat-card"><div class="lbl">P&L Total</div><div class="val '+(pnl>=0?'green':'red')+'">'+(pnl>=0?'+':'')+'$'+pnl.toFixed(2)+'<div style="font-size:0.65rem;color:#888;">'+(pnlPct>=0?'+':'')+pnlPct.toFixed(2)+'%</div></div></div>'+
-        '<div class="stat-card"><div class="lbl">Win Rate</div><div class="val">'+wr+'%</div></div>'+
-        '<div class="stat-card"><div class="lbl">Profit Factor</div><div class="val">'+pf+'</div></div>'+
-        '<div class="stat-card"><div class="lbl">Day Win %</div><div class="val '+(dayWinPct>=50?'green':'red')+'">'+dayWinPct+'%</div><div style="font-size:0.6rem;color:#888;">'+diasPositivos+'/'+fechasUnicas.length+' días</div></div>'+
-        '<div class="stat-card"><div class="lbl">Best Day % Profit</div><div class="val green">'+bestDayPct+'%</div></div>'+
-        '<div class="stat-card"><div class="lbl">Total Trades</div><div class="val">'+total+'</div></div>'+
-        '<div class="stat-card"><div class="lbl">Trades Hoy</div><div class="val">'+tradesHoy+'</div></div>'+
-        '<div class="stat-card"><div class="lbl">Días Operativos</div><div class="val">'+dias+'<div style="font-size:0.6rem;color:#888;">'+(c&&c.diasmin>0?'de '+c.diasmin+' requeridos'+((dias>=c.diasmin)?' ✅':' (faltan '+(c.diasmin-dias)+')'):'sin mínimo de días')+'</div></div></div>'+
-        '<div class="stat-card"><div class="lbl">Avg Win</div><div class="val green">$'+avgW.toFixed(2)+'</div></div>'+
-        '<div class="stat-card"><div class="lbl">Avg Loss</div><div class="val red">-$'+avgL.toFixed(2)+'</div></div>';
+        '<div class="stat-card clickable" onclick="showPage(\'reglas\')" style="border-left:4px solid var(--'+estadoColor+');"><div class="lbl">Estado Cuenta</div><div class="val '+estadoColor+'">'+estadoIcono+' '+estado+'</div><div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">Click para ver reglas</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'reglas\')"><div class="lbl">Drawdown Actual</div><div class="val '+(ddActualPctLimite>=80?'red':(ddActualPctLimite>=50?'neon':'green'))+'">-$'+dd.ddActual.toFixed(2)+'</div>'+(ddMaxLimite>0?'<div class="progress-bar" style="margin-top:6px;"><div class="progress-fill '+(ddActualPctLimite>=80?'red':(ddActualPctLimite>=50?'neon':'green'))+'" style="width:'+Math.min(100,ddActualPctLimite).toFixed(1)+'%"></div></div><div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">'+ddActualPctLimite.toFixed(1)+'% del límite ($'+ddMaxLimite.toFixed(0)+')</div>':'<div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">Define límite en la cuenta</div>')+'</div>'+
+        '<div class="stat-card"><div class="lbl">Max DD Histórico</div><div class="val red">-$'+dd.ddMax.toFixed(2)+'</div><div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">'+dd.ddMaxPct.toFixed(2)+'% del balance inicial</div></div>'+
+        '<div class="stat-card"><div class="lbl">P&L Hoy</div><div class="val '+(dd.pnlHoy>=0?'green':'red')+'">'+(dd.pnlHoy>=0?'+':'')+'$'+dd.pnlHoy.toFixed(2)+'</div>'+(ddDiarioLimite>0&&dd.pnlHoy<0?'<div class="progress-bar" style="margin-top:6px;"><div class="progress-fill '+(pnlHoyPctLimite>=80?'red':(pnlHoyPctLimite>=50?'neon':'green'))+'" style="width:'+Math.min(100,pnlHoyPctLimite).toFixed(1)+'%"></div></div><div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">'+pnlHoyPctLimite.toFixed(1)+'% del límite diario</div>':'<div style="font-size:0.6rem;color:var(--text2);margin-top:2px;">'+dd.pnlHoyPct.toFixed(2)+'% del balance</div>')+'</div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">P&L Total</div><div class="val '+(pnl>=0?'green':'red')+'">'+(pnl>=0?'+':'')+'$'+pnl.toFixed(2)+'<div style="font-size:0.65rem;color:#888;">'+(pnlPct>=0?'+':'')+pnlPct.toFixed(2)+'%</div></div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Win Rate</div><div class="val">'+wr+'%</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Profit Factor</div><div class="val">'+pf+'</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Day Win %</div><div class="val '+(dayWinPct>=50?'green':'red')+'">'+dayWinPct+'%</div><div style="font-size:0.6rem;color:#888;">'+diasPositivos+'/'+fechasUnicas.length+' días</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Best Day % Profit</div><div class="val green">'+bestDayPct+'%</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'trades\')"><div class="lbl">Total Trades</div><div class="val">'+total+'</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'trades\')"><div class="lbl">Trades Hoy</div><div class="val">'+tradesHoy+'</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'reglas\')"><div class="lbl">Días Operativos</div><div class="val">'+dias+'<div style="font-size:0.6rem;color:#888;">'+(c&&c.diasmin>0?'de '+c.diasmin+' requeridos'+((dias>=c.diasmin)?' ✅':' (faltan '+(c.diasmin-dias)+')'):'sin mínimo de días')+'</div></div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Avg Win</div><div class="val green">$'+avgW.toFixed(2)+'</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Avg Loss</div><div class="val red">-$'+avgL.toFixed(2)+'</div></div>';
     var ordenados=t.slice().sort(function(a,b){return a.fecha.localeCompare(b.fecha);});
     var bal=tam;
     var labels=ordenados.map(function(tr){return tr.fecha;}),dataEq=ordenados.map(function(tr){bal+=tr.resultado;return bal;});
@@ -1795,9 +1915,9 @@ function renderRiesgo(){
 function renderCuentas(){document.getElementById('cuentas-lista-tbody').innerHTML=data.cuentas.map(function(c){return'<tr><td><strong>'+c.nombre+'</strong></td><td>'+c.empresa+'</td><td>$'+c.tamano.toLocaleString()+'</td><td>$'+c.invertido.toFixed(2)+'</td><td>$'+c.objetivo.toFixed(2)+'</td><td>'+(c.diasmin||0)+'</td><td>'+c.consistenciaPct+'%</td><td><button class="btn btn-outline btn-sm" onclick="editarCuenta('+c.id+')">✏️</button> <button class="btn btn-outline btn-sm" onclick="eliminarCuentaCompleta('+c.id+')" style="color:var(--red);border-color:var(--red);margin-left:4px;">🗑️</button></td></tr>';}).join('');}
 function abrirModalCuenta(){
     if(!verificarLimiteCuentas())return;
-    editingCuentaId=null;document.getElementById('modal-cuenta-titulo').textContent='Nueva Cuenta';document.getElementById('cuenta-edit-id').value='';document.getElementById('cuenta-edit-nombre').value='';document.getElementById('cuenta-edit-empresa').value='';document.getElementById('cuenta-edit-tamano').value=50000;document.getElementById('cuenta-edit-invertido').value=0;document.getElementById('cuenta-edit-objetivo').value=1250;document.getElementById('cuenta-edit-diasmin').value=10;document.getElementById('cuenta-edit-consistencia').value=35;abrirModal('modal-cuenta');
+    editingCuentaId=null;document.getElementById('modal-cuenta-titulo').textContent='Nueva Cuenta';document.getElementById('cuenta-edit-id').value='';document.getElementById('cuenta-edit-nombre').value='';document.getElementById('cuenta-edit-empresa').value='';document.getElementById('cuenta-edit-tamano').value=50000;document.getElementById('cuenta-edit-invertido').value=0;document.getElementById('cuenta-edit-objetivo').value=1250;document.getElementById('cuenta-edit-diasmin').value=10;document.getElementById('cuenta-edit-consistencia').value=35;document.getElementById('cuenta-edit-ddmax').value=5000;document.getElementById('cuenta-edit-dddiario').value=2500;document.getElementById('cuenta-edit-tipodd').value='balance';abrirModal('modal-cuenta');
 }
-function editarCuenta(id){var c=data.cuentas.find(function(cu){return cu.id===id;});if(!c)return;editingCuentaId=id;document.getElementById('modal-cuenta-titulo').textContent='Editar Cuenta';document.getElementById('cuenta-edit-id').value=c.id;document.getElementById('cuenta-edit-nombre').value=c.nombre;document.getElementById('cuenta-edit-empresa').value=c.empresa;document.getElementById('cuenta-edit-tamano').value=c.tamano;document.getElementById('cuenta-edit-invertido').value=c.invertido;document.getElementById('cuenta-edit-objetivo').value=c.objetivo;document.getElementById('cuenta-edit-diasmin').value=(c.diasmin!==undefined&&c.diasmin!==null)?c.diasmin:10;document.getElementById('cuenta-edit-consistencia').value=(c.consistenciaPct!==undefined&&c.consistenciaPct!==null)?c.consistenciaPct:35;abrirModal('modal-cuenta');}
+function editarCuenta(id){var c=data.cuentas.find(function(cu){return cu.id===id;});if(!c)return;editingCuentaId=id;document.getElementById('modal-cuenta-titulo').textContent='Editar Cuenta';document.getElementById('cuenta-edit-id').value=c.id;document.getElementById('cuenta-edit-nombre').value=c.nombre;document.getElementById('cuenta-edit-empresa').value=c.empresa;document.getElementById('cuenta-edit-tamano').value=c.tamano;document.getElementById('cuenta-edit-invertido').value=c.invertido;document.getElementById('cuenta-edit-objetivo').value=c.objetivo;document.getElementById('cuenta-edit-diasmin').value=(c.diasmin!==undefined&&c.diasmin!==null)?c.diasmin:10;document.getElementById('cuenta-edit-consistencia').value=(c.consistenciaPct!==undefined&&c.consistenciaPct!==null)?c.consistenciaPct:35;document.getElementById('cuenta-edit-ddmax').value=(c.dd_max!==undefined&&c.dd_max!==null)?c.dd_max:5000;document.getElementById('cuenta-edit-dddiario').value=(c.dd_diario!==undefined&&c.dd_diario!==null)?c.dd_diario:2500;document.getElementById('cuenta-edit-tipodd').value=c.tipo_dd||'balance';abrirModal('modal-cuenta');}
 function reiniciarTradesCuenta(){
     if(!cuentaActivaId){alert('Selecciona una cuenta primero');return;}
     var c = cuentaActiva();
@@ -1822,7 +1942,7 @@ function eliminarCuentaCompleta(id){
     alert('🗑️ Cuenta eliminada.');
 }
     function guardarCuenta(){
-    var cuenta={nombre:document.getElementById('cuenta-edit-nombre').value,empresa:document.getElementById('cuenta-edit-empresa').value,tamano:parseFloat(document.getElementById('cuenta-edit-tamano').value)||50000,invertido:parseFloat(document.getElementById('cuenta-edit-invertido').value)||0,objetivo:parseFloat(document.getElementById('cuenta-edit-objetivo').value)||1250,diasmin:(function(){var v=parseInt(document.getElementById('cuenta-edit-diasmin').value);return isNaN(v)?10:v;})(),consistenciaPct:(function(){var v=parseFloat(document.getElementById('cuenta-edit-consistencia').value);return isNaN(v)?35:v;})()};
+    var cuenta={nombre:document.getElementById('cuenta-edit-nombre').value,empresa:document.getElementById('cuenta-edit-empresa').value,tamano:parseFloat(document.getElementById('cuenta-edit-tamano').value)||50000,invertido:parseFloat(document.getElementById('cuenta-edit-invertido').value)||0,objetivo:parseFloat(document.getElementById('cuenta-edit-objetivo').value)||1250,diasmin:(function(){var v=parseInt(document.getElementById('cuenta-edit-diasmin').value);return isNaN(v)?10:v;})(),consistenciaPct:(function(){var v=parseFloat(document.getElementById('cuenta-edit-consistencia').value);return isNaN(v)?35:v;})(),dd_max:(function(){var v=parseFloat(document.getElementById('cuenta-edit-ddmax').value);return isNaN(v)?0:v;})(),dd_diario:(function(){var v=parseFloat(document.getElementById('cuenta-edit-dddiario').value);return isNaN(v)?0:v;})(),tipo_dd:document.getElementById('cuenta-edit-tipodd').value||'balance'};
     if(!cuenta.nombre)return alert('Pon un nombre');
     if(editingCuentaId){var c=data.cuentas.find(function(cu){return cu.id===editingCuentaId;});if(c)Object.assign(c,cuenta);}
     else{cuenta.id=data.nextId.cuenta;data.cuentas.push(cuenta);data.nextId.cuenta++;}saveData();cerrarModal('modal-cuenta');cargarDatosUsuario();renderCuentas();}
