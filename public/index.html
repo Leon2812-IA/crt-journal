@@ -1047,7 +1047,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
         for (var c = 0; c < celdas.length; c++) {
             textos.push(celdas[c].textContent.trim());
         }
-        if (textos.length >= 10 && textos[0].includes('.') && (textos[3] === 'buy' || textos[3] === 'sell')) {
+        if (textos.length >= 10 && textos[0].includes('.') && (textos[3] === 'buy' || textos[3] === 'sell') && !isNaN(parseFloat(textos[12])) && parseFloat(textos[12]) !== 0) {
             esFundingPips = true;
             var fechaHora = textos[0];
             var simbolo = textos[2];
