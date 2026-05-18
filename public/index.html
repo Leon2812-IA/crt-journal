@@ -1034,43 +1034,68 @@ async function eliminarUsuario(email){
 
 // ============ IMPORTACIÓN DE ARCHIVOS (CSV + HTML) ============
 function abrirModalImportar(){document.getElementById('import-file').value='';abrirModal('modal-importar');}
-
 function parsearMetaTraderHTML(htmlContent, fileName) {
     var tradesEncontrados = [];
-    var lines = htmlContent.split('\n');
-    
-    // Formato Funding Pips: buscar filas con <tr> que tengan 13+ celdas
-    var dentroTabla = false;
-    for (var i = 0; i < lines.length; i++) {
-        var linea = lines[i];
-        if (linea.includes('<table') || linea.includes('<TABLE')) { dentroTabla = true; continue; }
-        if (linea.includes('</table>') || linea.includes('</TABLE>')) { dentroTabla = false; }
-        if (dentroTabla && (linea.includes('<tr') || linea.includes('<TR'))) {
-            var celdas = linea.match(/<td[^>]*>(.*?)<\/td>/gi);
-            if (!celdas) celdas = linea.match(/<TD[^>]*>(.*?)<\/TD>/gi);
-            if (celdas && celdas.length >= 10) {
-                var textoCeldas = [];
-                for (var c = 0; c < celdas.length; c++) {
-                    textoCeldas.push(celdas[c].replace(/<[^>]*>/g, '').trim());
+    var div = document.createElement('div');
+    div.innerHTML = htmlContent;
+    var filas = div.querySelectorAll('tr');
+    var esFundingPips = false;
+    for (var i = 0; i < filas.length; i++) {
+        var celdas = filas[i].querySelectorAll('td');
+        if (celdas.length === 0) celdas = filas[i].querySelectorAll('th');
+        var textos = [];
+        for (var c = 0; c < celdas.length; c++) {
+            textos.push(celdas[c].textContent.trim());
+        }
+        if (textos.length >= 10 && textos[0].includes('.') && (textos[3] === 'buy' || textos[3] === 'sell')) {
+            esFundingPips = true;
+            var fechaHora = textos[0];
+            var simbolo = textos[2];
+            var tipo = textos[3];
+            var beneficio = parseFloat(textos[12]) || 0;
+            var fecha = fechaHora.split(' ')[0];
+            fecha = fecha.replace(/\./g, '-');
+            if (simbolo && fecha && !isNaN(beneficio)) {
+                tradesEncontrados.push({
+                    fecha: fecha,
+                    activo: simbolo,
+                    tipo: tipo.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
+                    cierre: beneficio > 0 ? 'TP' : 'SL',
+                    resultado: beneficio,
+                    resultado_pct: 0,
+                    notas: 'Importado de ' + fileName,
+                    imagen: '',
+                    checklist: [],
+                    hora_entrada: '00:00',
+                    hora_salida: '00:00'
+                });
+            }
+        }
+    }
+    if (tradesEncontrados.length > 0) return tradesEncontrados;
+    var tieneHistorial = htmlContent.includes('Historial</b>') || htmlContent.includes('Historial</B>');
+    if (tieneHistorial) {
+        for (var i = 0; i < filas.length; i++) {
+            var celdas = filas[i].querySelectorAll('td');
+            var textos = [];
+            for (var c = 0; c < celdas.length; c++) {
+                textos.push(celdas[c].textContent.replace(/nobr|<\/?nobr>/g, '').trim());
+            }
+            if (textos.length >= 8 && textos[1] && textos[7] && !isNaN(parseFloat(textos[7]))) {
+                var simbolo = textos[1];
+                var direccion = textos[2];
+                var fechaHora = textos[3];
+                var beneficio = parseFloat(textos[7]) || 0;
+                var fecha = fechaHora.split(' ')[0];
+                if (fecha.includes('/')) {
+                    var partes = fecha.split('/');
+                    if (partes.length === 3) fecha = partes[2] + '-' + partes[1].padStart(2,'0') + '-' + partes[0].padStart(2,'0');
                 }
-                var fechaHora = textoCeldas[0] || '';
-                var simbolo = textoCeldas[2] || '';
-                var tipo = textoCeldas[3] || '';
-                var beneficio = 0;
-                for (var b = textoCeldas.length - 1; b >= textoCeldas.length - 3; b--) {
-                    var val = parseFloat(textoCeldas[b]);
-                    if (!isNaN(val) && val !== 0 && Math.abs(val) < 999999) {
-                        beneficio = val;
-                        break;
-                    }
-                }
-                if (simbolo && fechaHora && !isNaN(beneficio)) {
-                    var fecha = fechaHora.split(' ')[0];
-                    fecha = fecha.replace(/\./g, '-');
+                if (simbolo && beneficio !== 0 && fecha) {
                     tradesEncontrados.push({
                         fecha: fecha,
                         activo: simbolo,
-                        tipo: tipo.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
+                        tipo: direccion.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
                         cierre: beneficio > 0 ? 'TP' : 'SL',
                         resultado: beneficio,
                         resultado_pct: 0,
@@ -1084,57 +1109,8 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
             }
         }
     }
-    
-    // Si encontró trades, devolverlos
-    if (tradesEncontrados.length > 0) return tradesEncontrados;
-    
-    // Si no, intentar formato antiguo (WSF/FTMO)
-    var tieneTablaHistorial = htmlContent.includes('Historial</b>') || htmlContent.includes('Historial</B>');
-    if (tieneTablaHistorial) {
-     var  dentroTabla = false;
-        for (var i = 0; i < lines.length; i++) {
-            var linea = lines[i];
-            if (linea.includes('Historial</b>') || linea.includes('Historial</B>')) { dentroTabla = true; continue; }
-            if (dentroTabla && (linea.includes('</table>') || linea.includes('</TABLE>'))) { dentroTabla = false; }
-            if (dentroTabla && (linea.includes('<tr') || linea.includes('<TR'))) {
-                var celdas = linea.match(/<td[^>]*>(.*?)<\/td>/gi);
-                if (!celdas) celdas = linea.match(/<TD[^>]*>(.*?)<\/TD>/gi);
-                if (celdas && celdas.length >= 8) {
-                    var textoCeldas = [];
-                    for (var c = 0; c < celdas.length; c++) {
-                        textoCeldas.push(celdas[c].replace(/<[^>]*>/g, '').replace(/nobr|<\/?nobr>/g, '').trim());
-                    }
-                    var simbolo = textoCeldas[1] || '';
-                    var direccion = textoCeldas[2] || '';
-                    var fechaHora = textoCeldas[3] || '';
-                    var beneficio = parseFloat(textoCeldas[7]) || 0;
-                    var fecha = fechaHora.split(' ')[0];
-                    if (fecha.includes('/')) {
-                        var partes = fecha.split('/');
-                        if (partes.length === 3) fecha = partes[2] + '-' + partes[1].padStart(2,'0') + '-' + partes[0].padStart(2,'0');
-                    }
-                    if (simbolo && beneficio !== 0 && fecha) {
-                        tradesEncontrados.push({
-                            fecha: fecha,
-                            activo: simbolo,
-                            tipo: direccion.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
-                            cierre: beneficio > 0 ? 'TP' : 'SL',
-                            resultado: beneficio,
-                            resultado_pct: 0,
-                            notas: 'Importado de ' + fileName,
-                            imagen: '',
-                            checklist: [],
-                            hora_entrada: '00:00',
-                            hora_salida: '00:00'
-                        });
-                    }
-                }
-            }
-        }
-    }
-    
     return tradesEncontrados;
-} 
+}
 function importarArchivo() {
     var file = document.getElementById('import-file').files[0];
     if (!file) return;
