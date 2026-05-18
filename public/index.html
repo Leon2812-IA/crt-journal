@@ -461,7 +461,7 @@
             
             <div id="page-trades" class="page"><h2>Trades</h2><div class="card"><div class="cal-nav"><button onclick="cambiarMes(-1)">◀</button><span class="month-label" id="cal-label"></span><button onclick="cambiarMes(1)">▶</button><span style="margin-left:16px;font-weight:600;font-family:'Orbitron',sans-serif;font-size:0.8rem;" id="cal-total"></span><button class="btn btn-blue btn-sm" onclick="nuevoTrade()" style="margin-left:auto;">+ Trade</button><button class="btn btn-blue btn-sm" onclick="abrirModalImportar()">📤 Importar CSV/HTML</button><button class="btn btn-outline btn-sm" onclick="exportarCSV()">📥 Exportar CSV</button></div><div class="trades-layout"><div class="cal-column"><div class="cal-grid" id="cal-grid"></div></div><div class="semanas-column" id="semanas-column"></div></div></div><div class="card"><div class="card-title" id="hist-title">Historial</div><table><thead><tr><th>Fecha</th><th>Activo</th><th>Tipo</th><th>Cierre</th><th>$</th><th>%</th><th>Img</th><th>Plan</th><th></th></tr></thead><tbody id="trades-tbody"></tbody></table></div></div>
             
-            <div id="page-cuentas" class="page"><h2>Mis Cuentas</h2><div class="card"><div class="card-title">Cuentas <button class="btn btn-blue btn-sm" onclick="abrirModalCuenta()">+ Añadir</button></div><table><thead><tr><th>Cuenta</th><th>Empresa</th><th>Tamaño</th><th>Invertido</th><th>Objetivo</th><th>Días Mín</th><th>Consist.</th><th></th></tr></thead><tbody id="cuentas-lista-tbody"></tbody></table></div></div>
+            <div id="page-cuentas" class="page"><h2>Mis Cuentas</h2><div class="card"><div class="card-title">Cuentas <button class="btn btn-blue btn-sm" onclick="abrirModalCuenta()">+ Añadir</button><<button class="btn btn-outline btn-sm" onclick="reiniciarTradesCuenta()" style="color:var(--gold);border-color:var(--gold);">🔄 Reiniciar trades</button></div><table><thead><tr><th>Cuenta</th><th>Empresa</th><th>Tamaño</th><th>Invertido</th><th>Objetivo</th><th>Días Mín</th><th>Consist.</th><th></th></tr></thead><tbody id="cuentas-lista-tbody"></tbody></table></div></div>
             <div id="page-reglas" class="page"><h2>Reglas de la Cuenta</h2><div class="cards" id="reglas-cards"></div></div>
             <div id="page-retiros" class="page"><h2>Retiros</h2><div class="cards" id="retiros-cards"></div><div class="card"><div class="card-title">Historial <button class="btn btn-blue btn-sm" onclick="abrirModalRetiro()">+ Añadir</button></div><table><thead><tr><th>Fecha</th><th>Monto</th><th>Notas</th></tr></thead><tbody id="retiros-tbody"></tbody></table></div></div>
             
@@ -1715,13 +1715,36 @@ function renderRiesgo(){
 }
 
 // ============ CUENTAS (CORREGIDO - ACEPTA 0) ============
-function renderCuentas(){document.getElementById('cuentas-lista-tbody').innerHTML=data.cuentas.map(function(c){return'<tr><td><strong>'+c.nombre+'</strong></td><td>'+c.empresa+'</td><td>$'+c.tamano.toLocaleString()+'</td><td>$'+c.invertido.toFixed(2)+'</td><td>$'+c.objetivo.toFixed(2)+'</td><td>'+(c.diasmin||0)+'</td><td>'+c.consistenciaPct+'%</td><td><button class="btn btn-outline btn-sm" onclick="editarCuenta('+c.id+')">✏️</button></td></tr>';}).join('');}
+function renderCuentas(){document.getElementById('cuentas-lista-tbody').innerHTML=data.cuentas.map(function(c){return'<tr><td><strong>'+c.nombre+'</strong></td><td>'+c.empresa+'</td><td>$'+c.tamano.toLocaleString()+'</td><td>$'+c.invertido.toFixed(2)+'</td><td>$'+c.objetivo.toFixed(2)+'</td><td>'+(c.diasmin||0)+'</td><td>'+c.consistenciaPct+'%</td><td><button class="btn btn-outline btn-sm" onclick="editarCuenta('+c.id+')">✏️</button> <button class="btn btn-outline btn-sm" onclick="eliminarCuentaCompleta('+c.id+')" style="color:var(--red);border-color:var(--red);margin-left:4px;">🗑️</button></td></tr>';}).join('');}
 function abrirModalCuenta(){
     if(!verificarLimiteCuentas())return;
     editingCuentaId=null;document.getElementById('modal-cuenta-titulo').textContent='Nueva Cuenta';document.getElementById('cuenta-edit-id').value='';document.getElementById('cuenta-edit-nombre').value='';document.getElementById('cuenta-edit-empresa').value='';document.getElementById('cuenta-edit-tamano').value=50000;document.getElementById('cuenta-edit-invertido').value=0;document.getElementById('cuenta-edit-objetivo').value=1250;document.getElementById('cuenta-edit-diasmin').value=10;document.getElementById('cuenta-edit-consistencia').value=35;abrirModal('modal-cuenta');
 }
 function editarCuenta(id){var c=data.cuentas.find(function(cu){return cu.id===id;});if(!c)return;editingCuentaId=id;document.getElementById('modal-cuenta-titulo').textContent='Editar Cuenta';document.getElementById('cuenta-edit-id').value=c.id;document.getElementById('cuenta-edit-nombre').value=c.nombre;document.getElementById('cuenta-edit-empresa').value=c.empresa;document.getElementById('cuenta-edit-tamano').value=c.tamano;document.getElementById('cuenta-edit-invertido').value=c.invertido;document.getElementById('cuenta-edit-objetivo').value=c.objetivo;document.getElementById('cuenta-edit-diasmin').value=(c.diasmin!==undefined&&c.diasmin!==null)?c.diasmin:10;document.getElementById('cuenta-edit-consistencia').value=(c.consistenciaPct!==undefined&&c.consistenciaPct!==null)?c.consistenciaPct:35;abrirModal('modal-cuenta');}
-function guardarCuenta(){
+function reiniciarTradesCuenta(){
+    if(!cuentaActivaId){alert('Selecciona una cuenta primero');return;}
+    var c = cuentaActiva();
+    if(!c){alert('No hay cuenta seleccionada');return;}
+    if(!confirm('¿Borrar TODOS los trades de la cuenta "'+c.nombre+'"? Esta acción no se puede deshacer.'))return;
+    data.trades = data.trades.filter(function(t){return t.cuenta_id !== cuentaActivaId;});
+    saveData();
+    alert('✅ Trades eliminados. La cuenta "'+c.nombre+'" está vacía.');
+    refreshActive();
+}
+
+function eliminarCuentaCompleta(id){
+    var c = data.cuentas.find(function(cu){return cu.id===id;});
+    if(!c)return;
+    if(!confirm('¿Eliminar PARA SIEMPRE la cuenta "'+c.nombre+'" y TODOS sus trades? No se puede deshacer.'))return;
+    data.cuentas = data.cuentas.filter(function(cu){return cu.id !== id;});
+    data.trades = data.trades.filter(function(t){return t.cuenta_id !== id;});
+    data.retiros = data.retiros.filter(function(r){return r.cuenta_id !== id;});
+    saveData();
+    if(cuentaActivaId === id){cuentaActivaId = data.cuentas.length > 0 ? data.cuentas[0].id : null;}
+    cargarDatosUsuario();
+    alert('🗑️ Cuenta eliminada.');
+}
+    function guardarCuenta(){
     var cuenta={nombre:document.getElementById('cuenta-edit-nombre').value,empresa:document.getElementById('cuenta-edit-empresa').value,tamano:parseFloat(document.getElementById('cuenta-edit-tamano').value)||50000,invertido:parseFloat(document.getElementById('cuenta-edit-invertido').value)||0,objetivo:parseFloat(document.getElementById('cuenta-edit-objetivo').value)||1250,diasmin:(function(){var v=parseInt(document.getElementById('cuenta-edit-diasmin').value);return isNaN(v)?10:v;})(),consistenciaPct:(function(){var v=parseFloat(document.getElementById('cuenta-edit-consistencia').value);return isNaN(v)?35:v;})()};
     if(!cuenta.nombre)return alert('Pon un nombre');
     if(editingCuentaId){var c=data.cuentas.find(function(cu){return cu.id===editingCuentaId;});if(c)Object.assign(c,cuenta);}
