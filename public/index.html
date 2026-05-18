@@ -1082,12 +1082,13 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
             for (var c = 0; c < celdas.length; c++) {
                 textos.push(celdas[c].textContent.trim());
             }
-            if (textos.length >= 7 && textos[0] && textos[6] && !isNaN(parseFloat(textos[6]))) {
+            if (textos.length >= 7 && textos[0] && textos[0] !== 'Totales' && textos[0] !== 'Símbolo' && textos[6] && !isNaN(parseFloat(textos[6])) && parseFloat(textos[6]) !== 0) {
                 var simbolo = textos[0];
                 var direccion = textos[1];
                 var fechaHora = textos[2];
                 var beneficio = parseFloat(textos[6]) || parseFloat(textos[7]) || 0;
                 var fecha = fechaHora.split(' ')[0];
+                fecha = fecha.split('.')[0];
                 fecha = fecha.replace(/\//g, '-');
                 if (fecha.includes('/')) {
                     var partes = fecha.split('/');
