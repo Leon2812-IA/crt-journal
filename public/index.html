@@ -2017,7 +2017,7 @@ var slideActual = 0;
 var totalSlides = 5;
 function cambiarSlide(dir) {
     var slides = document.querySelectorAll('.gallery-slide');
-    var dots = document.querySelectorAll('.gallery-dot');
+    var dots = document.querySelectorAll('.gallery-dot'); 
     slides[slideActual].classList.remove('active');
     dots[slideActual].classList.remove('active');
     slideActual = (slideActual + dir + totalSlides) % totalSlides;
