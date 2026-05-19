@@ -1810,31 +1810,24 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
     if (htmlContent.includes('FundingPips') && tradesEncontrados.length === 0) {
         for (var iFP = 0; iFP < filas.length; iFP++) {
             var celdasFP = filas[iFP].querySelectorAll('td');
-            if (celdasFP.length < 14) continue;
+            if (celdasFP.length !== 14) continue;
             var tipoFP = (celdasFP[3]?.textContent.trim() || '').toLowerCase();
             if (tipoFP !== 'buy' && tipoFP !== 'sell') continue;
-            var simboloFP = celdasFP[2]?.textContent.trim() || '';
             var beneficioFP = parseFloat(celdasFP[13]?.textContent.trim());
-            // Solo aceptar beneficios menores a 5000 (los balances son > 24000)
-            if (!simboloFP || isNaN(beneficioFP) || Math.abs(beneficioFP) > 5000) continue;
-            var fechaHoraFP = celdasFP[0]?.textContent.trim() || '';
-            var fechaFP = fechaHoraFP.split(' ')[0].replace(/\./g, '-');
+            if (isNaN(beneficioFP) || Math.abs(beneficioFP) > 5000) continue;
+            var simboloFP = celdasFP[2]?.textContent.trim() || '';
+            var fechaFP = (celdasFP[0]?.textContent.trim() || '').split(' ')[0].replace(/\./g, '-');
             tradesEncontrados.push({
-                fecha: fechaFP,
-                activo: simboloFP,
+                fecha: fechaFP, activo: simboloFP,
                 tipo: tipoFP === 'sell' ? 'Corto' : 'Largo',
                 cierre: beneficioFP > 0 ? 'TP' : 'SL',
-                resultado: beneficioFP,
-                resultado_pct: 0,
-                notas: 'Importado de ' + fileName,
-                imagen: '',
-                checklist: [],
-                hora_entrada: '00:00',
-                hora_salida: '00:00'
+                resultado: beneficioFP, resultado_pct: 0,
+                notas: 'Importado de ' + fileName, imagen: '', checklist: [],
+                hora_entrada: '00:00', hora_salida: '00:00'
             });
         }
-    }
-    if (tradesEncontrados.length > 0) return tradesEncontrados;   
+        return tradesEncontrados;
+    }    
     
     // Formato cTrader
     if (htmlContent.includes('USD neto') && htmlContent.includes('Saldo USD') && tradesEncontrados.length === 0) {
