@@ -149,7 +149,8 @@
         .modal-gracias .gracias-icon { font-size: 4rem; margin-bottom: 16px; }
         .modal-gracias .gracias-text { font-family: 'Inter', sans-serif; font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
         @media (max-width: 768px) { .landing-nav { padding: 14px 16px; } .landing-nav .logo-landing img { height: 34px; width: 34px; } .hero h1 { font-size: 1.8rem; } .hero-logo { width: 60px; height: 60px; } .hero-stats { gap: 20px; padding: 16px; } .hero-stat .stat-num { font-size: 1.3rem; } }
-   .gallery-slide { display: none; text-align: center; padding: 20px; }
+   .gallery-slide { display: none !important; text-align: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
+.gallery-slide.active { display: block !important; opacity: 1; }
 .gallery-slide.active { display: block !important; }
 .gallery-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text2); cursor: pointer; transition: var(--transition); }
 .gallery-dot.active { background: var(--neon) !important; box-shadow: 0 0 6px var(--neon-glow) !important; }
