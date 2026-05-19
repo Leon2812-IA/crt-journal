@@ -1806,38 +1806,35 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
     div.innerHTML = htmlContent;
     var filas = div.querySelectorAll('tr');
     
-    // Formato Funding Pips
-    for (var i = 0; i < filas.length; i++) {
-        var celdas = filas[i].querySelectorAll('td');
-        if (celdas.length === 0) celdas = filas[i].querySelectorAll('th');
-        var textos = [];
-        for (var c = 0; c < celdas.length; c++) {
-            textos.push(celdas[c].textContent.trim());
-        }
-        if (textos.length >= 14 && textos[0].includes('.') && (textos[3] === 'buy' || textos[3] === 'sell') && !isNaN(parseFloat(textos[13])) && parseFloat(textos[13]) !== 0) {
-            var fechaHora = textos[0];
-            var simbolo = textos[2];
-            var tipo = textos[3];
-            var beneficio = parseFloat(textos[13]) || 0;
-            var fecha = fechaHora.split(' ')[0];
-            fecha = fecha.replace(/\./g, '-');
-            var dh_fp = extraerFechaHoras(textos);
-            if (dh_fp) fecha = dh_fp.fecha;
-            if (simbolo && fecha && !isNaN(beneficio)) {
-                tradesEncontrados.push({
-                    fecha: fecha,
-                    activo: simbolo,
-                    tipo: tipo.toLowerCase() === 'sell' ? 'Corto' : 'Largo',
-                    cierre: beneficio > 0 ? 'TP' : 'SL',
-                    resultado: beneficio,
-                    resultado_pct: 0,
-                    notas: 'Importado de ' + fileName,
-                    imagen: '',
-                    checklist: [],
-                    hora_entrada: dh_fp && dh_fp.horaEntrada ? dh_fp.horaEntrada : '00:00',
-                    hora_salida: dh_fp && dh_fp.horaSalida ? dh_fp.horaSalida : '00:00'
-                });
+       // Formato Funding Pips - Tabla "Posiciones" (14 columnas, beneficio en columna 13)
+    if (htmlContent.includes('FundingPips') && tradesEncontrados.length === 0) {
+        for (var iFP = 0; iFP < filas.length; iFP++) {
+            var celdasFP = filas[iFP].querySelectorAll('td');
+            if (celdasFP.length < 14) continue;
+            var textosFP = [];
+            for (var cFP = 0; cFP < celdasFP.length; cFP++) {
+                textosFP.push(celdasFP[cFP].textContent.trim());
             }
+            var tipoFP = (textosFP[3] || '').toLowerCase();
+            if (tipoFP !== 'buy' && tipoFP !== 'sell') continue;
+            var simboloFP = textosFP[2];
+            var beneficioFP = parseFloat(textosFP[13]);
+            if (!simboloFP || isNaN(beneficioFP)) continue;
+            var fechaHoraFP = textosFP[0];
+            var fechaFP = fechaHoraFP.split(' ')[0].replace(/\./g, '-');
+            tradesEncontrados.push({
+                fecha: fechaFP,
+                activo: simboloFP,
+                tipo: tipoFP === 'sell' ? 'Corto' : 'Largo',
+                cierre: beneficioFP > 0 ? 'TP' : 'SL',
+                resultado: beneficioFP,
+                resultado_pct: 0,
+                notas: 'Importado de ' + fileName,
+                imagen: '',
+                checklist: [],
+                hora_entrada: '00:00',
+                hora_salida: '00:00'
+            });
         }
     }
     if (tradesEncontrados.length > 0) return tradesEncontrados;
@@ -1882,7 +1879,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
     if (tradesEncontrados.length > 0) return tradesEncontrados;
     
     // Formato WSF/Elevate "Posiciones cerradas"
-    var esPosicionesCerradas = htmlContent.includes('Posiciones cerradas') || htmlContent.includes('CLOSED_POSITIONS') || htmlContent.includes('Elevate Challenge');
+    var esPosicionesCerradas = (htmlContent.includes('Posiciones cerradas') || htmlContent.includes('CLOSED_POSITIONS') || htmlContent.includes('Elevate Challenge')) && !htmlContent.includes('FundingPips');
     if (esPosicionesCerradas && tradesEncontrados.length === 0) {
         for (var iPC = 0; iPC < filas.length; iPC++) {
             var celdasPC = filas[iPC].querySelectorAll('td');
