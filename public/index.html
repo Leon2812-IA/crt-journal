@@ -30,7 +30,7 @@
         body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: 0; animation: gridScroll 25s linear infinite; }
         @keyframes gridScroll { 0% { transform: translate(0,0); } 100% { transform: translate(50px,50px); } }
         body::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 50% 0%, rgba(0,255,255,0.04) 0%, transparent 70%); pointer-events: none; z-index: 0; }
-        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(0,255,255,0.2); border-radius: 3px; }
+        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.2); border-radius: 3px; }
         #landing-page { position: relative; z-index: 1; min-height: 100vh; }
         .landing-nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 36px; position: relative; z-index: 2; background: rgba(10,10,10,0.75); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
         .landing-nav .logo-landing { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 30px var(--neon-glow); letter-spacing: 3px; text-decoration: none; display: flex; align-items: center; gap: 10px; }
@@ -154,8 +154,7 @@
 .gallery-slide.active { display: block !important; }
 .gallery-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text2); cursor: pointer; transition: var(--transition); }
 .gallery-dot.active { background: var(--neon) !important; box-shadow: 0 0 6px var(--neon-glow) !important; }
-    </style>
-</head>
+    </style></head>
 <body>    <!-- ============================================ -->
     <!-- LANDING PAGE -->
     <!-- ============================================ -->
@@ -517,9 +516,7 @@
     <div class="modal-overlay hidden" id="modal-retiro"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3>Registrar Retiro</h3><div class="form-row"><div class="form-group"><label>Monto ($)</label><input type="number" id="retiro-monto" step="0.01"></div><div class="form-group"><label>Fecha</label><input type="date" id="retiro-fecha"></div></div><div class="form-group"><label>Notas</label><input type="text" id="retiro-notas"></div><div class="btn-group"><button class="btn btn-blue" onclick="guardarRetiro()">Registrar</button><button class="btn btn-outline" onclick="cerrarModal('modal-retiro')">Cancelar</button></div></div></div>
     <div class="modal-overlay hidden" id="modal-importar"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3>Importar Archivo</h3><p style="color:var(--text2);font-size:0.72rem;margin-bottom:12px;font-family:'Inter',sans-serif;">Formatos aceptados: CSV, HTML (Funding Pips, WSF, FTMO, cTrader, etc.)</p><div class="form-group"><label>Archivo</label><input type="file" id="import-file" accept=".csv,.html,.htm"></div><div class="btn-group"><button class="btn btn-blue" onclick="importarArchivo()">Importar</button><button class="btn btn-outline" onclick="cerrarModal('modal-importar')">Cancelar</button></div></div></div>
     <div class="modal-overlay hidden" id="modal-desglose"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-desglose-titulo">Desglose</h3><div id="modal-desglose-content"></div><div class="btn-group"><button class="btn btn-outline" onclick="cerrarModal('modal-desglose')">Cerrar</button></div></div></div>
-    <div class="modal-overlay hidden" id="modal-imagen"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:90vw;text-align:center;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-imagen-titulo">Imagen del Trade</h3><img id="modal-imagen-img" style="max-width:100%;max-height:70vh;border-radius:8px;"><div class="btn-group" style="justify-content:center;"><button class="btn btn-outline" onclick="cerrarModal('modal-imagen')">Cerrar</button></div></div></div>
-
-    <style>
+    <div class="modal-overlay hidden" id="modal-imagen"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:90vw;text-align:center;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-imagen-titulo">Imagen del Trade</h3><img id="modal-imagen-img" style="max-width:100%;max-height:70vh;border-radius:8px;"><div class="btn-group" style="justify-content:center;"><button class="btn btn-outline" onclick="cerrarModal('modal-imagen')">Cerrar</button></div></div></div>    <style>
         .sidebar-nav a { display:flex;align-items:center;gap:12px;padding:11px 24px;color:var(--text2);text-decoration:none;font-size:0.8rem;cursor:pointer;position:relative;transition:all 0.25s ease;border-left:3px solid transparent;margin:2px 8px;border-radius:0 8px 8px 0; }
         .sidebar-nav a:hover, .sidebar-nav a.active { background:rgba(0,255,255,0.06);color:#fff;border-left:3px solid var(--neon);box-shadow:inset 0 0 20px rgba(0,255,255,0.05); }
         .sidebar-nav a::after { content:'';position:absolute;left:0;top:50%;transform:translateY(-50%) scaleY(0);width:2px;height:20px;background:var(--neon);transition:transform 0.25s;box-shadow:0 0 8px var(--neon-glow); }
@@ -604,7 +601,196 @@
         .toggle-group { display:flex;gap:5px; } .toggle-btn { padding:8px 16px;border:1px solid var(--border);background:rgba(24,24,30,0.6);color:var(--text2);border-radius:6px;cursor:pointer;font-size:0.72rem;font-family:'JetBrains Mono',monospace;transition:all 0.3s; }
         .toggle-btn.active { background:rgba(0,255,255,0.15);color:var(--neon);border-color:var(--neon);box-shadow:0 0 12px var(--neon-glow); }
         @media (max-width:768px) { .sidebar { width:60px; } .sidebar-header .logo, .sidebar-header .user, .sidebar-nav a span, .sidebar-footer select, .sidebar-footer .btn-logout { display:none; } .sidebar-nav a { justify-content:center;padding:14px;font-size:1.2rem; } .main { margin-left:60px;padding:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;width:calc(100vw - 60px);max-width:100%; } .trades-layout { flex-direction:column; } .trades-layout .semanas-column { width:100%; } .cal-day { min-height:70px;font-size:0.75rem;padding:6px 2px; } #dashboard-status-bar { left:60px;font-size:0.6rem;gap:10px;padding:6px 12px; } }
-    </style><script>// ============================================
+    </style>    <!-- ============================================ -->
+    <!-- NUEVOS ESTILOS DE DISEÑO (PARTE 1-4)        -->
+    <!-- ============================================ -->
+    <style>
+        /* ============================================ */
+        /* PARTE 1: SIDEBAR + LOGO                      */
+        /* ============================================ */
+        .sidebar-header { position: relative; padding-bottom: 16px !important; }
+        .sidebar-header::after { content: "PRECISE TRADING METRICS"; display: block; font-family: 'Inter', sans-serif; font-size: 0.55rem; color: #5a5878; letter-spacing: 2px; text-align: center; margin-top: 6px; font-weight: 500; }
+        .sidebar-nav a { font-family: 'Inter', sans-serif !important; font-size: 0.8rem !important; font-weight: 500 !important; transition: all 0.2s ease !important; border-left: 3px solid transparent !important; margin: 2px 8px !important; border-radius: 0 8px 8px 0 !important; }
+        .sidebar-nav a span { font-family: 'Inter', sans-serif !important; }
+        .sidebar-nav a:hover { background: rgba(139, 92, 246, 0.05) !important; color: #00e5ff !important; border-left: 3px solid transparent !important; }
+        .sidebar-nav a.active { background: rgba(139, 92, 246, 0.10) !important; border-left: 3px solid #8b5cf6 !important; color: #fff !important; box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.05) !important; }
+        .sidebar-nav a[onclick*="cuentas"] { margin-bottom: 10px !important; }
+        .sidebar-nav a[onclick*="cuentas"]::after, .sidebar-nav a[onclick*="plan"]::after, .sidebar-nav a[onclick*="stats"]::after { content: ""; display: block; height: 1px; background: rgba(139, 92, 246, 0.08); margin: 6px 16px 6px 0; }
+        .sidebar-footer select { font-family: 'Inter', sans-serif !important; font-size: 0.75rem !important; background: rgba(139, 92, 246, 0.04) !important; border: 1px solid rgba(139, 92, 246, 0.12) !important; border-radius: 8px !important; transition: all 0.2s ease !important; }
+        .sidebar-footer select:hover, .sidebar-footer select:focus { border-color: rgba(139, 92, 246, 0.3) !important; outline: none !important; }
+        .sidebar-footer .btn-logout { font-family: 'Inter', sans-serif !important; font-weight: 500 !important; border-radius: 8px !important; transition: all 0.2s ease !important; border-color: rgba(255, 51, 85, 0.3) !important; color: rgba(255, 51, 85, 0.8) !important; }
+        .sidebar-footer .btn-logout:hover { background: rgba(255, 51, 85, 0.08) !important; border-color: rgba(255, 51, 85, 0.5) !important; color: #ff3355 !important; }
+
+        /* ============================================ */
+        /* PARTE 2: BARRA DE ESTADO SUPERIOR            */
+        /* ============================================ */
+        #dashboard-status-bar { background: rgba(10, 10, 10, 0.95) !important; border-bottom: 1px solid rgba(139, 92, 246, 0.12) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; padding: 10px 28px !important; font-family: 'JetBrains Mono', monospace !important; font-size: 0.75rem !important; gap: 16px !important; }
+        #dashboard-status-bar span[style*="color:var(--text2)"] { color: rgba(255, 255, 255, 0.06) !important; }
+        #status-indicator { gap: 10px !important; }
+        #status-dot { width: 10px !important; height: 10px !important; border-radius: 50% !important; animation: statusPulse 2s infinite !important; }
+        @keyframes statusPulse { 0%, 100% { opacity: 1; box-shadow: 0 0 8px currentColor; } 50% { opacity: 0.4; box-shadow: 0 0 16px currentColor; } }
+        #status-text { font-family: 'Orbitron', sans-serif !important; font-size: 0.7rem !important; letter-spacing: 1.5px !important; font-weight: 700 !important; }
+        #status-dd, #status-pnl, #status-cuenta { font-family: 'JetBrains Mono', monospace !important; font-weight: 600 !important; font-size: 0.78rem !important; }
+        #status-plan-badge { font-family: 'Inter', sans-serif !important; font-weight: 600 !important; font-size: 0.65rem !important; letter-spacing: 1px !important; padding: 3px 10px !important; border-radius: 12px !important; }
+
+        /* ============================================ */
+        /* PARTE 3: CARDS DE MÉTRICAS                   */
+        /* ============================================ */
+        .cards { gap: 18px !important; margin-bottom: 28px !important; }
+        .stat-card { background: rgba(18, 18, 22, 0.9) !important; border: 1px solid rgba(139, 92, 246, 0.08) !important; border-radius: 14px !important; padding: 20px 18px !important; position: relative !important; overflow: hidden !important; transition: all 0.25s ease !important; }
+        .stat-card::before { content: '' !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; height: 2px !important; background: linear-gradient(90deg, #8b5cf6, #00e5ff) !important; opacity: 0 !important; transition: opacity 0.3s ease !important; }
+        .stat-card:hover::before { opacity: 1 !important; }
+        .stat-card:hover { border-color: rgba(139, 92, 246, 0.25) !important; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(139, 92, 246, 0.1) !important; transform: translateY(-3px) !important; }
+        .stat-card .lbl { font-family: 'Inter', sans-serif !important; font-size: 0.65rem !important; color: #5a5878 !important; text-transform: uppercase !important; letter-spacing: 1.5px !important; margin-bottom: 6px !important; font-weight: 600 !important; }
+        .stat-card .val { font-family: 'Orbitron', sans-serif !important; font-size: 1.8rem !important; font-weight: 700 !important; margin-top: 4px !important; }
+        .stat-card.hero-card { min-height: 110px !important; padding: 22px 20px !important; }
+        .stat-card.hero-card .val { font-size: 2.2rem !important; }
+        .stat-card:not(.hero-card) { min-height: 85px !important; }
+        .stat-card .val + div, .stat-card div[style*="font-size:0.6rem"], .stat-card div[style*="font-size:0.65rem"], .stat-card div[style*="font-size:0.55rem"] { font-family: 'Inter', sans-serif !important; font-size: 0.72rem !important; color: #7a7a8a !important; margin-top: 4px !important; }
+        .val.green { color: #00e676 !important; text-shadow: 0 0 10px rgba(0, 230, 118, 0.2) !important; }
+        .val.red { color: #ff3355 !important; text-shadow: 0 0 10px rgba(255, 51, 85, 0.2) !important; }
+        .val.neon { color: #00e5ff !important; text-shadow: 0 0 10px rgba(0, 229, 255, 0.2) !important; }
+        .stat-card .progress-bar { height: 6px !important; background: rgba(139, 92, 246, 0.06) !important; border-radius: 3px !important; margin-top: 10px !important; overflow: hidden !important; border: none !important; }
+        .stat-card .progress-fill { height: 100% !important; border-radius: 3px !important; transition: width 0.5s ease !important; }
+
+        /* ============================================ */
+        /* PARTE 4: HEADERS + TABLAS + COACH TIP        */
+        /* ============================================ */
+        h2 { font-family: 'Orbitron', sans-serif !important; font-size: 1.3rem !important; font-weight: 700 !important; margin-bottom: 20px !important; color: #fff !important; letter-spacing: 1px !important; text-shadow: none !important; border-left: 3px solid #8b5cf6 !important; padding-left: 14px !important; }
+        .card + .card { margin-top: 28px !important; }
+        .cards + .card { margin-top: 28px !important; }
+        .card + .card::before { content: '' !important; display: block !important; height: 1px !important; background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.15), transparent) !important; margin-bottom: 24px !important; }
+        .card { background: rgba(18, 18, 22, 0.85) !important; border: 1px solid rgba(139, 92, 246, 0.08) !important; border-radius: 14px !important; padding: 24px !important; margin-bottom: 24px !important; backdrop-filter: blur(16px) !important; transition: all 0.3s ease !important; }
+        .card:hover { border-color: rgba(139, 92, 246, 0.2) !important; box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5) !important; }
+        .card-title { font-family: 'Orbitron', sans-serif !important; font-size: 0.88rem !important; font-weight: 600 !important; margin-bottom: 16px !important; letter-spacing: 1px !important; color: #c0c0d0 !important; }
+        th { text-align: left !important; padding: 12px 14px !important; border-bottom: 1px solid rgba(139, 92, 246, 0.12) !important; color: #5a5878 !important; font-size: 0.68rem !important; text-transform: uppercase !important; letter-spacing: 1.5px !important; font-family: 'Inter', sans-serif !important; background: rgba(139, 92, 246, 0.04) !important; font-weight: 600 !important; }
+        td { padding: 11px 14px !important; border-bottom: 1px solid rgba(139, 92, 246, 0.04) !important; color: #c0c0d0 !important; font-size: 0.8rem !important; }
+        tr { transition: all 0.2s ease !important; }
+        tr:nth-child(even) td { background: rgba(255, 255, 255, 0.012) !important; }
+        tr:hover td { background: rgba(139, 92, 246, 0.04) !important; color: #fff !important; }
+        td:first-child { color: #5a5878 !important; font-family: 'JetBrains Mono', monospace !important; font-size: 0.75rem !important; }
+        .btn-sm { padding: 6px 12px !important; font-size: 0.7rem !important; border-radius: 6px !important; font-family: 'Inter', sans-serif !important; font-weight: 500 !important; transition: all 0.2s ease !important; }
+        .coach-tip { background: rgba(139, 92, 246, 0.05) !important; border: 1px solid rgba(139, 92, 246, 0.1) !important; border-left: 3px solid #00e5ff !important; border-radius: 10px !important; padding: 14px 18px !important; margin-bottom: 18px !important; font-family: 'Inter', sans-serif !important; font-size: 0.85rem !important; color: #c0d0e0 !important; line-height: 1.6 !important; }
+        .coach-tip::before { content: '› COACH TIP' !important; display: block !important; font-family: 'Orbitron', sans-serif !important; font-size: 0.62rem !important; color: #00e5ff !important; margin-bottom: 8px !important; letter-spacing: 1.5px !important; font-weight: 700 !important; }
+    </style>    <style>
+        /* ============================================ */
+        /* PARTE 5: GRÁFICAS + BOTONES + INPUTS         */
+        /* ============================================ */
+        canvas { border-radius: 8px !important; }
+        .btn { font-family: 'Inter', sans-serif !important; font-weight: 500 !important; border-radius: 8px !important; transition: all 0.25s ease !important; }
+        .btn-blue { background: rgba(139, 92, 246, 0.15) !important; border-color: rgba(139, 92, 246, 0.3) !important; color: #a78bfa !important; }
+        .btn-blue:hover { background: rgba(139, 92, 246, 0.25) !important; box-shadow: 0 0 25px rgba(139, 92, 246, 0.2) !important; color: #fff !important; }
+        .btn-outline { border-color: rgba(255, 255, 255, 0.1) !important; color: #888 !important; }
+        .btn-outline:hover { border-color: rgba(139, 92, 246, 0.4) !important; color: #a78bfa !important; }
+        input, select, textarea { font-family: 'Inter', sans-serif !important; border-radius: 8px !important; border: 1px solid rgba(139, 92, 246, 0.1) !important; background: rgba(10, 10, 10, 0.8) !important; color: #c0c0d0 !important; transition: all 0.2s ease !important; }
+        input:focus, select:focus, textarea:focus { border-color: #8b5cf6 !important; box-shadow: 0 0 15px rgba(139, 92, 246, 0.15) !important; outline: none !important; }
+        .badge { font-family: 'Inter', sans-serif !important; font-weight: 600 !important; letter-spacing: 0.5px !important; border-radius: 12px !important; padding: 4px 10px !important; }
+        .badge-green { background: rgba(0, 230, 118, 0.1) !important; color: #00e676 !important; border: 1px solid rgba(0, 230, 118, 0.2) !important; }
+        .badge-red { background: rgba(255, 51, 85, 0.1) !important; color: #ff3355 !important; border: 1px solid rgba(255, 51, 85, 0.2) !important; }
+        .cal-day { border-radius: 8px !important; background: rgba(18, 18, 22, 0.5) !important; border: 1px solid transparent !important; transition: all 0.2s ease !important; }
+        .cal-day:hover { background: rgba(139, 92, 246, 0.06) !important; border-color: rgba(139, 92, 246, 0.2) !important; transform: scale(1.03) !important; }
+        .cal-day.today { border: 2px solid #8b5cf6 !important; box-shadow: 0 0 20px rgba(139, 92, 246, 0.2) !important; background: rgba(139, 92, 246, 0.08) !important; }
+        .cal-day.win { background: rgba(0, 230, 118, 0.08) !important; }
+        .cal-day.loss { background: rgba(255, 51, 85, 0.08) !important; }
+        .semana-card { background: rgba(18, 18, 22, 0.8) !important; border: 1px solid rgba(139, 92, 246, 0.08) !important; border-radius: 10px !important; transition: all 0.3s ease !important; }
+        .semana-card:hover { border-color: rgba(139, 92, 246, 0.2) !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important; }
+        .ai-box { background: rgba(10, 10, 15, 0.9) !important; border: 1px solid rgba(139, 92, 246, 0.1) !important; border-radius: 10px !important; padding: 18px !important; color: #c0c0d0 !important; font-size: 0.8rem !important; line-height: 1.6 !important; }
+        .chat-input-row input { background: rgba(10, 10, 10, 0.8) !important; border: 1px solid rgba(139, 92, 246, 0.1) !important; color: #c0c0d0 !important; font-family: 'Inter', sans-serif !important; border-radius: 8px !important; }
+        .chat-input-row input:focus { border-color: #8b5cf6 !important; box-shadow: 0 0 15px rgba(139, 92, 246, 0.15) !important; }
+        .chat-input-row button { background: rgba(139, 92, 246, 0.15) !important; border: 1px solid rgba(139, 92, 246, 0.3) !important; color: #a78bfa !important; border-radius: 8px !important; font-family: 'Orbitron', sans-serif !important; transition: all 0.25s ease !important; }
+        .chat-input-row button:hover { background: rgba(139, 92, 246, 0.25) !important; box-shadow: 0 0 20px rgba(139, 92, 246, 0.2) !important; }
+        .toggle-btn { font-family: 'Inter', sans-serif !important; border-radius: 6px !important; border: 1px solid rgba(139, 92, 246, 0.12) !important; background: rgba(24, 24, 30, 0.6) !important; color: #7a7a8a !important; transition: all 0.2s ease !important; }
+        .toggle-btn.active { background: rgba(139, 92, 246, 0.15) !important; color: #a78bfa !important; border-color: #8b5cf6 !important; box-shadow: 0 0 12px rgba(139, 92, 246, 0.15) !important; }
+        .modal { background: rgba(18, 18, 22, 0.97) !important; border: 1px solid rgba(139, 92, 246, 0.2) !important; border-radius: 14px !important; box-shadow: 0 0 60px rgba(139, 92, 246, 0.1) !important; }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.2) !important; border-radius: 3px !important; }
+
+        /* ============================================ */
+        /* PARTE 6: RESPONSIVE + AJUSTES FINALES        */
+        /* ============================================ */
+        @media (max-width: 768px) {
+            .main { padding: 16px !important; margin-left: 60px !important; }
+            h2 { font-size: 1.1rem !important; padding-left: 10px !important; }
+            .stat-card .val { font-size: 1.4rem !important; }
+            .stat-card.hero-card .val { font-size: 1.6rem !important; }
+            .stat-card.hero-card { min-height: 90px !important; padding: 16px 14px !important; }
+            .stat-card:not(.hero-card) { min-height: 70px !important; }
+        }
+    </style>
+
+    <!-- ============================================ -->
+    <!-- COLORES DE GRÁFICAS (SOLO COLORES)           -->
+    <!-- ============================================ -->
+    <script>
+    (function() {
+        var observerGraficas = new MutationObserver(function() {
+            // Balance Diario Chart
+            if (window.balanceDiarioChart && window.balanceDiarioChart.data && window.balanceDiarioChart.data.datasets) {
+                var ds0 = window.balanceDiarioChart.data.datasets[0];
+                if (ds0 && ds0.backgroundColor && ds0.backgroundColor.map) {
+                    ds0.backgroundColor = ds0.backgroundColor.map(function(v) {
+                        return v.includes('136') ? 'rgba(100, 160, 255, 0.45)' : 'rgba(30, 60, 120, 0.6)';
+                    });
+                    ds0.borderColor = ds0.borderColor.map(function(v) {
+                        return v.includes('136') ? 'rgba(100, 160, 255, 0.8)' : 'rgba(30, 60, 120, 0.9)';
+                    });
+                    window.balanceDiarioChart.update();
+                }
+            }
+            // Distribución Chart
+            if (window.distChart && window.distChart.data && window.distChart.data.datasets) {
+                var dsDist = window.distChart.data.datasets[0];
+                if (dsDist && dsDist.backgroundColor) {
+                    for (var i = 0; i < dsDist.backgroundColor.length; i++) {
+                        var color = dsDist.backgroundColor[i];
+                        if (color.includes('51,85')) {
+                            dsDist.backgroundColor[i] = color.replace(/rgba\(255,\s*51,\s*85,\s*[\d.]+\)/, function(m) {
+                                return m.includes('0.6') ? 'rgba(30, 60, 120, 0.7)' : m.includes('0.4') ? 'rgba(30, 60, 120, 0.5)' : 'rgba(30, 60, 120, 0.3)';
+                            });
+                        } else if (color.includes('0,255,136') || color.includes('0, 255, 136') || color.includes('0,136')) {
+                            dsDist.backgroundColor[i] = color.replace(/rgba\(0,\s*255,\s*136,\s*[\d.]+\)/, function(m) {
+                                return m.includes('0.6') ? 'rgba(100, 160, 255, 0.7)' : m.includes('0.4') ? 'rgba(100, 160, 255, 0.5)' : 'rgba(100, 160, 255, 0.3)';
+                            });
+                        }
+                    }
+                    window.distChart.update();
+                }
+            }
+            // Duración Chart
+            if (window.duracionChart && window.duracionChart.data && window.duracionChart.data.datasets) {
+                var dsDur = window.duracionChart.data.datasets;
+                for (var j = 0; j < dsDur.length; j++) {
+                    if (dsDur[j].label === 'Ganados') {
+                        dsDur[j].backgroundColor = 'rgba(100, 160, 255, 0.5)';
+                        dsDur[j].borderColor = 'rgba(100, 160, 255, 0.8)';
+                    } else if (dsDur[j].label === 'Perdidos') {
+                        dsDur[j].backgroundColor = 'rgba(30, 60, 120, 0.5)';
+                        dsDur[j].borderColor = 'rgba(30, 60, 120, 0.8)';
+                    }
+                }
+                window.duracionChart.update();
+            }
+            // Frecuencia Chart
+            if (window.frecuenciaChart && window.frecuenciaChart.data && window.frecuenciaChart.data.datasets) {
+                var dsFrec = window.frecuenciaChart.data.datasets[0];
+                if (dsFrec && dsFrec.backgroundColor) {
+                    dsFrec.backgroundColor = [
+                        'rgba(100, 160, 255, 0.35)',
+                        'rgba(100, 160, 255, 0.4)',
+                        'rgba(100, 160, 255, 0.45)',
+                        'rgba(100, 160, 255, 0.5)',
+                        'rgba(100, 160, 255, 0.55)',
+                        'rgba(100, 160, 255, 0.3)',
+                        'rgba(100, 160, 255, 0.25)'
+                    ];
+                    dsFrec.borderColor = 'rgba(100, 160, 255, 0.7)';
+                    window.frecuenciaChart.update();
+                }
+            }
+        });
+        var app = document.getElementById('app');
+        if (app) { observerGraficas.observe(app, { childList: true, subtree: true, attributes: true }); }
+    })();
+    </script><script>// ============================================
 // CONFIGURACIÓN DE FIREBASE + EMAILJS
 // ============================================
 const firebaseConfig = {
@@ -703,7 +889,8 @@ function cerrarLegal(){document.getElementById('modal-legal').classList.add('hid
 
 // ============================================
 // SISTEMA DE AUTENTICACIÓN (SHA-256 + FIREBASE)
-// ============================================
+// ============================================                                     
+</script><script>
 function sha256(str) {
     function rotr(x, n) { return (x >>> n) | (x << (32 - n)); }
     function ch(x, y, z) { return (x & y) ^ (~x & z); }
@@ -1110,7 +1297,9 @@ async function eliminarUsuario(email){
     await db.collection('datos').doc(email).delete();
     alert('🗑️ Usuario eliminado: ' + email);
     renderAdmin();
-}// ============ CALCULAR DRAWDOWN ============
+}
+
+// ============ CALCULAR DRAWDOWN ============
 function calcularDrawdown(trades, tamCuenta) {
     if (!trades || trades.length === 0) {
         return {ddActual:0, ddMax:0, ddActualPct:0, ddMaxPct:0, pnlHoy:0, pnlHoyPct:0, peakEquity:tamCuenta, currentEquity:tamCuenta};
@@ -1383,7 +1572,9 @@ function renderPlanCumplimiento(){
         html+='</tr>';
     });
     html+='</tbody></table>';container.innerHTML=html;
-}// ============ MÉTRICAS ============
+}
+
+// ============ MÉTRICAS ============
 function calcularDuracionMinutos(tr){
     if(!tr.hora_entrada||!tr.hora_salida||tr.hora_entrada==='00:00'||tr.hora_salida==='00:00')return null;
     var h1=tr.hora_entrada.split(':'),h2=tr.hora_salida.split(':');
@@ -1625,7 +1816,7 @@ function renderRendimientoDiario(){
     htmlDesglose+='</tbody></table>';
     document.getElementById('desglose-diario-content').innerHTML=htmlDesglose;
 }
-
+</script><script>
 // ============ RIESGO ============
 function renderRiesgo(){
     var t=tradesCuenta();if(!t.length){document.getElementById('riesgo-content').innerHTML='<p style="color:var(--text2);">Sin datos.</p>';return;}
@@ -1716,7 +1907,9 @@ function eliminarCuentaCompleta(id){
 function renderReglas(){var c=cuentaActiva();if(!c)return;var t=tradesCuenta(),pnl=t.reduce(function(s,tr){return s+tr.resultado;},0),ganados=t.filter(function(tr){return tr.resultado>0;});var tradeMasAlto=ganados.length>0?Math.max.apply(null,ganados.map(function(tr){return tr.resultado;})):0;var dias=new Set(t.map(function(tr){return tr.fecha;})).size;var diasMin=(c&&c.diasmin!==undefined&&c.diasmin!==null)?c.diasmin:10;var pnlParaConsistencia=pnl*(c.consistenciaPct/100);var consistenciaOk=(c.consistenciaPct===0)?true:(tradeMasAlto<=(pnlParaConsistencia>0?pnlParaConsistencia:99999));var pctAvanceObj=Math.min(100,Math.max(0,(pnl/c.objetivo)*100));document.getElementById('reglas-cards').innerHTML='<div class="stat-card"><div class="lbl">Objetivo</div><div class="val">$'+c.objetivo.toFixed(2)+'</div><div class="progress-bar"><div class="progress-fill blue" style="width:'+pctAvanceObj+'%"></div></div><div style="font-size:0.7rem;color:#888;">$'+pnl.toFixed(2)+' ('+Math.round(pctAvanceObj)+'%)</div></div><div class="stat-card"><div class="lbl">Días Operativos</div><div class="val">'+dias+'<div style="font-size:0.6rem;color:#888;">'+(diasMin>0?'de '+diasMin+' requeridos'+(dias>=diasMin?' ✅':' (faltan '+(diasMin-dias)+')'):'sin mínimo de días')+'</div></div></div><div class="stat-card"><div class="lbl">Trade Más Alto</div><div class="val green">$'+tradeMasAlto.toFixed(2)+'</div></div><div class="stat-card"><div class="lbl">Consistencia</div><div class="val '+(consistenciaOk?'green':'red')+'">'+(c.consistenciaPct===0?'⚪ NO APLICA':(consistenciaOk?'✅ CUMPLE':'❌ NO CUMPLE'))+'</div></div>';}
 function renderRetiros(){var c=cuentaActiva();if(!c)return;var rets=retirosCuenta(),totalRet=rets.reduce(function(s,r){return s+r.monto;},0);var roi=c.invertido>0?((totalRet-c.invertido)/c.invertido*100).toFixed(2):0;document.getElementById('retiros-cards').innerHTML='<div class="stat-card"><div class="lbl">Invertido</div><div class="val">$'+c.invertido.toFixed(2)+'</div></div><div class="stat-card"><div class="lbl">Total Retirado</div><div class="val green">$'+totalRet.toFixed(2)+'</div></div><div class="stat-card"><div class="lbl">ROI Cuenta</div><div class="val '+(roi>=0?'green':'red')+'">'+roi+'%</div></div>';document.getElementById('retiros-tbody').innerHTML=rets.map(function(r){return'<tr><td>'+r.fecha+'</td><td class="green">+$'+r.monto.toFixed(2)+'</td><td>'+(r.notas||'')+'</td></tr>';}).join('');}
 function abrirModalRetiro(){document.getElementById('retiro-monto').value='';document.getElementById('retiro-fecha').value=new Date().toISOString().split('T')[0];abrirModal('modal-retiro');}
-function guardarRetiro(){var r={id:data.nextId.retiro,cuenta_id:cuentaActivaId,monto:parseFloat(document.getElementById('retiro-monto').value),fecha:document.getElementById('retiro-fecha').value,notas:document.getElementById('retiro-notas').value};data.retiros.push(r);data.nextId.retiro++;saveData();cerrarModal('modal-retiro');renderRetiros();}// ============ ESTADÍSTICAS ============
+function guardarRetiro(){var r={id:data.nextId.retiro,cuenta_id:cuentaActivaId,monto:parseFloat(document.getElementById('retiro-monto').value),fecha:document.getElementById('retiro-fecha').value,notas:document.getElementById('retiro-notas').value};data.retiros.push(r);data.nextId.retiro++;saveData();cerrarModal('modal-retiro');renderRetiros();}
+
+// ============ ESTADÍSTICAS ============
 function renderStats(){
     var t=tradesCuenta(),total=t.length,ganados=t.filter(function(tr){return tr.resultado>0;}).length,perdidos=t.filter(function(tr){return tr.resultado<0;}).length;
     var wr=total>0?((ganados/total)*100).toFixed(1):0,pnl=t.reduce(function(s,tr){return s+tr.resultado;},0);
