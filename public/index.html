@@ -1486,6 +1486,160 @@
             </div>
         </main>
     </div><script>    <!-- ============================================ -->
+    <!-- MODALES DEL DASHBOARD -->
+    <!-- ============================================ -->
+    <div class="modal-overlay hidden" id="modal-dia-trades"><div class="modal" style="background:rgba(13,12,26,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-dia-titulo" style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;border-left:3px solid #8b5cf6;padding-left:12px;">Trades del día</h3><div id="modal-dia-lista"></div><div class="btn-group" style="display:flex;gap:10px;margin-top:16px;"><button class="btn btn-blue btn-sm" onclick="nuevoTradeEnDia()" style="background:var(--neon);color:#000;border:none;padding:9px 16px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.78rem;">+ Añadir trade</button><button class="btn btn-outline btn-sm" onclick="cerrarModal('modal-dia-trades')" style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:9px 16px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.78rem;">Cerrar</button></div></div></div>
+
+    <div class="modal-overlay hidden" id="modal-trade"><div class="modal" style="background:rgba(13,12,26,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-trade-title" style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;border-left:3px solid #8b5cf6;padding-left:12px;">Nuevo Trade</h3><form id="trade-form"><input type="hidden" id="trade-id"><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Fecha</label><input type="date" id="trade-fecha" required style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="form-row" style="display:flex;gap:14px;flex-wrap:wrap;"><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Hora Entrada</label><input type="time" id="trade-hora-entrada" value="00:00" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Hora Salida</label><input type="time" id="trade-hora-salida" value="00:00" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div></div><div class="form-row" style="display:flex;gap:14px;flex-wrap:wrap;"><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Activo</label><select id="trade-activo" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>XAUUSD</option><option>BTCUSD</option><option>SPX</option><option>NAS100</option><option>US30</option></select></div><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Tipo</label><select id="trade-tipo" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"><option>Largo</option><option>Corto</option></select></div></div><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Cierre</label><div class="toggle-group" id="cierre-toggle" style="display:flex;gap:6px;"><button type="button" class="toggle-btn active" data-val="Manual" style="padding:8px 14px;background:rgba(139,92,246,0.15);border:1px solid var(--violet-border);color:var(--violet);border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:'Inter',sans-serif;">Manual</button><button type="button" class="toggle-btn" data-val="TP" style="padding:8px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:'Inter',sans-serif;">TP</button><button type="button" class="toggle-btn" data-val="SL" style="padding:8px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:'Inter',sans-serif;">SL</button><button type="button" class="toggle-btn" data-val="BE" style="padding:8px 14px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:6px;cursor:pointer;font-size:0.75rem;font-family:'Inter',sans-serif;">BE</button></div><input type="hidden" id="trade-cierre" value="Manual"></div><div class="form-row" style="display:flex;gap:14px;flex-wrap:wrap;"><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Resultado ($)</label><input type="number" id="trade-resultado" step="0.01" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Resultado (%)</label><input type="number" id="trade-resultado-pct" step="0.01" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div></div><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Notas</label><textarea id="trade-notas" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;min-height:60px;"></textarea></div><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">🖼️ Imagen (URL o archivo)</label><input type="text" id="trade-imagen" placeholder="https://... o pega URL de TradingView" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;margin-bottom:6px;"><input type="file" id="trade-imagen-file" accept="image/*" style="margin-top:6px;" onchange="previewImagen(this)"><img id="trade-imagen-preview" class="img-preview hidden" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:8px;border:1px solid var(--border);"></div><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">📋 Checklist del Plan</label><div id="trade-checklist"></div></div><div class="btn-group" style="display:flex;gap:10px;flex-wrap:wrap;"><button type="submit" class="btn btn-blue" style="background:var(--neon);color:#000;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Guardar</button><button type="button" class="btn btn-outline" onclick="cerrarModal('modal-trade')" style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Cancelar</button><button type="button" class="btn btn-outline hidden" id="btn-del-trade" onclick="eliminarTrade()" style="color:var(--red);border-color:var(--red);">Eliminar</button></div></form></div></div>
+
+    <div class="modal-overlay hidden" id="modal-cuenta"><div class="modal" style="background:rgba(13,12,26,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-cuenta-titulo" style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;border-left:3px solid #8b5cf6;padding-left:12px;">Nueva Cuenta</h3><input type="hidden" id="cuenta-edit-id"><div class="form-row" style="display:flex;gap:14px;flex-wrap:wrap;"><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Nombre</label><input type="text" id="cuenta-edit-nombre" placeholder="Ej: 50K" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Empresa</label><input type="text" id="cuenta-edit-empresa" placeholder="Ej: Elevate" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div></div><div class="form-row" style="display:flex;gap:14px;flex-wrap:wrap;"><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Tamaño ($)</label><input type="number" id="cuenta-edit-tamano" value="50000" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Invertido ($)</label><input type="number" id="cuenta-edit-invertido" value="0" step="0.01" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div></div><div class="form-row" style="display:flex;gap:14px;flex-wrap:wrap;"><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Objetivo ($)</label><input type="number" id="cuenta-edit-objetivo" value="1250" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Días Mínimos</label><input type="number" id="cuenta-edit-diasmin" value="10" min="0" step="1" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin mínimo de días</div></div></div><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Consistencia (%)</label><input type="number" id="cuenta-edit-consistencia" value="35" min="0" step="1" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin regla de consistencia</div></div><div class="form-row" style="display:flex;gap:14px;flex-wrap:wrap;"><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Drawdown Máximo ($)</label><input type="number" id="cuenta-edit-ddmax" value="5000" min="0" step="0.01" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">Límite total de pérdida permitido</div></div><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Pérdida Diaria Máx ($)</label><input type="number" id="cuenta-edit-dddiario" value="2500" min="0" step="0.01" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin límite diario</div></div></div><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Tipo de Drawdown</label><select id="cuenta-edit-tipodd" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"><option value="balance">Balance-based (sobre balance inicial)</option><option value="equity">Equity-based (sobre balance + ganancias)</option></select></div><div class="btn-group" style="display:flex;gap:10px;"><button class="btn btn-blue" onclick="guardarCuenta()" style="background:var(--neon);color:#000;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Guardar</button><button class="btn btn-outline" onclick="cerrarModal('modal-cuenta')" style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Cancelar</button></div></div></div>
+
+    <div class="modal-overlay hidden" id="modal-retiro"><div class="modal" style="background:rgba(13,12,26,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;border-left:3px solid #8b5cf6;padding-left:12px;">Registrar Retiro</h3><div class="form-row" style="display:flex;gap:14px;flex-wrap:wrap;"><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Monto ($)</label><input type="number" id="retiro-monto" step="0.01" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="form-group" style="flex:1;min-width:140px;margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Fecha</label><input type="date" id="retiro-fecha" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div></div><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Notas</label><input type="text" id="retiro-notas" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="btn-group" style="display:flex;gap:10px;"><button class="btn btn-blue" onclick="guardarRetiro()" style="background:var(--neon);color:#000;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Registrar</button><button class="btn btn-outline" onclick="cerrarModal('modal-retiro')" style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Cancelar</button></div></div></div>
+
+    <div class="modal-overlay hidden" id="modal-importar"><div class="modal" style="background:rgba(13,12,26,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;border-left:3px solid #8b5cf6;padding-left:12px;">Importar Archivo</h3><p style="color:var(--text2);font-size:0.72rem;margin-bottom:12px;font-family:'Inter',sans-serif;">Formatos aceptados: CSV, HTML (Funding Pips, WSF, FTMO, cTrader, etc.)</p><div class="form-group" style="margin-bottom:14px;"><label style="display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;font-family:'Orbitron',sans-serif;">Archivo</label><input type="file" id="import-file" accept=".csv,.html,.htm" style="width:100%;padding:10px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:0.85rem;"></div><div class="btn-group" style="display:flex;gap:10px;"><button class="btn btn-blue" onclick="importarArchivo()" style="background:var(--neon);color:#000;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Importar</button><button class="btn btn-outline" onclick="cerrarModal('modal-importar')" style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Cancelar</button></div></div></div>
+
+    <div class="modal-overlay hidden" id="modal-desglose"><div class="modal" style="background:rgba(13,12,26,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-desglose-titulo" style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;border-left:3px solid #8b5cf6;padding-left:12px;">Desglose</h3><div id="modal-desglose-content"></div><div class="btn-group" style="display:flex;gap:10px;margin-top:16px;"><button class="btn btn-outline" onclick="cerrarModal('modal-desglose')" style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Cerrar</button></div></div></div>
+
+    <div class="modal-overlay hidden" id="modal-imagen"><div class="modal" style="background:rgba(13,12,26,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:90vw;text-align:center;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-imagen-titulo" style="font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;border-left:3px solid #8b5cf6;padding-left:12px;">Imagen del Trade</h3><img id="modal-imagen-img" style="max-width:100%;max-height:70vh;border-radius:8px;"><div class="btn-group" style="justify-content:center;display:flex;gap:10px;margin-top:16px;"><button class="btn btn-outline" onclick="cerrarModal('modal-imagen')" style="background:transparent;color:var(--text2);border:1px solid var(--border);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;">Cerrar</button></div></div></div>
+
+    <!-- ============================================ -->
+    <!-- ESTILOS SIDEBAR NAV Y DASHBOARD -->
+    <!-- ============================================ -->
+    <style>
+        .sidebar-nav a {
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:11px 24px;
+            color:var(--text2);
+            text-decoration:none;
+            font-size:0.8rem;
+            cursor:pointer;
+            position:relative;
+            transition:all 0.2s ease;
+            border-left:3px solid transparent;
+            margin:2px 8px;
+            border-radius:0 8px 8px 0;
+            font-family:'Inter',sans-serif;
+            font-weight:500;
+        }
+        .sidebar-nav a:hover {
+            background:rgba(139,92,246,0.05);
+            color:#00e5ff;
+            border-left:3px solid transparent;
+        }
+        .sidebar-nav a.active {
+            background:rgba(139,92,246,0.10);
+            color:#fff;
+            border-left:3px solid #8b5cf6;
+            box-shadow:inset 0 0 20px rgba(139,92,246,0.05);
+        }
+        .main {
+            margin-left:240px;
+            flex:1;
+            padding:28px 32px;
+            position:relative;
+            z-index:1;
+            overflow-x:auto;
+            -webkit-overflow-scrolling:touch;
+        }
+        .page {
+            display:none;
+            animation:fadeIn 0.35s ease;
+        }
+        .page.active {
+            display:block;
+        }
+        @keyframes fadeIn {
+            from { opacity:0;transform:translateY(10px); }
+            to { opacity:1;transform:translateY(0); }
+        }
+        .cards {
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+            gap:18px;
+            margin-bottom:28px;
+        }
+        .stat-card {
+            background:rgba(13,12,26,0.92);
+            border:1px solid var(--border);
+            border-top:2px solid transparent;
+            border-image:linear-gradient(90deg,#8b5cf6,#00e5ff) 1;
+            border-radius:12px;
+            padding:20px 18px;
+            position:relative;
+            backdrop-filter:blur(16px);
+            transition:all 0.25s ease;
+            cursor:default;
+            min-height:110px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+        }
+        .stat-card:hover {
+            transform:translateY(-3px);
+            box-shadow:0 8px 32px rgba(139,92,246,0.08);
+            border-color:var(--violet-border);
+        }
+        .stat-card .stat-num {
+            font-family:'Orbitron',sans-serif;
+            font-size:1.8rem;
+            font-weight:700;
+            margin-bottom:4px;
+        }
+        .stat-card .stat-label {
+            font-size:0.65rem;
+            color:#5a5878;
+            letter-spacing:1.5px;
+            text-transform:uppercase;
+            font-family:'Inter',sans-serif;
+        }
+        .stat-card .stat-sub {
+            font-size:0.72rem;
+            margin-top:4px;
+            font-family:'JetBrains Mono',monospace;
+        }
+        .stat-card-sm {
+            min-height:85px;
+        }
+        .stat-card-sm .stat-num {
+            font-size:1.5rem;
+        }
+        table tr:nth-child(even) {
+            background:rgba(255,255,255,0.012);
+        }
+        table tbody tr:hover {
+            background:rgba(139,92,246,0.04);
+        }
+        table tbody td {
+            padding:11px 14px;
+            font-size:0.78rem;
+            color:var(--text);
+            border-bottom:1px solid rgba(139,92,246,0.06);
+            font-family:'JetBrains Mono',monospace;
+        }
+        table tbody td:first-child {
+            color:#5a5878;
+        }
+        .gallery-slide.active {
+            display:block !important;
+        }
+        .gallery-dot.active {
+            background:var(--neon) !important;
+            box-shadow:0 0 6px var(--neon-glow) !important;
+        }
+        .gallery-nav:hover {
+            background:rgba(139,92,246,0.2) !important;
+            border-color:var(--violet-border) !important;
+        }
+        .toggle-btn.active {
+            background:rgba(139,92,246,0.2) !important;
+            border-color:var(--violet) !important;
+            color:var(--violet) !important;
+        }
+    </style>
+
+    <!-- ============================================ -->
     <!-- JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
@@ -2544,7 +2698,7 @@
         }
 
         // ============================================
-        // IMPORTAR ARCHIVOS - FUNCIONES ORIGINALES RESTAURADAS
+        // IMPORTAR ARCHIVOS
         // ============================================
         function abrirModalImportar() {
             document.getElementById('modal-importar').classList.remove('hidden');
@@ -2591,22 +2745,21 @@
             const lines = content.split('\n').filter(l => l.trim());
             if (lines.length < 2) return [];
             const headers = lines[0].toLowerCase().split(',');
-            const idxFecha = headers.findIndex(h => h.includes('fecha') || h.includes('date') || h.includes('time') || h.includes('open') || h.includes('open time'));
-            const idxActivo = headers.findIndex(h => h.includes('activo') || h.includes('symbol') || h.includes('par') || h.includes('instrument') || h.includes('item'));
-            const idxTipo = headers.findIndex(h => h.includes('tipo') || h.includes('type') || h.includes('direction') || h.includes('position'));
-            const idxResultado = headers.findIndex(h => h.includes('resultado') || h.includes('profit') || h.includes('pnl') || h.includes('gain') || h.includes('beneficio') || h.includes('net'));
+            const idxFecha = headers.findIndex(h => h.includes('fecha') || h.includes('date') || h.includes('time'));
+            const idxActivo = headers.findIndex(h => h.includes('activo') || h.includes('symbol') || h.includes('par') || h.includes('instrument'));
+            const idxTipo = headers.findIndex(h => h.includes('tipo') || h.includes('type') || h.includes('direction'));
+            const idxResultado = headers.findIndex(h => h.includes('resultado') || h.includes('profit') || h.includes('pnl') || h.includes('gain'));
 
             return lines.slice(1).map(line => {
                 const cols = line.split(',');
-                const resultado = idxResultado >= 0 ? parseFloat(cols[idxResultado]?.replace(/[^0-9.-]/g, '')) || 0 : 0;
                 return {
                     fecha: idxFecha >= 0 ? cols[idxFecha]?.trim() : '',
                     activo: idxActivo >= 0 ? cols[idxActivo]?.trim() : '',
-                    tipo: resultado >= 0 ? 'Largo' : 'Corto',
-                    resultado,
+                    tipo: idxTipo >= 0 ? cols[idxTipo]?.trim() : '',
+                    resultado: idxResultado >= 0 ? parseFloat(cols[idxResultado]) || 0 : 0,
                     cierre: 'Manual'
                 };
-            }).filter(t => t.fecha && !t.fecha.toLowerCase().includes('total'));
+            }).filter(t => t.fecha);
         }
 
         function parsearMetaTraderHTML(content, fileName) {
@@ -2615,130 +2768,27 @@
             const doc = parser.parseFromString(content, 'text/html');
             const tables = doc.querySelectorAll('table');
 
-            // Detectar formato por nombre de archivo o contenido
-            const isElevate = fileName.includes('elevate');
-            const isFundingPips = fileName.includes('funding') || fileName.includes('pips');
-            const isWSF = fileName.includes('wsf') || fileName.includes('ftmo');
-
             tables.forEach(table => {
                 const rows = table.querySelectorAll('tr');
-                const headers = [];
-                const firstRow = rows[0];
-                if (firstRow) {
-                    const headerCells = firstRow.querySelectorAll('th, td');
-                    headerCells.forEach(cell => headers.push(cell.textContent.trim().toLowerCase()));
-                }
-
-                // Funding Pips: tabla "Posiciones", 14 columnas, beneficio en [13]
-                if (isFundingPips && headers.some(h => h.includes('posición') || h.includes('posiciones') || h.includes('position'))) {
-                    for (let i = 1; i < rows.length; i++) {
-                        const cells = rows[i].querySelectorAll('td');
-                        if (cells.length >= 14) {
-                            const beneficio = parseFloat(cells[13]?.textContent?.replace(/[^0-9.-]/g, ''));
-                            if (!isNaN(beneficio) && Math.abs(beneficio) < 5000) {
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 5) {
+                        const texto = Array.from(cells).map(c => c.textContent.trim());
+                        if (!texto.some(t => t.includes('Total') || t.includes('Symbol') || t.includes('Símbolo') || t.includes('Totales'))) {
+                            const resultado = parseFloat(texto[texto.length - 1]?.replace(/[^0-9.-]/g, ''));
+                            if (!isNaN(resultado)) {
                                 trades.push({
-                                    fecha: cells[0]?.textContent?.trim() || '',
-                                    activo: cells[1]?.textContent?.trim() || '',
-                                    tipo: beneficio >= 0 ? 'Largo' : 'Corto',
-                                    resultado: beneficio,
+                                    fecha: texto[0] || '',
+                                    activo: texto[1] || '',
+                                    tipo: resultado > 0 ? 'Largo' : 'Corto',
+                                    resultado,
                                     cierre: 'Manual'
                                 });
                             }
                         }
                     }
-                }
-
-                // cTrader: USD neto y Saldo USD, columnas [1],[2],[3],[7]
-                if (headers.some(h => h.includes('usd') || h.includes('neto') || h.includes('saldo'))) {
-                    for (let i = 1; i < rows.length; i++) {
-                        const cells = rows[i].querySelectorAll('td');
-                        if (cells.length >= 8) {
-                            const texto = Array.from(cells).map(c => c.textContent.trim());
-                            if (!texto.some(t => t.includes('Total') || t.includes('Symbol'))) {
-                                const resultado = parseFloat(texto[7]?.replace(/[^0-9.-]/g, ''));
-                                if (!isNaN(resultado) && resultado !== 0) {
-                                    trades.push({
-                                        fecha: texto[1] || '',
-                                        activo: texto[2] || '',
-                                        tipo: resultado >= 0 ? 'Largo' : 'Corto',
-                                        resultado,
-                                        cierre: 'Manual'
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // WSF/FTMO: tabla "Historial", filtra Totales/Símbolo
-                if (isWSF || headers.some(h => h.includes('historial') || h.includes('history'))) {
-                    for (let i = 1; i < rows.length; i++) {
-                        const cells = rows[i].querySelectorAll('td');
-                        if (cells.length >= 5) {
-                            const texto = Array.from(cells).map(c => c.textContent.trim());
-                            if (!texto.some(t => t.toLowerCase().includes('total') || t.toLowerCase().includes('symbol') || t.toLowerCase().includes('símbolo'))) {
-                                const resultado = parseFloat(texto[texto.length - 1]?.replace(/[^0-9.-]/g, ''));
-                                if (!isNaN(resultado) && resultado !== 0) {
-                                    trades.push({
-                                        fecha: texto[0] || '',
-                                        activo: texto[1] || '',
-                                        tipo: resultado >= 0 ? 'Largo' : 'Corto',
-                                        resultado,
-                                        cierre: 'Manual'
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Elevate: "Posiciones cerradas", columnas [1],[4],[12]
-                if (isElevate || headers.some(h => h.includes('cerradas') || h.includes('closed'))) {
-                    for (let i = 1; i < rows.length; i++) {
-                        const cells = rows[i].querySelectorAll('td');
-                        if (cells.length >= 13) {
-                            const texto = Array.from(cells).map(c => c.textContent.trim());
-                            if (!texto.some(t => t.toLowerCase().includes('total'))) {
-                                const resultado = parseFloat(texto[12]?.replace(/[^0-9.-]/g, ''));
-                                if (!isNaN(resultado) && resultado !== 0) {
-                                    trades.push({
-                                        fecha: texto[1] || '',
-                                        activo: texto[4] || '',
-                                        tipo: resultado >= 0 ? 'Largo' : 'Corto',
-                                        resultado,
-                                        cierre: texto[0] || 'Manual'
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Si no se detectó formato específico, intentar genérico
-            if (trades.length === 0) {
-                tables.forEach(table => {
-                    const rows = table.querySelectorAll('tr');
-                    rows.forEach(row => {
-                        const cells = row.querySelectorAll('td');
-                        if (cells.length >= 5) {
-                            const texto = Array.from(cells).map(c => c.textContent.trim());
-                            if (!texto.some(t => t.includes('Total') || t.includes('Symbol') || t.includes('Símbolo') || t.includes('Totales') || t.includes('Balance'))) {
-                                const resultado = parseFloat(texto[texto.length - 1]?.replace(/[^0-9.-]/g, ''));
-                                if (!isNaN(resultado)) {
-                                    trades.push({
-                                        fecha: texto[0] || '',
-                                        activo: texto[1] || '',
-                                        tipo: resultado > 0 ? 'Largo' : 'Corto',
-                                        resultado,
-                                        cierre: 'Manual'
-                                    });
-                                }
-                            }
-                        }
-                    });
                 });
-            }
+            });
 
             return trades;
         }
