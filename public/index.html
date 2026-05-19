@@ -1806,7 +1806,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
     div.innerHTML = htmlContent;
     var filas = div.querySelectorAll('tr');
     
-       // Formato Funding Pips - Tabla "Posiciones" (14 columnas, beneficio en columna 13)
+         // Formato Funding Pips - Tabla "Posiciones" (14 columnas, beneficio en columna 13)
     if (htmlContent.includes('FundingPips') && tradesEncontrados.length === 0) {
         for (var iFP = 0; iFP < filas.length; iFP++) {
             var celdasFP = filas[iFP].querySelectorAll('td');
@@ -1819,7 +1819,8 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
             if (tipoFP !== 'buy' && tipoFP !== 'sell') continue;
             var simboloFP = textosFP[2];
             var beneficioFP = parseFloat(textosFP[13]);
-            if (!simboloFP || isNaN(beneficioFP)) continue;
+            // Filtrar: el beneficio debe ser un número válido y NO un balance de cuenta (menor a 100000)
+            if (!simboloFP || isNaN(beneficioFP) || Math.abs(beneficioFP) > 100000) continue;
             var fechaHoraFP = textosFP[0];
             var fechaFP = fechaHoraFP.split(' ')[0].replace(/\./g, '-');
             tradesEncontrados.push({
