@@ -155,7 +155,10 @@
 .gallery-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text2); cursor: pointer; transition: var(--transition); }
 .gallery-dot.active { background: var(--neon) !important; box-shadow: 0 0 6px var(--neon-glow) !important; }
     </style></head>
-<body>    <!-- ============================================ -->
+<body> 
+    <button id="menu-toggle" style="display:none;position:fixed;top:10px;left:10px;z-index:300;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#fff;font-size:1.2rem;width:40px;height:40px;border-radius:8px;cursor:pointer;">☰</button>
+ 
+    <!-- ============================================ -->
     <!-- LANDING PAGE -->
     <!-- ============================================ -->
     <div id="landing-page">
@@ -707,14 +710,17 @@
         /* ============================================ */
         /* PARTE 6: RESPONSIVE + AJUSTES FINALES        */
         /* ============================================ */
-                @media (max-width: 768px) {
-            .main { padding: 10px !important; margin-left: 60px !important; }
+                   @media (max-width: 768px) {
+            .main { padding: 10px !important; margin-left: 0px !important; width: 100% !important; }
             h2 { font-size: 1rem !important; padding-left: 10px !important; }
             .stat-card .val { font-size: 1.15rem !important; }
             .stat-card.hero-card .val { font-size: 1.3rem !important; }
             .stat-card.hero-card { min-height: 65px !important; padding: 12px 10px !important; }
             .stat-card:not(.hero-card) { min-height: 50px !important; padding: 10px 8px !important; }
             .cards { gap: 8px !important; }
+            .sidebar { transform: translateX(-100%); position: fixed; z-index: 200; transition: transform 0.3s ease; width: 220px !important; }
+            .sidebar.open { transform: translateX(0); }
+            #dashboard-status-bar { left: 0px !important; font-size: 0.6rem; padding: 6px 8px; }
         }
     </style>
 
@@ -2286,6 +2292,22 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+</script>
+                    
+<script>
+document.getElementById('menu-toggle').addEventListener('click', function() {
+    document.querySelector('.sidebar').classList.toggle('open');
+});
+function checkMobile() {
+    var btn = document.getElementById('menu-toggle');
+    if (window.innerWidth <= 768) {
+        btn.style.display = 'block';
+    } else {
+        btn.style.display = 'none';
+    }
+}
+window.addEventListener('resize', checkMobile);
+window.addEventListener('load', checkMobile);
 </script>
 </body>
 </html>
