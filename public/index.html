@@ -2295,19 +2295,54 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
                     
 <script>
-document.getElementById('menu-toggle').addEventListener('click', function() {
-    document.querySelector('.sidebar').classList.toggle('open');
-});
-function checkMobile() {
+// Menú móvil
+document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('menu-toggle');
-    if (window.innerWidth <= 768) {
-        btn.style.display = 'block';
-    } else {
-        btn.style.display = 'none';
+    var sidebar = document.querySelector('.sidebar');
+    
+    if (btn && sidebar) {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                btn.textContent = '☰';
+            } else {
+                sidebar.classList.add('open');
+                btn.textContent = '✕';
+            }
+        });
+        
+        // Cerrar al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            if (!sidebar.contains(e.target) && e.target !== btn) {
+                sidebar.classList.remove('open');
+                btn.textContent = '☰';
+            }
+        });
+        
+        // Permitir scroll en sidebar
+        sidebar.addEventListener('touchmove', function(e) {
+            e.stopPropagation();
+        }, { passive: false });
     }
-}
-window.addEventListener('resize', checkMobile);
-window.addEventListener('load', checkMobile);
+    
+    function checkMobile() {
+        if (window.innerWidth <= 768) {
+            btn.style.display = 'block';
+            sidebar.style.overflowY = 'auto';
+            sidebar.style.height = '100vh';
+        } else {
+            btn.style.display = 'none';
+            sidebar.classList.remove('open');
+            btn.textContent = '☰';
+            sidebar.style.overflowY = '';
+            sidebar.style.height = '';
+        }
+    }
+    
+    window.addEventListener('resize', checkMobile);
+    checkMobile();
+});
 </script>
 </body>
 </html>
