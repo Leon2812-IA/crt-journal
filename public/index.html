@@ -158,9 +158,9 @@
 .gallery-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--text2); cursor: pointer; transition: var(--transition); }
 .gallery-dot.active { background: var(--neon) !important; box-shadow: 0 0 6px var(--neon-glow) !important; }
     </style></head>
-<body> 
+<body>
     <button id="menu-toggle" style="display:none;position:fixed;top:10px;left:10px;z-index:300;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#fff;font-size:1.2rem;width:40px;height:40px;border-radius:8px;cursor:pointer;">☰</button>
- 
+
     <!-- ============================================ -->
     <!-- LANDING PAGE -->
     <!-- ============================================ -->
@@ -495,20 +495,20 @@
         </aside>
 
         <main class="main" style="margin-left:240px;flex:1;padding:24px 28px;position:relative;z-index:1;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:40px;">
-            <div id="page-dashboard" class="page active"><h2>Dashboard</h2><div id="dashboard-alert"></div><div id="coach-tip-container"></div><div class="cards" id="dash-cards"></div><div class="card"><div class="card-title">Curva de Equity</div><div style="height:320px;"><canvas id="equityChart"></canvas></div></div></div>
-            
+            <div id="page-dashboard" class="page active"><h2>Dashboard</h2><div id="dashboard-alert"></div><div id="coach-tip-container"></div><div class="cards" id="dash-cards"></div><div class="card"><div class="card-title">Curva de Equity</div><div style="height:320px;"><canvas id="equityChart"></canvas></div></div><div class="card"><div class="card-title">Racha Visual <span style="font-size:0.65rem;color:var(--text2);font-family:'Inter',sans-serif;font-weight:400;">(ultimos 20 trades)</span></div><div id="streakVisualizer"><p style="color:var(--text2);font-size:0.78rem;">Cargando...</p></div></div></div>
+
             <div id="page-trades" class="page"><h2>Trades</h2><div class="card"><div class="cal-nav"><button onclick="cambiarMes(-1)">◀</button><span class="month-label" id="cal-label"></span><button onclick="cambiarMes(1)">▶</button><span style="margin-left:16px;font-weight:600;font-family:'Orbitron',sans-serif;font-size:0.82rem;" id="cal-total"></span><button class="btn btn-blue btn-sm" onclick="nuevoTrade()" style="margin-left:auto;">+ Trade</button><button class="btn btn-blue btn-sm" onclick="abrirModalImportar()">📤 Importar CSV/HTML</button><button class="btn btn-outline btn-sm" onclick="exportarCSV()">📥 Exportar CSV</button></div><div class="trades-layout"><div class="cal-column"><div class="cal-grid" id="cal-grid"></div></div><div class="semanas-column" id="semanas-column"></div></div></div><div class="card"><div class="card-title" id="hist-title">Historial</div><table><thead><tr><th>Fecha</th><th>Activo</th><th>Tipo</th><th>Cierre</th><th>$</th><th>%</th><th>Img</th><th>Plan</th><th></th></tr></thead><tbody id="trades-tbody"></tbody></table></div></div>
-            
+
             <div id="page-cuentas" class="page"><h2>Mis Cuentas</h2><div class="card"><div class="card-title">Cuentas <button class="btn btn-blue btn-sm" onclick="abrirModalCuenta()">+ Añadir</button><button class="btn btn-outline btn-sm" onclick="reiniciarTradesCuenta()" style="color:var(--gold);border-color:var(--gold);">🔄 Reiniciar trades</button></div><table><thead><tr><th>Cuenta</th><th>Empresa</th><th>Tamaño</th><th>Invertido</th><th>Objetivo</th><th>Días Mín</th><th>Consist.</th><th></th></tr></thead><tbody id="cuentas-lista-tbody"></tbody></table></div></div>
             <div id="page-reglas" class="page"><h2>Reglas de la Cuenta</h2><div class="cards" id="reglas-cards"></div></div>
             <div id="page-retiros" class="page"><h2>Retiros</h2><div class="cards" id="retiros-cards"></div><div class="card"><div class="card-title">Historial <button class="btn btn-blue btn-sm" onclick="abrirModalRetiro()">+ Añadir</button></div><table><thead><tr><th>Fecha</th><th>Monto</th><th>Notas</th></tr></thead><tbody id="retiros-tbody"></tbody></table></div></div>
-            
+
             <div id="page-plan" class="page"><h2>📝 Mi Plan de Trading</h2><div class="card"><div class="card-title">Mis Reglas <button class="btn btn-blue btn-sm" onclick="agregarReglaPlan()">+ Añadir</button></div><p style="color:var(--text2);font-size:0.72rem;margin-bottom:8px;">Doble clic para editar cada regla</p><div id="plan-reglas-container"></div><button class="btn btn-blue" onclick="guardarPlan()" style="margin-top:12px;">💾 Guardar Plan</button></div><div class="card"><div class="card-title">📊 Cumplimiento Semanal</div><div id="plan-cumplimiento-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
-            
+
             <div id="page-metricas" class="page"><h2>📊 Métricas Avanzadas</h2><div class="cards" id="metricas-cards"></div><div class="card"><div class="card-title">📅 Rendimiento Mensual</div><div id="rendimiento-mensual"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📈 Frecuencia por Día</div><div style="height:260px;"><canvas id="frecuenciaChart"></canvas></div></div><div class="card"><div class="card-title">⏱️ Análisis de Duración</div><div id="duracion-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Duración por Tipo</div><div style="height:260px;"><canvas id="duracionChart"></canvas></div></div></div>
-            
+
             <div id="page-rendimiento" class="page"><h2>📈 Rendimiento Diario</h2><div class="cards" id="rendimiento-daily-cards"></div><div class="card"><div class="card-title">Balance Diario Acumulado</div><div style="height:320px;"><canvas id="balanceDiarioChart"></canvas></div></div><div class="card"><div class="card-title">Desglose por Día</div><div id="desglose-diario-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
-            
+
             <div id="page-stats" class="page"><h2>Estadísticas</h2><div class="cards" id="stats-cards"></div><div class="card"><div class="card-title">🛡️ Gestión de Riesgo</div><div id="riesgo-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Distribución de Resultados</div><div style="height:280px;"><canvas id="distChart"></canvas></div></div><div class="card"><div class="card-title">🧠 Análisis</div><div id="ai-observations" class="ai-box">Cargando...</div></div><div class="card"><div class="card-title">💬 Chat IA</div><div id="chat-messages" class="ai-box" style="min-height:150px;"><p style="color:#888;">Pregúntame sobre tus trades. Ej: "¿cómo voy con el plan?", "¿qué día tuve mejor gestión de riesgo?", "¿cuál es mi punto más débil?"</p></div><div class="chat-input-row"><input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')preguntarAI()"><button onclick="preguntarAI()">➤</button></div></div></div>
 
             <div id="page-admin" class="page"><h2>🔐 Panel de Administrador</h2><div class="cards" id="admin-cards"></div><div class="card"><div class="card-title">💰 Ingresos del Mes</div><div id="admin-ingresos"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">👥 Usuarios Registrados</div><div id="admin-tabla-usuarios"><p style="color:var(--text2);">Cargando...</p></div></div></div>
@@ -725,7 +725,14 @@
             .sidebar.open { transform: translateX(0); }
             #dashboard-status-bar { left: 0px !important; font-size: 0.6rem; padding: 6px 8px; }
         }
-    </style>
+
+.streak-bar { display:flex; gap:4px; align-items:flex-end; height:50px; padding:4px 0; }
+.streak-block { width:18px; border-radius:3px; transition:all 0.2s ease; cursor:pointer; }
+.streak-block.win { background:#00e5ff; opacity:0.6; }
+.streak-block.loss { background:#a78bfa; opacity:0.6; }
+.streak-block.current { opacity:1; border:2px solid #fff; }
+.streak-block:hover { opacity:1; transform:scaleY(1.1); }
+</style>
 
     <!-- ============================================ -->
     <!-- COLORES DE GRÁFICAS (SOLO COLORES)           -->
@@ -899,7 +906,7 @@ function cerrarLegal(){document.getElementById('modal-legal').classList.add('hid
 
 // ============================================
 // SISTEMA DE AUTENTICACIÓN (SHA-256 + FIREBASE)
-// ============================================                                     
+// ============================================
 </script><script>
 function sha256(str) {
     function rotr(x, n) { return (x >>> n) | (x << (32 - n)); }
@@ -1218,7 +1225,7 @@ function iniciarVerificacionPlan() {
             }
         }
     }, 30 * 60 * 1000);
-}        
+}
 function verificarLimiteCuentas() {
     var plan = verificarPlan();
     if (plan === 'pro') return true;
@@ -1394,6 +1401,28 @@ function renderCoachTip(){
 }
 
 // ============ DASHBOARD ============
+
+// ============ STREAK VISUALIZER ============
+function renderStreakVisualizer(t) {
+    var container = document.getElementById('streakVisualizer');
+    if (!container) return;
+    if (!t || t.length === 0) {
+        container.innerHTML = '<div style="font-size:0.85rem;color:var(--text2);font-family:Inter,sans-serif;">Registra trades para ver tu racha visual.</div>';
+        return;
+    }
+    var last20 = t.slice(-20);
+    var html = '<div class="streak-bar">';
+    last20.forEach(function(tr, idx) {
+        var isWin = tr.resultado > 0;
+        var isCurrent = idx === last20.length - 1;
+        var absVal = Math.abs(tr.resultado);
+        var height = Math.min(42, Math.max(6, absVal * 2));
+        html += '<div class="streak-block ' + (isWin ? 'win' : 'loss') + (isCurrent ? ' current' : '') + '" style="height:' + height + 'px;" title="' + tr.fecha + ': ' + (isWin ? '+' : '') + '$' + tr.resultado.toFixed(2) + '"></div>';
+    });
+    html += '</div>';
+    html += '<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:0.7rem;color:var(--text2);"><span>Mas antiguo</span><span>Mas reciente</span></div>';
+    container.innerHTML = html;
+}
 function renderDashboard(){
     var t=tradesCuenta(),total=t.length,ganados=t.filter(function(tr){return tr.resultado>0;}).length,perdidos=t.filter(function(tr){return tr.resultado<0;}).length;
     var wr=total>0?((ganados/total)*100).toFixed(1):0,pnl=t.reduce(function(s,tr){return s+tr.resultado;},0);
@@ -1404,13 +1433,13 @@ function renderDashboard(){
     var dias=new Set(t.map(function(tr){return tr.fecha;})).size;
     var c=cuentaActiva(),tam=c?c.tamano:50000;
     var pnlPct=tam>0?(pnl/tam*100):0;
-    
+
     var fechasUnicas=[...new Set(t.map(function(tr){return tr.fecha;}))];
     var diasPositivos=fechasUnicas.filter(function(f){
         return t.filter(function(tr){return tr.fecha===f;}).reduce(function(s,tr){return s+tr.resultado;},0)>0;
     }).length;
     var dayWinPct=fechasUnicas.length>0?((diasPositivos/fechasUnicas.length)*100).toFixed(1):0;
-    
+
     var bestDayPct=0;
     if(pnl>0){
         var diasPnl={};
@@ -1421,8 +1450,33 @@ function renderDashboard(){
         bestDayPct=bestDayPnl>0?((bestDayPnl/pnl)*100).toFixed(1):0;
     }
 
+
+    // === SHARPE RATIO ===
+    var sharpeRatio = 'N/A';
+    if (total > 0 && fechasUnicas.length > 1) {
+        var dailyReturns = [];
+        fechasUnicas.forEach(function(f) {
+            var dayPnl = t.filter(function(tr) { return tr.fecha === f; })
+                .reduce(function(s, tr) { return s + tr.resultado; }, 0);
+            dailyReturns.push((dayPnl / (tam || 50000)) * 100);
+        });
+        var avgRet = dailyReturns.reduce(function(s, v) { return s + v; }, 0) / dailyReturns.length;
+        var variance = dailyReturns.reduce(function(s, v) { return s + Math.pow(v - avgRet, 2); }, 0) / (dailyReturns.length - 1);
+        var stdDev = Math.sqrt(variance);
+        if (stdDev > 0) {
+            sharpeRatio = ((avgRet / stdDev) * Math.sqrt(252)).toFixed(2);
+        }
+    }
+
     // Calcular Drawdown
     var dd = calcularDrawdown(t, tam);
+
+    // === CALMAR RATIO ===
+    var calmarRatio = 'N/A';
+    if (dd.ddMaxPct > 0 && fechasUnicas.length > 0) {
+        var annualizedReturn = (pnl / (tam || 50000)) * (252 / fechasUnicas.length);
+        calmarRatio = (annualizedReturn / dd.ddMaxPct).toFixed(2);
+    }
     var ddMaxLimite = (c && c.dd_max) ? c.dd_max : 0;
     var ddDiarioLimite = (c && c.dd_diario) ? c.dd_diario : 0;
     var ddActualPctLimite = ddMaxLimite > 0 ? (dd.ddActual / ddMaxLimite * 100) : 0;
@@ -1432,7 +1486,7 @@ function renderDashboard(){
     var maxPct = Math.max(ddActualPctLimite, pnlHoyPctLimite);
     if (maxPct >= 80) { estado='DANGER'; estadoColor='red'; estadoIcono='🔴'; }
     else if (maxPct >= 50) { estado='WARNING'; estadoColor='neon'; estadoIcono='🟡'; }
-    
+
     document.getElementById('dash-cards').innerHTML =
         '<div class="stat-card hero-card clickable" onclick="showPage(\'reglas\')" style="border-left:4px solid var(--'+estadoColor+');"><div class="lbl">Estado Cuenta</div><div class="val '+estadoColor+'">'+estadoIcono+' '+estado+'</div><div style="font-size:0.72rem;color:var(--text2);margin-top:4px;">Click para ver reglas</div></div>'+
         '<div class="stat-card hero-card clickable" onclick="showPage(\'reglas\')"><div class="lbl">Drawdown Actual</div><div class="val '+(ddActualPctLimite>=80?'red':(ddActualPctLimite>=50?'neon':'green'))+'">-$'+dd.ddActual.toFixed(2)+'</div>'+(ddMaxLimite>0?'<div class="progress-bar" style="margin-top:8px;"><div class="progress-fill '+(ddActualPctLimite>=80?'red':(ddActualPctLimite>=50?'neon':'green'))+'" style="width:'+Math.min(100,ddActualPctLimite).toFixed(1)+'%;background:'+(ddActualPctLimite>=80?'var(--red)':(ddActualPctLimite>=50?'var(--gold)':'var(--green)'))+';box-shadow:0 0 8px '+(ddActualPctLimite>=80?'var(--red)':(ddActualPctLimite>=50?'var(--gold)':'var(--green)'))+';"></div></div><div style="font-size:0.65rem;color:var(--text2);margin-top:4px;">'+ddActualPctLimite.toFixed(1)+'% del límite ($'+ddMaxLimite.toFixed(0)+')</div>':'<div style="font-size:0.65rem;color:var(--text2);margin-top:4px;">Define límite en la cuenta</div>')+'</div>'+
@@ -1441,6 +1495,8 @@ function renderDashboard(){
         '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">P&L Total</div><div class="val '+(pnl>=0?'green':'red')+'">'+(pnl>=0?'+':'')+'$'+pnl.toFixed(2)+'<div style="font-size:0.65rem;color:#888;">'+(pnlPct>=0?'+':'')+pnlPct.toFixed(2)+'%</div></div></div>'+
         '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Win Rate</div><div class="val">'+wr+'%</div></div>'+
         '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Profit Factor</div><div class="val">'+pf+'</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Sharpe Ratio</div><div class="val">'+sharpeRatio+'</div></div>'+
+        '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Calmar Ratio</div><div class="val">'+calmarRatio+'</div></div>'+
         '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Day Win %</div><div class="val '+(dayWinPct>=50?'green':'red')+'">'+dayWinPct+'%</div><div style="font-size:0.6rem;color:#888;">'+diasPositivos+'/'+fechasUnicas.length+' días</div></div>'+
         '<div class="stat-card clickable" onclick="showPage(\'metricas\')"><div class="lbl">Best Day % Profit</div><div class="val green">'+bestDayPct+'%</div></div>'+
         '<div class="stat-card clickable" onclick="showPage(\'trades\')"><div class="lbl">Total Trades</div><div class="val">'+total+'</div></div>'+
@@ -1454,6 +1510,7 @@ function renderDashboard(){
     var ctx=document.getElementById('equityChart').getContext('2d');
     if(equityChart)equityChart.destroy();
     equityChart=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{label:'Equity',data:dataEq,borderColor:'#00ffff',backgroundColor:'rgba(0,255,255,0.08)',fill:true,tension:0.4,pointRadius:0,borderWidth:3,pointHoverRadius:6,pointHoverBackgroundColor:'#00ffff',pointHoverBorderColor:'#fff',pointHoverBorderWidth:2},{label:'Inicial',data:Array(labels.length).fill(tam),borderColor:'#555',borderDash:[5,5],pointRadius:0,borderWidth:1,fill:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,labels:{color:'#8888a0',font:{size:9}}},tooltip:{backgroundColor:'rgba(18,18,22,0.95)',borderColor:'#00ffff',borderWidth:1,borderRadius:8,titleColor:'#00ffff',bodyColor:'#e0e0e8',callbacks:{label:function(ctx){return ctx.dataset.label+': $'+parseFloat(ctx.raw).toFixed(2);}}}},scales:{x:{ticks:{color:'#8888a0',maxTicksLimit:8},grid:{color:'rgba(0,255,255,0.04)'}},y:{ticks:{color:'#8888a0',callback:function(v){return'$'+v;}},grid:{color:'rgba(0,255,255,0.04)'}}}}});
+    renderStreakVisualizer(t);
     var alertHtml = '';
     if (estado === 'DANGER') {
         alertHtml = '<div style="background:rgba(255,51,85,0.15);border:1px solid var(--red);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;"><span style="font-size:1.8rem;">🚨</span><div><div style="font-weight:700;color:var(--red);font-family:\'Orbitron\',sans-serif;">¡ALERTA CRÍTICA — A PUNTO DE VIOLAR LA REGLA!</div><div style="font-size:0.7rem;color:var(--text2);">Estás al '+Math.max(ddActualPctLimite,pnlHoyPctLimite).toFixed(0)+'% del límite. Considera detener la operativa hoy.</div></div></div>';
@@ -1601,10 +1658,10 @@ function renderMetricas(){
     var promPerdida=perdidos.length>0?Math.abs(perdidos.reduce(function(s,tr){return s+tr.resultado;},0)/perdidos.length):0;
     var maxRachaG=(function(arr){var m=0,c=0;arr.forEach(function(v){if(v>0){c++;m=Math.max(m,c);}else c=0;});return m;})(t.map(function(tr){return tr.resultado;}));
     var maxRachaP=(function(arr){var m=0,c=0;arr.forEach(function(v){if(v<0){c++;m=Math.max(m,c);}else c=0;});return m;})(t.map(function(tr){return tr.resultado;}));
-    
+
     var mejorTradeObj=ganados.length>0?ganados.reduce(function(a,b){return a.resultado>b.resultado?a:b;}):null;
     var peorTradeObj=perdidos.length>0?perdidos.reduce(function(a,b){return a.resultado<b.resultado?a:b;}):null;
-    
+
     var tradesConHoras=t.filter(function(tr){return calcularDuracionMinutos(tr)!==null;});
     var durTotal=0,durGan=0,durPer=0,cG=0,cP=0;
     tradesConHoras.forEach(function(tr){
@@ -1616,7 +1673,7 @@ function renderMetricas(){
     var durMedia=tradesConHoras.length>0?Math.round(durTotal/tradesConHoras.length):0;
     var durMediaG=cG>0?Math.round(durGan/cG):0;
     var durMediaP=cP>0?Math.round(durPer/cP):0;
-    
+
     document.getElementById('metricas-cards').innerHTML=
         '<div class="stat-card clickable" onclick="mostrarDesglose(\'ganadores\')"><div class="lbl">🟢 Ganadores</div><div class="val green">'+ganados.length+'</div></div>'+
         '<div class="stat-card clickable" onclick="mostrarDesglose(\'perdedores\')"><div class="lbl">🔴 Perdedores</div><div class="val red">'+perdidos.length+'</div></div>'+
@@ -1629,7 +1686,7 @@ function renderMetricas(){
         '<div class="stat-card"><div class="lbl">Dur. Media Loss</div><div class="val red">'+(durMediaP>0?durMediaP+'m':'--')+'</div><div style="font-size:0.55rem;color:var(--text2);">'+(durMediaP>0?'':'⏱️ Doble clic en trade → editar horas')+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Max Racha G</div><div class="val green">'+maxRachaG+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Max Racha P</div><div class="val red">'+maxRachaP+'</div></div>';
-    
+
     var mensual={};t.forEach(function(tr){var d=new Date(tr.fecha+'T00:00:00');var key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');if(!mensual[key])mensual[key]={pnl:0,count:0};mensual[key].pnl+=tr.resultado;mensual[key].count++;});
     var c=cuentaActiva(),tam=c?c.tamano:50000;
     var mesesNombres=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -1639,13 +1696,13 @@ function renderMetricas(){
     years.forEach(function(year){htmlRend+='<tr><td><b>'+year+'</b></td>';
         for(var m=1;m<=12;m++){var key=year+'-'+String(m).padStart(2,'0');var d=mensual[key];var pct=d&&tam>0?(d.pnl/tam*100):null;htmlRend+='<td class="'+(pct!==null?(pct>=0?'green':'red'):'')+'">'+(pct!==null?(pct>=0?'+':'')+pct.toFixed(2)+'%':'-')+'</td>';}htmlRend+='</tr>';});
     htmlRend+='</tbody></table>';document.getElementById('rendimiento-mensual').innerHTML=htmlRend;
-    
+
     var diasSem=['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];var porDia={};
     t.forEach(function(tr){var d=new Date(tr.fecha+'T00:00:00').getDay();porDia[d]=(porDia[d]||0)+1;});
     var ctxF=document.getElementById('frecuenciaChart').getContext('2d');
     if(frecuenciaChart)frecuenciaChart.destroy();
     frecuenciaChart=new Chart(ctxF,{type:'bar',data:{labels:diasSem,datasets:[{label:'Trades',data:diasSem.map(function(d,i){return porDia[i]||0;}),backgroundColor:['rgba(0,255,255,0.3)','rgba(0,255,255,0.35)','rgba(0,255,255,0.4)','rgba(0,255,255,0.45)','rgba(0,255,255,0.5)','rgba(0,255,255,0.25)','rgba(0,255,255,0.2)'],borderColor:'#00ffff',borderWidth:1,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{color:'#8888a0',stepSize:1},grid:{color:'rgba(0,255,255,0.04)'}},x:{ticks:{color:'#8888a0'},grid:{color:'rgba(0,255,255,0.04)'}}}}});
-    
+
     renderDuracionContent(tradesConHoras);
     renderDuracionChart(tradesConHoras);
 }
@@ -1670,7 +1727,7 @@ function renderDuracionContent(tradesConHoras){
         return tradesEnRango.length;
     });
     maxCount=Math.max.apply(null,counts);
-    
+
     rangos.forEach(function(r,i){
         var tradesEnRango=tradesConHoras.filter(function(tr){
             var d=calcularDuracionMinutos(tr);return d>=r.min&&d<r.max;
@@ -1689,20 +1746,20 @@ function renderDuracionChart(tradesConHoras){
     var ctx=document.getElementById('duracionChart').getContext('2d');
     if(duracionChart)duracionChart.destroy();
     if(!tradesConHoras.length)return;
-    
+
     var ganados=tradesConHoras.filter(function(tr){return tr.resultado>0;});
     var perdidos=tradesConHoras.filter(function(tr){return tr.resultado<0;});
-    
+
     var rangos=['<15m','15-30m','30-60m','1-2h','2-4h','>4h'];
     var limites=[15,30,60,120,240,99999];
     var gData=[],pData=[];
-    
+
     for(var i=0;i<rangos.length;i++){
         var min=i===0?0:limites[i-1],max=limites[i];
         gData.push(ganados.filter(function(tr){var d=calcularDuracionMinutos(tr);return d>=min&&d<max;}).length);
         pData.push(perdidos.filter(function(tr){var d=calcularDuracionMinutos(tr);return d>=min&&d<max;}).length);
     }
-    
+
     duracionChart=new Chart(ctx,{type:'bar',data:{labels:rangos,datasets:[
         {label:'Ganados',data:gData,backgroundColor:'rgba(0,255,136,0.4)',borderColor:'#00ff88',borderWidth:1,borderRadius:4},
         {label:'Perdidos',data:pData,backgroundColor:'rgba(255,51,85,0.4)',borderColor:'#ff3355',borderWidth:1,borderRadius:4}
@@ -1753,13 +1810,13 @@ function mostrarDesglose(tipo){
     var diasConTrades=new Set(filtrados.map(function(tr){return tr.fecha;}));
     var mejorDia=null,peorDia=null;diasConTrades.forEach(function(f){var pnl=t.filter(function(tr){return tr.fecha===f;}).reduce(function(s,tr){return s+tr.resultado;},0);if(!mejorDia||pnl>mejorDia.pnl)mejorDia={fecha:f,pnl:pnl};if(!peorDia||pnl<peorDia.pnl)peorDia={fecha:f,pnl:pnl};});
     var extremo=tipo==='ganadores'?filtrados.reduce(function(a,b){return a.resultado>b.resultado?a:b;}):filtrados.reduce(function(a,b){return a.resultado<b.resultado?a:b;});
-    
+
     var html='<p><b>Total:</b> '+total+' trades | <b>Suma:</b> '+(suma>=0?'+':'')+'$'+suma.toFixed(2)+'</p>';
     html+='<p><b>Por día:</b> '+diasSem.map(function(d,i){return d+': '+(porDia[i]||0);}).join(' | ')+'</p>';
     html+='<p><b>Por activo:</b> '+Object.entries(porActivo).sort(function(a,b){return b[1]-a[1];}).slice(0,5).map(function(e){return e[0]+': '+e[1];}).join(' | ')+'</p>';
     if(mejorDia)html+='<p><b>'+(tipo==='ganadores'?'Mejor':'Peor')+' día:</b> '+mejorDia.fecha+' ($'+mejorDia.pnl.toFixed(2)+')</p>';
     if(extremo)html+='<p><b>'+(tipo==='ganadores'?'Mejor':'Peor')+' trade:</b> '+extremo.activo+' $'+extremo.resultado.toFixed(2)+' ('+extremo.cierre+')</p>';
-    
+
     document.getElementById('modal-desglose-titulo').textContent=tipo==='ganadores'?'🟢 Ganadores - Desglose':'🔴 Perdedores - Desglose';
     document.getElementById('modal-desglose-content').innerHTML=html;abrirModal('modal-desglose');
 }
@@ -1772,28 +1829,28 @@ function renderRendimientoDiario(){
         document.getElementById('desglose-diario-content').innerHTML='<p style="color:var(--text2);">Sin datos.</p>';
         return;
     }
-    
+
     var diasPnl={};var diasCount={};
     t.forEach(function(tr){
         if(!diasPnl[tr.fecha]){diasPnl[tr.fecha]=0;diasCount[tr.fecha]=0;}
         diasPnl[tr.fecha]+=tr.resultado;diasCount[tr.fecha]++;
     });
-    
+
     var fechas=Object.keys(diasPnl).sort();
     var pnl=t.reduce(function(s,tr){return s+tr.resultado;},0);
     var diasPos=fechas.filter(function(f){return diasPnl[f]>0;}).length;
     var diasNeg=fechas.filter(function(f){return diasPnl[f]<0;}).length;
     var daysTotal=fechas.length;
     var dayWinPct=daysTotal>0?((diasPos/daysTotal)*100).toFixed(1):0;
-    
+
     var mejorDia=fechas.reduce(function(a,b){return diasPnl[a]>diasPnl[b]?a:b;});
     var peorDia=fechas.reduce(function(a,b){return diasPnl[a]<diasPnl[b]?a:b;});
-    
+
     var bestDayPct=0;
     if(pnl>0&&diasPnl[mejorDia]>0)bestDayPct=((diasPnl[mejorDia]/pnl)*100).toFixed(1);
-    
+
     var avgDiario=daysTotal>0?(pnl/daysTotal):0;
-    
+
     document.getElementById('rendimiento-daily-cards').innerHTML=
         '<div class="stat-card"><div class="lbl">Días Totales</div><div class="val">'+daysTotal+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Días Positivos</div><div class="val green">'+diasPos+'</div></div>'+
@@ -1803,7 +1860,7 @@ function renderRendimientoDiario(){
         '<div class="stat-card"><div class="lbl">Peor Día</div><div class="val red">$'+diasPnl[peorDia].toFixed(2)+'</div><div style="font-size:0.55rem;color:#888;">'+peorDia+'</div></div>'+
         '<div class="stat-card"><div class="lbl">Promedio Diario</div><div class="val '+(avgDiario>=0?'green':'red')+'">'+(avgDiario>=0?'+':'')+'$'+avgDiario.toFixed(2)+'</div></div>'+
         '<div class="stat-card"><div class="lbl">P&L Total</div><div class="val '+(pnl>=0?'green':'red')+'">'+(pnl>=0?'+':'')+'$'+pnl.toFixed(2)+'</div></div>';
-    
+
     var ctx=document.getElementById('balanceDiarioChart').getContext('2d');
     if(balanceDiarioChart)balanceDiarioChart.destroy();
     var bal=0;
@@ -1812,7 +1869,7 @@ function renderRendimientoDiario(){
         {label:'P&L Diario',data:fechas.map(function(f){return diasPnl[f];}),backgroundColor:fechas.map(function(f){return diasPnl[f]>=0?'rgba(0,255,136,0.4)':'rgba(255,51,85,0.4)';}),borderColor:fechas.map(function(f){return diasPnl[f]>=0?'#00ff88':'#ff3355';}),borderWidth:1,borderRadius:4},
         {label:'Balance Acumulado',data:balanceData,type:'line',borderColor:'#00ffff',backgroundColor:'rgba(0,255,255,0.05)',fill:false,tension:0.4,pointRadius:3,pointHoverRadius:5,borderWidth:3,yAxisID:'y1'}
     ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#8888a0',font:{size:9}}}},scales:{x:{ticks:{color:'#8888a0',maxTicksLimit:10},grid:{color:'rgba(0,255,255,0.04)'}},y:{ticks:{color:'#8888a0',callback:function(v){return'$'+v;}},grid:{color:'rgba(0,255,255,0.04)'},position:'left'},y1:{position:'right',ticks:{color:'#00ffff',callback:function(v){return'$'+v;}},grid:{display:false}}}}});
-    
+
     var htmlDesglose='<table><thead><tr><th>Fecha</th><th>Trades</th><th>P&L</th><th>% Cuenta</th><th>Acumulado</th><th>Win Rate</th></tr></thead><tbody>';
     var acum=0;
     fechas.reverse().forEach(function(f){
@@ -1833,29 +1890,29 @@ function renderRiesgo(){
     var ganados=t.filter(function(tr){return tr.resultado>0;}),perdidos=t.filter(function(tr){return tr.resultado<0;});
     var pnl=t.reduce(function(s,tr){return s+tr.resultado;},0);
     var c=cuentaActiva(),tam=c?c.tamano:50000;
-    
+
     var ordenados=t.slice().sort(function(a,b){return a.fecha.localeCompare(b.fecha);});
     var peak=0,valley=0,maxDD=0;ordenados.forEach(function(tr){peak+=tr.resultado;if(peak>valley)valley=peak;var dd=valley-peak;if(dd>maxDD)maxDD=dd;});
     var maxDDPct=tam>0?(maxDD/tam*100):0;
-    
+
     var mayorPerdida=perdidos.length>0?Math.min.apply(null,perdidos.map(function(tr){return tr.resultado;})):0;
     var mayorPerdidaPct=tam>0?(Math.abs(mayorPerdida)/tam*100):0;
-    
+
     var slCount=t.filter(function(tr){return tr.cierre==='SL';}).length;
     var slPct=t.length>0?(slCount/t.length*100):0;
-    
+
     var avgW=ganados.length>0?ganados.reduce(function(s,tr){return s+tr.resultado;},0)/ganados.length:0;
     var avgL=perdidos.length>0?Math.abs(perdidos.reduce(function(s,tr){return s+tr.resultado;},0)/perdidos.length):0;
     var rrRatio=avgL>0?(avgW/avgL).toFixed(2):'N/A';
-    
+
     var expectancy=t.length>0?(pnl/t.length).toFixed(2):0;
-    
+
     var diasPerd={};t.forEach(function(tr){if(tr.resultado<0){var f=tr.fecha;if(!diasPerd[f])diasPerd[f]=0;diasPerd[f]+=tr.resultado;}});
     var peorDia=Object.entries(diasPerd).sort(function(a,b){return a[1]-b[1];})[0];
-    
+
     var activoPerd={};t.forEach(function(tr){if(tr.resultado<0){if(!activoPerd[tr.activo])activoPerd[tr.activo]=0;activoPerd[tr.activo]+=tr.resultado;}});
     var peorActivo=Object.entries(activoPerd).sort(function(a,b){return a[1]-b[1];})[0];
-    
+
     var html='';
     html+='<div class="riesgo-metric"><span>Drawdown Máximo</span><span class="riesgo-val '+(maxDDPct<3?'green':maxDDPct<5?'':'red')+'">-$'+maxDD.toFixed(2)+' ('+maxDDPct.toFixed(2)+'%)</span></div>';
     html+='<div class="riesgo-metric"><span>Mayor Pérdida Individual</span><span class="riesgo-val red">-$'+Math.abs(mayorPerdida).toFixed(2)+' ('+mayorPerdidaPct.toFixed(2)+'%)</span></div>';
@@ -1864,7 +1921,7 @@ function renderRiesgo(){
     html+='<div class="riesgo-metric"><span>Expectancy (por trade)</span><span class="riesgo-val '+(expectancy>=0?'green':'red')+'">'+(expectancy>=0?'+':'')+'$'+expectancy+'</span></div>';
     if(peorDia)html+='<div class="riesgo-metric"><span>Día con más pérdidas</span><span class="riesgo-val red">'+peorDia[0]+' (-$'+Math.abs(peorDia[1]).toFixed(2)+')</span></div>';
     if(peorActivo)html+='<div class="riesgo-metric"><span>Activo que más te hace perder</span><span class="riesgo-val red">'+peorActivo[0]+' (-$'+Math.abs(peorActivo[1]).toFixed(2)+')</span></div>';
-    
+
     html+='<div style="margin-top:12px;padding:10px;background:rgba(255,51,85,0.05);border:1px solid rgba(255,51,85,0.2);border-radius:6px;">';
     html+='<p style="font-size:0.7rem;font-weight:600;color:var(--red);margin-bottom:4px;">⚠️ ALERTAS</p>';
     if(slPct>40)html+='<p style="font-size:0.65rem;color:var(--text2);">• '+slPct.toFixed(1)+'% de tus trades terminan en SL. Reduce tamaño o mejora stops.</p>';
@@ -1872,7 +1929,7 @@ function renderRiesgo(){
     if(rrRatio<1.2&&rrRatio!=='N/A')html+='<p style="font-size:0.65rem;color:var(--text2);">• Ratio R/R bajo. Busca setups con mejor recompensa.</p>';
     if(peorActivo&&Math.abs(peorActivo[1])>Math.abs(pnl)*0.3)html+='<p style="font-size:0.65rem;color:var(--text2);">• '+peorActivo[0]+' concentra muchas pérdidas. Considera evitarlo.</p>';
     html+='</div>';
-    
+
     document.getElementById('riesgo-content').innerHTML=html;
 }
 
@@ -1947,11 +2004,11 @@ function renderAI(){
     if(winRate<35)recs.push('<span class="alerta">⚠️ Win Rate BAJO: '+winRate+'% ('+ganados.length+'/'+t.length+').</span> Revisa tus entradas urgentemente.');
     else if(winRate<50)recs.push('<span class="warning">🟡 Win Rate: '+winRate+'%.</span> ¿Forzando entradas?');
     else recs.push('<span class="ok">✅ Win Rate: '+winRate+'%.</span>');
-    
+
     var obj=cuentaActiva()?.objetivo||1250;
     if(pnl<obj)recs.push('<span class="warning">🎯 $'+pnl.toFixed(2)+' de $'+obj.toFixed(2)+' ('+(pnl/obj*100).toFixed(0)+'%). Te faltan $'+(obj-pnl).toFixed(2)+'.</span>');
     else recs.push('<span class="ok">🏆 ¡OBJETIVO SUPERADO! (+$'+pnl.toFixed(2)+').</span>');
-    
+
     document.getElementById('ai-observations').innerHTML=recs.map(function(r){return'<p style="margin-bottom:6px;">'+r+'</p>';}).join('');
 }
 
@@ -1963,7 +2020,7 @@ function generarRespuesta(pregunta,t){
     var ganados=t.filter(function(tr){return tr.resultado>0;}),perdidos=t.filter(function(tr){return tr.resultado<0;});
     var wr=(ganados.length/total*100).toFixed(1);
     var obj=cuentaActiva()?.objetivo||1250;
-    
+
     if(q.indexOf('análisis')>-1||q.indexOf('analisis')>-1||q.indexOf('completo')>-1||q.indexOf('cómo voy')>-1||q.indexOf('como voy')>-1){
         var resp='📊 P&L: '+(pnl>=0?'+':'')+'$'+pnl.toFixed(2)+' | WR: '+wr+'% | Trades: '+total+'\n🎯 $'+pnl.toFixed(2)+' de $'+obj.toFixed(2)+' ('+(pnl/obj*100).toFixed(0)+'%)\n💡 '+(pnl>0?'Sigue así.':'Revisa tus entradas.');
         return resp.replace(/\n/g,'<br>');
@@ -2013,7 +2070,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
     var div = document.createElement('div');
     div.innerHTML = htmlContent;
     var filas = div.querySelectorAll('tr');
-    
+
         // Formato Funding Pips - Tabla "Posiciones" (14 columnas, beneficio en columna 13)
     if (htmlContent.includes('FundingPips') && tradesEncontrados.length === 0) {
         for (var iFP = 0; iFP < filas.length; iFP++) {
@@ -2035,8 +2092,8 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
             });
         }
         return tradesEncontrados;
-    }    
-    
+    }
+
     // Formato cTrader
     if (htmlContent.includes('USD neto') && htmlContent.includes('Saldo USD') && tradesEncontrados.length === 0) {
         var filasCTrader = div.querySelectorAll('tr');
@@ -2075,7 +2132,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
         }
     }
     if (tradesEncontrados.length > 0) return tradesEncontrados;
-    
+
     // Formato WSF/Elevate "Posiciones cerradas"
     var esPosicionesCerradas = (htmlContent.includes('Posiciones cerradas') || htmlContent.includes('CLOSED_POSITIONS') || htmlContent.includes('Elevate Challenge')) && !htmlContent.includes('FundingPips');
     if (esPosicionesCerradas && tradesEncontrados.length === 0) {
@@ -2109,7 +2166,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
         }
         if (tradesEncontrados.length > 0) return tradesEncontrados;
     }
-    
+
     // Formato WSF/FTMO (Historial)
     var tieneHistorial = htmlContent.includes('Historial</b>') || htmlContent.includes('Historial</B>');
     if (tieneHistorial) {
@@ -2148,7 +2205,7 @@ function parsearMetaTraderHTML(htmlContent, fileName) {
             }
         }
     }
-    
+
     return tradesEncontrados;
 }
 
@@ -2280,7 +2337,7 @@ function irASlide(n) {
     slides[slideActual].classList.add('active');
     dots[slideActual].classList.add('active');
 }
-setInterval(function(){ cambiarSlide(1); }, 8000);        
+setInterval(function(){ cambiarSlide(1); }, 8000);
 
 // ============ INICIALIZACIÓN ============
 window.addEventListener('DOMContentLoaded', function() {
@@ -2296,13 +2353,13 @@ window.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-                    
+
 <script>
 // Menú móvil
 document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('menu-toggle');
     var sidebar = document.querySelector('.sidebar');
-    
+
     if (btn && sidebar) {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -2314,7 +2371,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.textContent = '✕';
             }
         });
-        
+
         // Cerrar al hacer clic fuera
         document.addEventListener('click', function(e) {
             if (!sidebar.contains(e.target) && e.target !== btn) {
@@ -2322,13 +2379,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.textContent = '☰';
             }
         });
-        
+
         // Permitir scroll en sidebar
         sidebar.addEventListener('touchmove', function(e) {
             e.stopPropagation();
         }, { passive: false });
     }
-    
+
     function checkMobile() {
         if (window.innerWidth <= 768) {
             btn.style.display = 'block';
@@ -2342,7 +2399,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebar.style.height = '';
         }
     }
-    
+
     window.addEventListener('resize', checkMobile);
     checkMobile();
 });
