@@ -953,32 +953,19 @@
         if (app) { observerGraficas.observe(app, { childList: true, subtree: true, attributes: true }); }
     })();
     </script><script>// ============================================
-// CONFIGURACIÓN — intenta servidor, fallback a hardcoded
+// CONFIGURACIÓN DE FIREBASE + EMAILJS
 // ============================================
-(async function cargarConfig() {
-  try {
-    const resp = await fetch('/api/config');
-    if (!resp.ok) throw new Error('Endpoint no disponible');
-    const config = await resp.json();
-    firebase.initializeApp(config.firebase);
-    window.db = firebase.firestore();
-    emailjs.init(config.emailjsPublicKey);
-    console.log('✅ Configuración cargada desde servidor');
-  } catch (e) {
-    console.warn('⚠️ /api/config falló, usando fallback:', e.message);
-    firebase.initializeApp({
-      apiKey: ***      authDomain: "crt-journal-f8ae3.firebaseapp.com",
-      projectId: "crt-journal-f8ae3",
-      storageBucket: "crt-journal-f8ae3.firebasestorage.app",
-      messagingSenderId: "629465653592",
-      appId: "1:629465653592:web:7dae95dc7958f31695c52d"
-    });
-    window.db = firebase.firestore();
-    emailjs.init('h_Wh0jRq4rxTGllr7');
-    console.log('✅ Configuración cargada (fallback)');
-  }
-})();
-
+const firebaseConfig = {
+  apiKey: "AIzaSyCxtKvOQTNz_OdA-njw1Sgo2sntx-lNv88",
+  authDomain: "crt-journal-f8ae3.firebaseapp.com",
+  projectId: "crt-journal-f8ae3",
+  storageBucket: "crt-journal-f8ae3.firebasestorage.app",
+  messagingSenderId: "629465653592",
+  appId: "1:629465653592:web:7dae95dc7958f31695c52d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+emailjs.init('h_Wh0jRq4rxTGllr7');
 // ============================================
 // FUNCIONES DE MODALES (AL INICIO - PARA EVITAR ERRORES)
 // ============================================
@@ -2554,16 +2541,7 @@ setInterval(function(){ cambiarSlide(1); }, 8000);
 
 // ============ INICIALIZACIÓN ============
 window.addEventListener('DOMContentLoaded', function() {
-    // Esperar a que db esté disponible antes de inicializar
-    function esperarDB(callback) {
-        if (typeof db !== 'undefined' && db) {
-            callback();
-        } else {
-            setTimeout(function() { esperarDB(callback); }, 100);
-        }
-    }
-    esperarDB(function() {
-        precargarAdmin().then(function(){
+    precargarAdmin().then(function(){
         var usuario = getUsuarioActual();
         if (usuario) {
             mostrarDashboard();
@@ -2572,7 +2550,6 @@ window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('app').style.display = 'none';
             document.getElementById('dashboard-status-bar').style.display = 'none';
         }
-    });
     });
 });
 </script>
