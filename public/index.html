@@ -985,6 +985,8 @@ const db = firebase.firestore();
 var _emailjsReady=false,_emailjsLoading=false;
 function _loadEmailJS(){if(_emailjsReady)return Promise.resolve();if(_emailjsLoading)return new Promise(function(r){var i=setInterval(function(){if(_emailjsReady){clearInterval(i);r();}},100);});_emailjsLoading=true;return new Promise(function(r){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';s.onload=function(){emailjs.init('h_Wh0jRq4rxTGllr7');_emailjsReady=true;r();};document.head.appendChild(s);});}
 function _sendEmail(svc,tpl,data){_loadEmailJS().then(function(){emailjs.send(svc,tpl,data);});}
+// Sanitizador anti-XSS
+function _esc(s){var d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
 // ============================================
 // HAMBURGUESA MÓVIL
 // ============================================
@@ -1459,7 +1461,7 @@ async function renderAdmin() {
         var planColor = u.plan === 'pro' ? 'green' : '';
         var pruebaTexto = u.pruebaGratis ? '🟡 Activa' : '⚪ No';
         var btnPro = u.plan === 'pro' ? '<button class="btn btn-outline btn-sm" onclick="quitarPro(\''+u.email+'\')" style="color:var(--red);border-color:var(--red);">Quitar Pro</button>' : '<button class="btn btn-sm" onclick="activarPro(\''+u.email+'\')" style="background:rgba(0,255,136,0.1);color:var(--green);border-color:var(--green);">Activar Pro</button>';
-        html += '<tr><td>' + u.nombre + '</td><td>' + u.email + '</td><td class="' + planColor + '">' + (u.plan || 'basico') + '</td><td>' + pruebaTexto + '</td><td>' + (u.fechaRegistro ? new Date(u.fechaRegistro).toLocaleDateString() : 'N/A') + '</td><td style="display:flex;gap:6px;">' + btnPro + '<button class="btn btn-outline btn-sm" onclick="eliminarUsuario(\''+u.email+'\')" style="color:var(--red);border-color:var(--red);">🗑️</button></td></tr>';
+        html += '<tr><td>' + _esc(u.nombre) + '</td><td>' + _esc(u.email) + '</td><td class="' + planColor + '">' + (u.plan || 'basico') + '</td><td>' + pruebaTexto + '</td><td>' + (u.fechaRegistro ? new Date(u.fechaRegistro).toLocaleDateString() : 'N/A') + '</td><td style="display:flex;gap:6px;">' + btnPro + '<button class="btn btn-outline btn-sm" onclick="eliminarUsuario(\''+u.email+'\')" style="color:var(--red);border-color:var(--red);">🗑️</button></td></tr>';
     });
     html += '</tbody></table>';
     document.getElementById('admin-tabla-usuarios').innerHTML = html;
@@ -1764,11 +1766,12 @@ function renderCalendar(){
     var pctTotal=tam>0?(total/tam*100):0;
     document.getElementById('cal-total').textContent='Total: '+(total>=0?'+':'')+'$'+total.toFixed(2)+' ('+(pctTotal>=0?'+':'')+pctTotal.toFixed(2)+'%)';
     document.getElementById('cal-total').style.color=total>=0?'var(--green)':'var(--red)';
+    var maxAbsPnl=0;for(var d in tpd){var a=Math.abs(tpd[d].pnl);if(a>maxAbsPnl)maxAbsPnl=a;}
     var grid=document.getElementById('cal-grid');grid.innerHTML='';
     ['Lun','Mar','Mie','Jue','Vie','Sab','Dom'].forEach(function(d){grid.innerHTML+='<div class="cal-day head">'+d+'</div>';});
     for(var i=0;i<adj;i++)grid.innerHTML+='<div class="cal-day empty"></div>';
     var hoy=new Date();
-    for(var day=1;day<=daysIn;day++){var d=tpd[day],pnl=d?d.pnl:0,cnt=d?d.count:0;var pct=tam>0?(pnl/tam*100):0;var isToday=day===hoy.getDate()&&calMonth===hoy.getMonth()+1&&calYear===hoy.getFullYear();var dayClass='';if(pnl>0)dayClass=' win';else if(pnl<0)dayClass=' loss';else if(cnt>0)dayClass=' mixed';grid.innerHTML+='<div class="cal-day '+(isToday?'today':'')+dayClass+'" onclick="abrirDia('+calYear+','+calMonth+','+day+')"><div style="font-weight:700;font-size:1rem;">'+day+'</div>'+(pnl!==0?'<div style="font-size:0.8rem;font-weight:600;color:'+(pnl>0?'var(--green)':'var(--red)')+'">'+(pnl>0?'+':'')+'$'+Math.round(pnl)+'</div>':'')+(cnt>0?'<div style="font-size:0.6rem;color:var(--text2);">'+cnt+' op</div>':'')+'</div>';}
+    for(var day=1;day<=daysIn;day++){var d=tpd[day],pnl=d?d.pnl:0,cnt=d?d.count:0;var pct=tam>0?(pnl/tam*100):0;var isToday=day===hoy.getDate()&&calMonth===hoy.getMonth()+1&&calYear===hoy.getFullYear();var intensity=maxAbsPnl>0?Math.min(1,Math.abs(pnl)/maxAbsPnl):0;var bg=pnl>0?'rgba(0,255,136,'+(0.08+intensity*0.35).toFixed(2)+')':pnl<0?'rgba(255,126,95,'+(0.08+intensity*0.35).toFixed(2)+')':'';var dayClass='';if(pnl>0)dayClass=' win';else if(pnl<0)dayClass=' loss';else if(cnt>0)dayClass=' mixed';grid.innerHTML+='<div class=\"cal-day '+(isToday?'today':'')+dayClass+'\" onclick=\"abrirDia('+calYear+','+calMonth+','+day+')\" style=\"'+(bg?'background:'+bg+';':'')+'\"><div style=\"font-weight:700;font-size:1rem;\">'+day+'</div>'+(pnl!==0?'<div style=\"font-size:0.8rem;font-weight:600;color:'+(pnl>0?'var(--green)':'var(--red)')+'\">'+(pnl>0?'+':'')+'$'+Math.round(pnl)+'</div>':'')+(cnt>0?'<div style=\"font-size:0.6rem;color:var(--text2);\">'+cnt+' op</div>':'')+'</div>';}
     renderHistorial();renderVistaSemanal();
 }
 
@@ -2497,7 +2500,7 @@ function importarArchivo() {
                         notas: t.notas,
                         imagen: t.imagen,
                         checklist: t.checklist,
-                        cuenta_id: cuentaActivaId
+                        cuenta_id: cuentaActivaId, setup: t.setup||'', sesion: t.sesion||'', entry_price: t.entry_price||0, stop_loss: t.stop_loss||0, emocion: t.emocion||'', confianza: t.confianza||3, plan_seguido: t.plan_seguido!==false
                     });
                     data.nextId.trade++;
                 }
@@ -2539,7 +2542,7 @@ function importarArchivo() {
                     var mhCsvEntrada = cols[iHA].match(/(\d{1,2}):(\d{2})/);
                     if (mhCsvEntrada) heCSV = mhCsvEntrada[1].padStart(2,'0') + ':' + mhCsvEntrada[2];
                 }
-                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: heCSV, hora_salida: hsCSV, activo: s, tipo: op, cierre: 'Manual', resultado: bv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId });
+                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: heCSV, hora_salida: hsCSV, activo: s, tipo: op, cierre: 'Manual', resultado: bv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId, setup: '', sesion: '', entry_price: 0, stop_loss: 0, emocion: '', confianza: 3, plan_seguido: true });
                 data.nextId.trade++;
                 c++;
             }
@@ -2562,7 +2565,7 @@ function importarArchivo() {
                 if (m) f = m[3] + '-' + m[2] + '-' + m[1];
                 var rv = parseFloat(rs);
                 if (isNaN(rv)) continue;
-                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: '00:00', hora_salida: '00:00', activo: a, tipo: 'Largo', cierre: 'Manual', resultado: rv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId });
+                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: '00:00', hora_salida: '00:00', activo: a, tipo: 'Largo', cierre: 'Manual', resultado: rv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId, setup: '', sesion: '', entry_price: 0, stop_loss: 0, emocion: '', confianza: 3, plan_seguido: true });
                 data.nextId.trade++;
                 c++;
             }
@@ -2575,7 +2578,7 @@ function importarArchivo() {
     reader.readAsText(file);
 }
 
-function exportarCSV(){var t=tradesCuenta();if(!t.length)return;var csv='fecha,hora_entrada,hora_salida,activo,tipo,cierre,resultado,notas,imagen\n';t.forEach(function(tr){csv+=tr.fecha+','+(tr.hora_entrada||'')+','+(tr.hora_salida||'')+','+tr.activo+','+tr.tipo+','+tr.cierre+','+tr.resultado+',"'+(tr.notas||'').replace(/"/g,'""')+'","'+(tr.imagen||'').replace(/"/g,'""')+'"\n';});var blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='trades.csv';a.click();}
+function exportarCSV(){var t=tradesCuenta();if(!t.length)return;var csv='fecha,hora_entrada,hora_salida,activo,tipo,setup,sesion,entry_price,stop_loss,cierre,resultado,resultado_pct,emocion,confianza,plan_seguido,notas,imagen\n';t.forEach(function(tr){csv+=tr.fecha+','+(tr.hora_entrada||'')+','+(tr.hora_salida||'')+','+tr.activo+','+tr.tipo+','+(tr.setup||'')+','+(tr.sesion||'')+','+(tr.entry_price||'')+','+(tr.stop_loss||'')+','+tr.cierre+','+tr.resultado+','+(tr.resultado_pct||'')+','+(tr.emocion||'')+','+(tr.confianza||'')+','+(tr.plan_seguido!==false)+',\"'+(tr.notas||'').replace(/\"/g,'\"\"')+'\",\"'+(tr.imagen||'').replace(/\"/g,'\"\"')+'\"\n';});var blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='trades.csv';a.click();}
 function abrirModal(id){document.getElementById(id).classList.remove('hidden');}
 function cerrarModal(id){document.getElementById(id).classList.add('hidden');}
 function refreshActive(){var p=document.querySelector('.page.active');if(!p)return;var pageName=p.id.replace('page-','');if(pageName==='dashboard'){renderDashboard();renderCoachTip();actualizarBarraEstado();}if(pageName==='trades')renderCalendar();if(pageName==='cuentas')renderCuentas();if(pageName==='reglas')renderReglas();if(pageName==='retiros')renderRetiros();if(pageName==='plan')renderPlan();if(pageName==='metricas')renderMetricas();if(pageName==='rendimiento')renderRendimientoDiario();if(pageName==='stats'){renderStats();renderRiesgo();renderAI();renderDistChart();}}
