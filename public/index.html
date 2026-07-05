@@ -953,22 +953,29 @@
         if (app) { observerGraficas.observe(app, { childList: true, subtree: true, attributes: true }); }
     })();
     </script><script>// ============================================
-// CONFIGURACIÓN SEGURA — obtenida del servidor
+// CONFIGURACIÓN — intenta servidor, fallback a hardcoded
 // ============================================
-let firebaseConfig, emailjsPublicKey;
 (async function cargarConfig() {
   try {
     const resp = await fetch('/api/config');
-    if (!resp.ok) throw new Error('Error al cargar configuración');
+    if (!resp.ok) throw new Error('Endpoint no disponible');
     const config = await resp.json();
-    firebaseConfig = config.firebase;
-    emailjsPublicKey = config.emailjsPublicKey;
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(config.firebase);
     window.db = firebase.firestore();
-    emailjs.init(emailjsPublicKey);
+    emailjs.init(config.emailjsPublicKey);
     console.log('✅ Configuración cargada desde servidor');
   } catch (e) {
-    console.error('❌ No se pudo cargar la configuración:', e);
+    console.warn('⚠️ /api/config falló, usando fallback:', e.message);
+    firebase.initializeApp({
+      apiKey: ***      authDomain: "crt-journal-f8ae3.firebaseapp.com",
+      projectId: "crt-journal-f8ae3",
+      storageBucket: "crt-journal-f8ae3.firebasestorage.app",
+      messagingSenderId: "629465653592",
+      appId: "1:629465653592:web:7dae95dc7958f31695c52d"
+    });
+    window.db = firebase.firestore();
+    emailjs.init('h_Wh0jRq4rxTGllr7');
+    console.log('✅ Configuración cargada (fallback)');
   }
 })();
 
