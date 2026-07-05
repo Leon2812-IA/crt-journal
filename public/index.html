@@ -2547,7 +2547,16 @@ setInterval(function(){ cambiarSlide(1); }, 8000);
 
 // ============ INICIALIZACIÓN ============
 window.addEventListener('DOMContentLoaded', function() {
-    precargarAdmin().then(function(){
+    // Esperar a que db esté disponible antes de inicializar
+    function esperarDB(callback) {
+        if (typeof db !== 'undefined' && db) {
+            callback();
+        } else {
+            setTimeout(function() { esperarDB(callback); }, 100);
+        }
+    }
+    esperarDB(function() {
+        precargarAdmin().then(function(){
         var usuario = getUsuarioActual();
         if (usuario) {
             mostrarDashboard();
@@ -2556,6 +2565,7 @@ window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('app').style.display = 'none';
             document.getElementById('dashboard-status-bar').style.display = 'none';
         }
+    });
     });
 });
 </script>
