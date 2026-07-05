@@ -34,15 +34,16 @@
     <meta name="twitter:image" content="https://i.ibb.co/ZpwZWcMp/crt-journal-logo-negro.jpg">
     <meta name="twitter:image:alt" content="CRT Journal - Aplicación de journal de trading con métricas y gestión de riesgo">
     <link rel="icon" type="image/jpeg" href="https://i.ibb.co/5gkfzBXN/Whats-App-Image-2026-05-16-at-18-50-39.jpg">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- EmailJS cargado lazy en registrar() -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    <link rel="dns-prefetch" href="https://i.ibb.co">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <style>
         :root { --bg: #0a0a0a; --sidebar: rgba(10,10,10,0.92); --card: rgba(18,18,22,0.9); --card2: rgba(24,24,30,0.6); --border: rgba(0,255,255,0.12); --border-strong: rgba(0,255,255,0.18); --text: #e0e0e8; --text2: #9ca3af; --green: #00ff88; --red: #ff7e5f; --neon: #00ffff; --neon-glow: rgba(0,255,255,0.25); --neon-strong: rgba(0,255,255,0.5); --gold: #f0b90b; --radius: 14px; --radius-sm: 8px; --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -351,23 +352,23 @@
                 <button class="gallery-nav gallery-prev" onclick="cambiarSlide(-1)">◀</button>
                 <button class="gallery-nav gallery-next" onclick="cambiarSlide(1)">▶</button>
                 <div class="gallery-slide active">
-                    <img src="https://i.ibb.co/Y76QqzC6/Captura-de-pantalla-2026-05-15-111218.png" alt="Dashboard CRT Journal" loading="lazy">
+                    <img src="https://i.ibb.co/Y76QqzC6/Captura-de-pantalla-2026-05-15-111218.png" alt="Dashboard CRT Journal" loading="lazy" decoding="async">
                     <div class="gallery-caption"><span class="highlight">"El que no conoce sus números en trading, es como no conocerse a sí mismo."</span> — Visualiza tu P&L, Win Rate, Profit Factor y más métricas en tiempo real.</div>
                 </div>
                 <div class="gallery-slide">
-                    <img src="https://i.ibb.co/4ZSrjPsV/Captura-de-pantalla-2026-05-15-111306.png" alt="Calendario de trades" loading="lazy">
+                    <img data-src="https://i.ibb.co/4ZSrjPsV/Captura-de-pantalla-2026-05-15-111306.png" alt="Calendario de trades" loading="lazy" decoding="async">
                     <div class="gallery-caption"><span class="highlight">Importa tus trades directamente desde tu broker o empresa de fondeo.</span> Sin esfuerzo. Sin errores. Solo arrastra tu CSV y listo.</div>
                 </div>
                 <div class="gallery-slide">
-                    <img src="https://i.ibb.co/1fGSfhfB/Captura-de-pantalla-2026-05-15-111323.png" alt="Métricas avanzadas" loading="lazy">
+                    <img data-src="https://i.ibb.co/1fGSfhfB/Captura-de-pantalla-2026-05-15-111323.png" alt="Métricas avanzadas" loading="lazy" decoding="async">
                     <div class="gallery-caption"><span class="highlight">Win rate, profit factor, rachas, duración media.</span> Métricas avanzadas calculadas automáticamente para que sepas exactamente dónde mejorar.</div>
                 </div>
                 <div class="gallery-slide">
-                    <img src="https://i.ibb.co/wFxMQ0QG/Captura-de-pantalla-2026-05-15-111343.png" alt="Chat IA integrado" loading="lazy">
+                    <img data-src="https://i.ibb.co/wFxMQ0QG/Captura-de-pantalla-2026-05-15-111343.png" alt="Chat IA integrado" loading="lazy" decoding="async">
                     <div class="gallery-caption"><span class="highlight">IA integrada que analiza tus operaciones y te da recomendaciones personalizadas.</span> Como tener un coach de trading disponible 24/7.</div>
                 </div>
                 <div class="gallery-slide">
-                    <img src="https://i.ibb.co/B5C2SvZC/Captura-de-pantalla-2026-05-15-111422.png" alt="Curva de equity" loading="lazy">
+                    <img data-src="https://i.ibb.co/B5C2SvZC/Captura-de-pantalla-2026-05-15-111422.png" alt="Curva de equity" loading="lazy" decoding="async">
                     <div class="gallery-caption"><span class="highlight">Visualiza tu evolución. La curva de equity no miente.</span> Comprueba tu progreso y detecta tus puntos débiles al instante.</div>
                 </div>
             </div>
@@ -622,7 +623,7 @@
         </aside>
 
         <main class="main" style="margin-left:240px;flex:1;padding:24px 28px;position:relative;z-index:1;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:40px;">
-            <div id="page-dashboard" class="page active"><h2>Dashboard</h2><div id="dashboard-alert"></div><div id="coach-tip-container"></div><div class="cards" id="dash-cards"></div><div class="card" id="weekly-summary-card"><h3 class="card-title">📊 Resumen Semanal</h3><div id="weekly-summary-content" style="font-family:'Inter',sans-serif;font-size:0.82rem;">Selecciona una cuenta para ver el resumen semanal.</div></div>
+            <div id="page-dashboard" class="page active"><h2>Dashboard</h2><div id="dashboard-alert"></div><div id="coach-tip-container"></div><div class="cards" id="dash-cards"></div><div class="card" id="weekly-summary-card"><h3 class="card-title">📊 Resumen Semanal</h3><div id="weekly-summary-content" style="font-family:'Inter',sans-serif;font-size:0.82rem;">Selecciona una cuenta para ver el resumen semanal.</div></div><div class="card" id="setup-sesion-card" style="display:none;"><h3 class="card-title">🎯 Rendimiento por Setup y Sesión</h3><div id="setup-sesion-content" style="font-family:'Inter',sans-serif;font-size:0.78rem;"></div></div>
             <div class="card"><h3 class="card-title">Curva de Equity</h3><div style="height:320px;"><canvas id="equityChart"></canvas></div></div><div class="card"><h3 class="card-title">Racha Visual <span style="font-size:0.65rem;color:var(--text2);font-family:'Inter',sans-serif;font-weight:400;">(ultimos 20 trades)</span></h3><div id="streakVisualizer"><p style="color:var(--text2);font-size:0.78rem;" class="streak-empty">📭 Cargando...</p></div></div></div>
 
             <div id="page-trades" class="page"><h2>Trades</h2><div class="card"><div class="cal-nav"><button onclick="cambiarMes(-1)">◀</button><span class="month-label" id="cal-label"></span><button onclick="cambiarMes(1)">▶</button><span style="margin-left:16px;font-weight:600;font-family:'Orbitron',sans-serif;font-size:0.82rem;" id="cal-total"></span><button class="btn btn-blue btn-sm" onclick="nuevoTrade()" style="margin-left:auto;">+ Trade</button><button class="btn btn-blue btn-sm" onclick="abrirModalImportar()">📤 Importar CSV/HTML</button><button class="btn btn-outline btn-sm" onclick="exportarCSV()">📥 Exportar CSV</button></div><div class="trades-layout"><div class="cal-column"><div class="cal-grid" id="cal-grid"></div></div><div class="semanas-column" id="semanas-column"></div></div></div><div class="card"><div class="card-title" id="hist-title">Historial <span style="font-size:0.6rem;color:#5a5878;font-weight:400;font-family:'Inter',sans-serif;">Ordenado por fecha descendente</span></div>
@@ -637,7 +638,7 @@
         <input type="date" id="filter-fecha-from" style="padding:8px 12px;background:rgba(10,10,10,0.6);border:1px solid rgba(139,92,246,0.1);border-radius:8px;color:#c0c0d0;font-size:0.72rem;font-family:'Inter',sans-serif;width:130px;transition:all 0.2s;" oninput="filtrarTrades()" title="Desde fecha">
         <input type="date" id="filter-fecha-to" style="padding:8px 12px;background:rgba(10,10,10,0.6);border:1px solid rgba(139,92,246,0.1);border-radius:8px;color:#c0c0d0;font-size:0.72rem;font-family:'Inter',sans-serif;width:130px;transition:all 0.2s;" oninput="filtrarTrades()" title="Hasta fecha">
         <button onclick="limpiarFiltros()" style="padding:8px 12px;background:transparent;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#7a7a8a;font-size:0.68rem;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;">✕ Limpiar</button>
-    </div><table><thead><tr><th>Fecha</th><th>Activo</th><th>Tipo</th><th>Cierre</th><th>$</th><th>%</th><th>Img</th><th>Plan</th><th></th></tr></thead><tbody id="trades-tbody"></tbody></table></div></div>
+    </div><table><thead><tr><th>Fecha</th><th>Activo</th><th>Tipo</th><th>Setup</th><th>Sesión</th><th>Cierre</th><th>$</th><th>%</th><th>Img</th><th>Plan</th><th></th></tr></thead><tbody id="trades-tbody"></tbody></table></div></div>
 
             <div id="page-cuentas" class="page"><h2>Mis Cuentas</h2><div class="card"><h3 class="card-title">Cuentas <button class="btn btn-blue btn-sm" onclick="abrirModalCuenta()">+ Añadir</button><button class="btn btn-outline btn-sm" onclick="reiniciarTradesCuenta()" style="color:var(--gold);border-color:var(--gold);">🔄 Reiniciar trades</button></h3><table><thead><tr><th>Cuenta</th><th>Empresa</th><th>Tamaño</th><th>Invertido</th><th>Objetivo</th><th>Días Mín</th><th>Consist.</th><th></th></tr></thead><tbody id="cuentas-lista-tbody"></tbody></table></div></div>
             <div id="page-reglas" class="page"><h2>Reglas de la Cuenta</h2><div class="cards" id="reglas-cards"></div></div>
@@ -657,7 +658,7 @@
 
     <!-- MODALES DEL DASHBOARD -->
     <div class="modal-overlay hidden" id="modal-dia-trades"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-dia-titulo">Trades del día</h3><div id="modal-dia-lista"></div><div class="btn-group"><button class="btn btn-blue btn-sm" onclick="nuevoTradeEnDia()">+ Añadir trade</button><button class="btn btn-outline btn-sm" onclick="cerrarModal('modal-dia-trades')">Cerrar</button></div></div></div>
-    <div class="modal-overlay hidden" id="modal-trade"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-trade-title">Nuevo Trade</h3><form id="trade-form"><input type="hidden" id="trade-id"><div class="form-group"><label for="trade-fecha">Fecha</label><input type="date" id="trade-fecha" required></div><div class="form-row"><div class="form-group"><label for="trade-hora-entrada">Hora Entrada</label><input type="time" id="trade-hora-entrada" value="00:00"></div><div class="form-group"><label for="trade-hora-salida">Hora Salida</label><input type="time" id="trade-hora-salida" value="00:00"></div></div><div class="form-row"><div class="form-group"><label for="trade-activo">Activo</label><select id="trade-activo"><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>XAUUSD</option><option>BTCUSD</option><option>SPX</option><option>NAS100</option><option>US30</option></select></div><div class="form-group"><label for="trade-tipo">Tipo</label><select id="trade-tipo"><option>Largo</option><option>Corto</option></select></div></div><div class="form-group"><label>Cierre</label><div class="toggle-group" id="cierre-toggle"><button type="button" class="toggle-btn active" data-val="Manual">Manual</button><button type="button" class="toggle-btn" data-val="TP">TP</button><button type="button" class="toggle-btn" data-val="SL">SL</button><button type="button" class="toggle-btn" data-val="BE">BE</button></div><input type="hidden" id="trade-cierre" value="Manual"></div><div class="form-row"><div class="form-group"><label for="trade-resultado">Resultado ($)</label><input type="number" id="trade-resultado" step="0.01"></div><div class="form-group"><label for="trade-resultado-pct">Resultado (%)</label><input type="number" id="trade-resultado-pct" step="0.01"></div></div><div class="form-group"><label for="trade-notas">Notas</label><textarea id="trade-notas"></textarea></div><div class="form-group"><label for="trade-imagen">🖼️ Imagen (URL o archivo)</label><input type="text" id="trade-imagen" placeholder="https://... o pega URL de TradingView"><input type="file" id="trade-imagen-file" accept="image/*" style="margin-top:6px;" onchange="previewImagen(this)"><img id="trade-imagen-preview" class="img-preview hidden" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:8px;border:1px solid var(--border);"></div><div class="form-group"><label>📋 Checklist del Plan</label><div id="trade-checklist"></div></div><div class="btn-group"><button type="submit" class="btn btn-blue">Guardar</button><button type="button" class="btn btn-outline" onclick="cerrarModal('modal-trade')">Cancelar</button><button type="button" class="btn btn-outline hidden" id="btn-del-trade" onclick="eliminarTrade()" style="color:var(--red);border-color:var(--red);">Eliminar</button></div></form></div></div>
+    <div class="modal-overlay hidden" id="modal-trade"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-trade-title">Nuevo Trade</h3><form id="trade-form"><input type="hidden" id="trade-id"><div class="form-group"><label for="trade-fecha">Fecha</label><input type="date" id="trade-fecha" required></div><div class="form-row"><div class="form-group"><label for="trade-hora-entrada">Hora Entrada</label><input type="time" id="trade-hora-entrada" value="00:00"></div><div class="form-group"><label for="trade-hora-salida">Hora Salida</label><input type="time" id="trade-hora-salida" value="00:00"></div></div><div class="form-row"><div class="form-group"><label for="trade-activo">Activo</label><select id="trade-activo"><option>EURUSD</option><option>GBPUSD</option><option>USDJPY</option><option>XAUUSD</option><option>BTCUSD</option><option>SPX</option><option>NAS100</option><option>US30</option></select></div><div class="form-group"><label for="trade-tipo">Tipo</label><select id="trade-tipo"><option>Largo</option><option>Corto</option></select></div></div><div class="form-row"><div class="form-group"><label for="trade-setup">Setup</label><select id="trade-setup"><option value="">-- Sin setup --</option><option>Break of Structure</option><option>Order Block</option><option>Liquidity Grab</option><option>FVG</option><option>Supply/Demand</option><option>Trendline Break</option><option>Support/Resistance</option><option>ICT Killzone</option><option>Scalping</option><option>Other</option></select></div><div class="form-group"><label for="trade-sesion">Sesión</label><select id="trade-sesion"><option value="">-- Sin sesión --</option><option>London</option><option>New York</option><option>Asia</option><option>London-NY Overlap</option><option>NY Close</option></select></div></div><div class="form-group"><label>Cierre</label><div class="toggle-group" id="cierre-toggle"><button type="button" class="toggle-btn active" data-val="Manual">Manual</button><button type="button" class="toggle-btn" data-val="TP">TP</button><button type="button" class="toggle-btn" data-val="SL">SL</button><button type="button" class="toggle-btn" data-val="BE">BE</button></div><input type="hidden" id="trade-cierre" value="Manual"></div><div class="form-row"><div class="form-group"><label for="trade-resultado">Resultado ($)</label><input type="number" id="trade-resultado" step="0.01"></div><div class="form-group"><label for="trade-resultado-pct">Resultado (%)</label><input type="number" id="trade-resultado-pct" step="0.01"></div></div><div class="form-group"><label for="trade-notas">Notas</label><textarea id="trade-notas"></textarea></div><div class="form-group"><label for="trade-imagen">🖼️ Imagen (URL o archivo)</label><input type="text" id="trade-imagen" placeholder="https://... o pega URL de TradingView"><input type="file" id="trade-imagen-file" accept="image/*" style="margin-top:6px;" onchange="previewImagen(this)"><img id="trade-imagen-preview" class="img-preview hidden" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:8px;border:1px solid var(--border);"></div><div class="form-group"><label>📋 Checklist del Plan</label><div id="trade-checklist"></div></div><div class="btn-group"><button type="submit" class="btn btn-blue">Guardar</button><button type="button" class="btn btn-outline" onclick="cerrarModal('modal-trade')">Cancelar</button><button type="button" class="btn btn-outline hidden" id="btn-del-trade" onclick="eliminarTrade()" style="color:var(--red);border-color:var(--red);">Eliminar</button></div></form></div></div>
     <div class="modal-overlay hidden" id="modal-cuenta"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3 id="modal-cuenta-titulo">Nueva Cuenta</h3><input type="hidden" id="cuenta-edit-id"><div class="form-row"><div class="form-group"><label for="cuenta-edit-nombre">Nombre</label><input type="text" id="cuenta-edit-nombre" placeholder="Ej: 50K"></div><div class="form-group"><label for="cuenta-edit-empresa">Empresa</label><input type="text" id="cuenta-edit-empresa" placeholder="Ej: Elevate"></div></div><div class="form-row"><div class="form-group"><label for="cuenta-edit-tamano">Tamaño ($)</label><input type="number" id="cuenta-edit-tamano" value="50000"></div><div class="form-group"><label for="cuenta-edit-invertido">Invertido ($)</label><input type="number" id="cuenta-edit-invertido" value="0" step="0.01"></div></div><div class="form-row"><div class="form-group"><label for="cuenta-edit-objetivo">Objetivo ($)</label><input type="number" id="cuenta-edit-objetivo" value="1250"></div><div class="form-group"><label for="cuenta-edit-diasmin">Días Mínimos</label><input type="number" id="cuenta-edit-diasmin" value="10" min="0" step="1"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin mínimo de días</div></div></div><div class="form-group"><label for="cuenta-edit-consistencia">Consistencia (%)</label><input type="number" id="cuenta-edit-consistencia" value="35" min="0" step="1"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin regla de consistencia</div></div><div class="form-row"><div class="form-group"><label for="cuenta-edit-ddmax">Drawdown Máximo ($)</label><input type="number" id="cuenta-edit-ddmax" value="5000" min="0" step="0.01"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">Límite total de pérdida permitido</div></div><div class="form-group"><label for="cuenta-edit-dddiario">Pérdida Diaria Máx ($)</label><input type="number" id="cuenta-edit-dddiario" value="2500" min="0" step="0.01"><div style="font-size:0.55rem;color:var(--text2);margin-top:2px;">0 = Sin límite diario</div></div></div><div class="form-group"><label for="cuenta-edit-tipodd">Tipo de Drawdown</label><select id="cuenta-edit-tipodd" style="width:100%;padding:8px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:8px;color:var(--text);"><option value="balance">Balance-based (sobre balance inicial)</option><option value="equity">Equity-based (sobre balance + ganancias)</option></select></div><div class="btn-group"><button class="btn btn-blue" onclick="guardarCuenta()">Guardar</button><button class="btn btn-outline" onclick="cerrarModal('modal-cuenta')">Cancelar</button></div></div></div>
     <div class="modal-overlay hidden" id="modal-retiro"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3>Registrar Retiro</h3><div class="form-row"><div class="form-group"><label for="retiro-monto">Monto ($)</label><input type="number" id="retiro-monto" step="0.01"></div><div class="form-group"><label for="retiro-fecha">Fecha</label><input type="date" id="retiro-fecha"></div></div><div class="form-group"><label for="retiro-notas">Notas</label><input type="text" id="retiro-notas"></div><div class="btn-group"><button class="btn btn-blue" onclick="guardarRetiro()">Registrar</button><button class="btn btn-outline" onclick="cerrarModal('modal-retiro')">Cancelar</button></div></div></div>
     <div class="modal-overlay hidden" id="modal-importar"><div class="modal" style="background:rgba(18,18,22,0.96);border:1px solid var(--neon-strong);border-radius:14px;padding:30px;width:90%;max-width:620px;max-height:85vh;overflow-y:auto;backdrop-filter:blur(24px);box-shadow:0 0 40px var(--neon-glow);position:relative;animation:modalIn 0.3s ease;"><h3>Importar Archivo</h3><p style="color:var(--text2);font-size:0.72rem;margin-bottom:12px;font-family:'Inter',sans-serif;">Formatos aceptados: CSV, HTML (Funding Pips, WSF, FTMO, cTrader, etc.)</p><div class="form-group"><label for="import-file">Archivo</label><input type="file" id="import-file" accept=".csv,.html,.htm"></div><div class="btn-group"><button class="btn btn-blue" onclick="importarArchivo()">Importar</button><button class="btn btn-outline" onclick="cerrarModal('modal-importar')">Cancelar</button></div></div></div>
@@ -980,7 +981,10 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-emailjs.init('h_Wh0jRq4rxTGllr7');
+// EmailJS lazy loader — solo carga cuando se necesita (registro)
+var _emailjsReady=false,_emailjsLoading=false;
+function _loadEmailJS(){if(_emailjsReady)return Promise.resolve();if(_emailjsLoading)return new Promise(function(r){var i=setInterval(function(){if(_emailjsReady){clearInterval(i);r();}},100);});_emailjsLoading=true;return new Promise(function(r){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';s.onload=function(){emailjs.init('h_Wh0jRq4rxTGllr7');_emailjsReady=true;r();};document.head.appendChild(s);});}
+function _sendEmail(svc,tpl,data){_loadEmailJS().then(function(){emailjs.send(svc,tpl,data);});}
 // ============================================
 // HAMBURGUESA MÓVIL
 // ============================================
@@ -1199,7 +1203,7 @@ async function registrar(){
     setUsuarioActual({nombre:nombre,email:email,plan:'pro',pruebaGratis:true,fechaPrueba:new Date().toISOString()});
     cerrarRegistro();
     mostrarDashboard();
-    emailjs.send('service_bbqvqm4','template_ag1nfcl',{nombre:nombre,email:email,plan:'Pro (prueba 7 días)',fecha:new Date().toLocaleDateString()});
+    _sendEmail('service_bbqvqm4','template_ag1nfcl',{nombre:nombre,email:email,plan:'Pro (prueba 7 días)',fecha:new Date().toLocaleDateString()});
 }
 
 async function iniciarSesion(){
@@ -1221,7 +1225,7 @@ async function iniciarSesion(){
             planEfectivo = usuario.plan || 'basico';
             usuario.pruebaGratis = false;
             await ref.set({pruebaGratis:false},{merge:true});
-            emailjs.send('service_bbqvqm4','template_w0ua5qm',{nombre:usuario.nombre,email:usuario.email});
+            _sendEmail('service_bbqvqm4','template_w0ua5qm',{nombre:usuario.nombre,email:usuario.email});
         }
     }
     setUsuarioActual({nombre:usuario.nombre,email:usuario.email,plan:planEfectivo,pruebaGratis:usuario.pruebaGratis||false});
@@ -1386,7 +1390,7 @@ function iniciarVerificacionPlan() {
                 usuario.pruebaGratis = false;
                 setUsuarioActual(usuario);
                 db.collection('usuarios').doc(usuario.email).set({plan: 'basico', pruebaGratis: false}, {merge: true});
-                emailjs.send('service_bbqvqm4','template_w0ua5qm',{nombre:usuario.nombre,email:usuario.email});
+                _sendEmail('service_bbqvqm4','template_w0ua5qm',{nombre:usuario.nombre,email:usuario.email});
                 alert('⚠️ Tu prueba gratis de 7 días ha terminado. Has vuelto al plan Básico. Actualiza a Pro para seguir disfrutando de todas las funciones.');
                 location.reload();
             }
@@ -1705,6 +1709,36 @@ function renderDashboard(){try{renderResumenSemanal()}catch(e){}
     if(equityChart)equityChart.destroy();
     equityChart=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{label:'Equity',data:dataEq,borderColor:'#00ffff',backgroundColor:'rgba(0,255,255,0.08)',fill:true,tension:0.4,pointRadius:0,borderWidth:3,pointHoverRadius:6,pointHoverBackgroundColor:'#00ffff',pointHoverBorderColor:'#fff',pointHoverBorderWidth:2},{label:'Inicial',data:Array(labels.length).fill(tam),borderColor:'#555',borderDash:[5,5],pointRadius:0,borderWidth:1,fill:false}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,labels:{color:'#8888a0',font:{size:9}}},tooltip:{backgroundColor:'rgba(18,18,22,0.95)',borderColor:'#00ffff',borderWidth:1,borderRadius:8,titleColor:'#00ffff',bodyColor:'#e0e0e8',callbacks:{label:function(ctx){return ctx.dataset.label+': $'+parseFloat(ctx.raw).toFixed(2);}}}},scales:{x:{ticks:{color:'#8888a0',maxTicksLimit:8},grid:{color:'rgba(0,255,255,0.04)'}},y:{ticks:{color:'#8888a0',callback:function(v){return'$'+v;}},grid:{color:'rgba(0,255,255,0.04)'}}}}});
     renderStreakVisualizer(t);
+    // Métricas por Setup y Sesión
+    var setups={},sesiones={};
+    t.forEach(function(tr){
+        var s=tr.setup||'Sin setup';
+        if(!setups[s])setups[s]={total:0,ganados:0,pnl:0};
+        setups[s].total++;if(tr.resultado>0)setups[s].ganados++;setups[s].pnl+=tr.resultado;
+        var se=tr.sesion||'Sin sesión';
+        if(!sesiones[se])sesiones[se]={total:0,ganados:0,pnl:0};
+        sesiones[se].total++;if(tr.resultado>0)sesiones[se].ganados++;sesiones[se].pnl+=tr.resultado;
+    });
+    var setupKeys=Object.keys(setups).sort(function(a,b){return setups[b].pnl-setups[a].pnl;});
+    var sesionKeys=Object.keys(sesiones).sort(function(a,b){return sesiones[b].pnl-sesiones[a].pnl;});
+    if(setupKeys.length||sesionKeys.length){
+        var html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
+        html+='<div><div style="font-weight:600;color:var(--neon);margin-bottom:6px;">📈 Win Rate por Setup</div>';
+        setupKeys.forEach(function(s){
+            var d=setups[s],wr=d.total>0?(d.ganados/d.total*100).toFixed(0):0;
+            html+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);"><span>'+s+'</span><span style="color:'+(wr>=50?'var(--green)':'var(--red)')+';">'+wr+'% ('+d.ganados+'/'+d.total+') <span style="color:'+(d.pnl>=0?'var(--green)':'var(--red)')+';">'+(d.pnl>=0?'+':'')+'$'+d.pnl.toFixed(0)+'</span></span></div>';
+        });
+        html+='</div><div><div style="font-weight:600;color:var(--neon);margin-bottom:6px;">🌍 P&L por Sesión</div>';
+        sesionKeys.forEach(function(s){
+            var d=sesiones[s],wr=d.total>0?(d.ganados/d.total*100).toFixed(0):0;
+            html+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);"><span>'+s+'</span><span style="color:'+(d.pnl>=0?'var(--green)':'var(--red)')+';">'+(d.pnl>=0?'+':'')+'$'+d.pnl.toFixed(0)+' ('+d.total+' ops, '+wr+'% WR)</span></div>';
+        });
+        html+='</div></div>';
+        document.getElementById('setup-sesion-content').innerHTML=html;
+        document.getElementById('setup-sesion-card').style.display='';
+    }else{
+        document.getElementById('setup-sesion-card').style.display='none';
+    }
     var alertHtml = '';
     if (estado === 'DANGER') {
         alertHtml = '<div style="background:rgba(255,51,85,0.15);border:1px solid var(--red);border-radius:14px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;"><span style="font-size:1.8rem;">🚨</span><div><div style="font-weight:700;color:var(--red);font-family:\'Orbitron\',sans-serif;">¡ALERTA CRÍTICA — A PUNTO DE VIOLAR LA REGLA!</div><div style="font-size:0.7rem;color:var(--text2);">Estás al '+Math.max(ddActualPctLimite,pnlHoyPctLimite).toFixed(0)+'% del límite. Considera detener la operativa hoy.</div></div></div>';
@@ -1795,9 +1829,9 @@ function obtenerChecklistDelForm(){
     return result;
 }
 function abrirDiaFormNuevo(y,m,d){editingTradeId=null;document.getElementById('modal-trade-title').textContent='Nuevo Trade · '+d+'/'+m+'/'+y;document.getElementById('btn-del-trade').classList.add('hidden');document.getElementById('trade-id').value='';document.getElementById('trade-fecha').value=y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');document.getElementById('trade-hora-entrada').value='00:00';document.getElementById('trade-hora-salida').value='00:00';document.getElementById('trade-resultado').value='';document.getElementById('trade-resultado-pct').value='';document.getElementById('trade-notas').value='';document.getElementById('trade-imagen').value='';document.getElementById('trade-imagen-file').value='';document.getElementById('trade-imagen-preview').classList.add('hidden');document.getElementById('trade-cierre').value='Manual';document.querySelectorAll('#cierre-toggle .toggle-btn').forEach(function(b){b.classList.remove('active');});document.querySelector('#cierre-toggle [data-val="Manual"]').classList.add('active');llenarChecklistTrade(null);abrirModal('modal-trade');}
-function editarTrade(id){var t=data.trades.find(function(tr){return tr.id===id;});if(!t)return;editingTradeId=id;document.getElementById('modal-trade-title').textContent='Editar Trade';document.getElementById('btn-del-trade').classList.remove('hidden');document.getElementById('trade-id').value=t.id;document.getElementById('trade-fecha').value=t.fecha;document.getElementById('trade-hora-entrada').value=t.hora_entrada||'00:00';document.getElementById('trade-hora-salida').value=t.hora_salida||'00:00';document.getElementById('trade-activo').value=t.activo;document.getElementById('trade-tipo').value=t.tipo;document.getElementById('trade-resultado').value=t.resultado;document.getElementById('trade-resultado-pct').value=t.resultado_pct||'';document.getElementById('trade-cierre').value=t.cierre;document.getElementById('trade-notas').value=t.notas||'';document.getElementById('trade-imagen').value=t.imagen||'';document.getElementById('trade-imagen-file').value='';var preview=document.getElementById('trade-imagen-preview');if(t.imagen&&t.imagen.startsWith('data:')){preview.src=t.imagen;preview.classList.remove('hidden');}else{preview.classList.add('hidden');}document.querySelectorAll('#cierre-toggle .toggle-btn').forEach(function(b){b.classList.remove('active');});var btnC=document.querySelector('#cierre-toggle [data-val="'+t.cierre+'"]');if(btnC)btnC.classList.add('active');llenarChecklistTrade(t.checklist);abrirModal('modal-trade');}
+function editarTrade(id){var t=data.trades.find(function(tr){return tr.id===id;});if(!t)return;editingTradeId=id;document.getElementById('modal-trade-title').textContent='Editar Trade';document.getElementById('btn-del-trade').classList.remove('hidden');document.getElementById('trade-id').value=t.id;document.getElementById('trade-fecha').value=t.fecha;document.getElementById('trade-hora-entrada').value=t.hora_entrada||'00:00';document.getElementById('trade-hora-salida').value=t.hora_salida||'00:00';document.getElementById('trade-activo').value=t.activo;document.getElementById('trade-tipo').value=t.tipo;document.getElementById('trade-setup').value=t.setup||'';document.getElementById('trade-sesion').value=t.sesion||'';document.getElementById('trade-resultado').value=t.resultado;document.getElementById('trade-resultado-pct').value=t.resultado_pct||'';document.getElementById('trade-cierre').value=t.cierre;document.getElementById('trade-notas').value=t.notas||'';document.getElementById('trade-imagen').value=t.imagen||'';document.getElementById('trade-imagen-file').value='';var preview=document.getElementById('trade-imagen-preview');if(t.imagen&&t.imagen.startsWith('data:')){preview.src=t.imagen;preview.classList.remove('hidden');}else{preview.classList.add('hidden');}document.querySelectorAll('#cierre-toggle .toggle-btn').forEach(function(b){b.classList.remove('active');});var btnC=document.querySelector('#cierre-toggle [data-val="'+t.cierre+'"]');if(btnC)btnC.classList.add('active');llenarChecklistTrade(t.checklist);abrirModal('modal-trade');}
 function eliminarTrade(){if(!editingTradeId||!confirm('Eliminar?'))return;data.trades=data.trades.filter(function(t){return t.id!==editingTradeId;});saveData();cerrarModal('modal-trade');refreshActive();}
-document.getElementById('trade-form').addEventListener('submit',function(e){e.preventDefault();var trade={id:editingTradeId||data.nextId.trade,fecha:document.getElementById('trade-fecha').value,hora_entrada:document.getElementById('trade-hora-entrada').value||'00:00',hora_salida:document.getElementById('trade-hora-salida').value||'00:00',activo:document.getElementById('trade-activo').value,tipo:document.getElementById('trade-tipo').value,cierre:document.getElementById('trade-cierre').value,resultado:parseFloat(document.getElementById('trade-resultado').value)||0,resultado_pct:parseFloat(document.getElementById('trade-resultado-pct').value)||0,notas:document.getElementById('trade-notas').value,imagen:document.getElementById('trade-imagen').value||'',checklist:obtenerChecklistDelForm(),cuenta_id:cuentaActivaId};if(editingTradeId){var idx=data.trades.findIndex(function(t){return t.id===editingTradeId;});if(idx>=0){trade.id=editingTradeId;data.trades[idx]=trade;}}else{data.trades.push(trade);data.nextId.trade++;}saveData();cerrarModal('modal-trade');refreshActive();});
+document.getElementById('trade-form').addEventListener('submit',function(e){e.preventDefault();var trade={id:editingTradeId||data.nextId.trade,fecha:document.getElementById('trade-fecha').value,hora_entrada:document.getElementById('trade-hora-entrada').value||'00:00',hora_salida:document.getElementById('trade-hora-salida').value||'00:00',activo:document.getElementById('trade-activo').value,tipo:document.getElementById('trade-tipo').value,cierre:document.getElementById('trade-cierre').value,resultado:parseFloat(document.getElementById('trade-resultado').value)||0,resultado_pct:parseFloat(document.getElementById('trade-resultado-pct').value)||0,notas:document.getElementById('trade-notas').value,imagen:document.getElementById('trade-imagen').value||'',checklist:obtenerChecklistDelForm(),cuenta_id:cuentaActivaId,setup:document.getElementById('trade-setup').value,sesion:document.getElementById('trade-sesion').value};if(editingTradeId){var idx=data.trades.findIndex(function(t){return t.id===editingTradeId;});if(idx>=0){trade.id=editingTradeId;data.trades[idx]=trade;}}else{data.trades.push(trade);data.nextId.trade++;}saveData();cerrarModal('modal-trade');refreshActive();});
 document.querySelectorAll('#cierre-toggle .toggle-btn').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('#cierre-toggle .toggle-btn').forEach(function(b){b.classList.remove('active');});this.classList.add('active');document.getElementById('trade-cierre').value=this.dataset.val;});});
 
 // ============ PLAN ============
@@ -2542,6 +2576,13 @@ function refreshActive(){var p=document.querySelector('.page.active');if(!p)retu
 // ============ GALERÍA DE IMÁGENES ============
 var slideActual = 0;
 var totalSlides = 5;
+function _activarSlideImg(idx) {
+    var img = document.querySelectorAll('.gallery-slide')[idx].querySelector('img');
+    if (img && img.hasAttribute('data-src') && !img.src) {
+        img.src = img.getAttribute('data-src');
+        img.removeAttribute('data-src');
+    }
+}
 function cambiarSlide(dir) {
     var slides = document.querySelectorAll('.gallery-slide');
     var dots = document.querySelectorAll('.gallery-dot');
@@ -2550,6 +2591,7 @@ function cambiarSlide(dir) {
     slideActual = (slideActual + dir + totalSlides) % totalSlides;
     slides[slideActual].classList.add('active');
     dots[slideActual].classList.add('active');
+    _activarSlideImg(slideActual);
 }
 function irASlide(n) {
     var slides = document.querySelectorAll('.gallery-slide');
@@ -2559,6 +2601,7 @@ function irASlide(n) {
     slideActual = n;
     slides[slideActual].classList.add('active');
     dots[slideActual].classList.add('active');
+    _activarSlideImg(slideActual);
 }
 setInterval(function(){ cambiarSlide(1); }, 8000);
 
