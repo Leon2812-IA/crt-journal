@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>CRT JOURNAL - Journal Profesional de Trading</title>
     <meta name="description" content="CRT Journal es el journal de trading definitivo para traders de prop firms e independientes. Métricas avanzadas, gestión de riesgo, chat IA y más.">
     <meta name="keywords" content="trading, journal, prop firm, métricas, diario de trading, gestor de riesgo, bitácora, day trading, forex, futuros">
@@ -38,13 +38,26 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <style>
-        :root { --bg: #0a0a0a; --sidebar: rgba(10,10,10,0.92); --card: rgba(18,18,22,0.9); --card2: rgba(24,24,30,0.6); --border: rgba(0,255,255,0.12); --border-strong: rgba(0,255,255,0.18); --text: #e0e0e8; --text2: #7a7a8a; --green: #00ff88; --red: #ff7e5f; --neon: #00ffff; --neon-glow: rgba(0,255,255,0.25); --neon-strong: rgba(0,255,255,0.5); --gold: #f0b90b; --radius: 14px; --radius-sm: 8px; --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        :root { --bg: #0a0a0a; --sidebar: rgba(10,10,10,0.92); --card: rgba(18,18,22,0.9); --card2: rgba(24,24,30,0.6); --border: rgba(0,255,255,0.12); --border-strong: rgba(0,255,255,0.18); --text: #e0e0e8; --text2: #9ca3af; --green: #00ff88; --red: #ff7e5f; --neon: #00ffff; --neon-glow: rgba(0,255,255,0.25); --neon-strong: rgba(0,255,255,0.5); --gold: #f0b90b; --radius: 14px; --radius-sm: 8px; --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; min-height: 100vh; overflow-x: hidden; position: relative; }
-        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: 0; animation: gridScroll 25s linear infinite; }
-        @keyframes gridScroll { 0% { transform: translate(0,0); } 100% { transform: translate(50px,50px); } }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: 0; }
+        @media (prefers-reduced-motion: no-preference) {
+          body::before { animation: gridScroll 25s linear infinite; }
+          @keyframes gridScroll { 0% { transform: translate(0,0); } 100% { transform: translate(50px,50px); } }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
+        .hamburger { display: none; background: none; border: 1px solid var(--border); color: var(--neon); font-size: 1.5rem; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: var(--transition); }
+        .hamburger:hover { background: rgba(0,255,255,0.1); box-shadow: 0 0 15px var(--neon-glow); }
         body::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 50% 0%, rgba(0,255,255,0.04) 0%, transparent 70%); pointer-events: none; z-index: 0; }
         ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.2); border-radius: 3px; }
         #landing-page { position: relative; z-index: 1; min-height: 100vh; }
@@ -77,8 +90,8 @@
         .hero-stat { text-align: center; }
         .hero-stat .stat-num { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--neon); text-shadow: 0 0 20px var(--neon-glow); }
         .hero-stat .stat-label { font-size: 0.72rem; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; font-family: 'Inter', sans-serif; }
-        .section-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 12px; letter-spacing: 1px; }
-        .section-subtitle { text-align: center; color: var(--text2); font-size: 0.9rem; margin-bottom: 40px; font-family: 'Inter', sans-serif; }
+        h2.section-title, .section-title { text-align: center; font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; color: #fff; margin: 0 0 12px 0; letter-spacing: 1px; }
+        p.section-subtitle, .section-subtitle { text-align: center; color: var(--text2); font-size: 0.9rem; margin: 0 0 40px 0; font-family: 'Inter', sans-serif; }
         .about-logo { width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 16px; display: block; border: 2px solid var(--neon); box-shadow: 0 0 15px var(--neon-glow); object-fit: cover; }
         .who-for { padding: 60px 20px; max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
         .who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
@@ -164,7 +177,7 @@
         .modal-gracias { text-align: center; padding: 20px; }
         .modal-gracias .gracias-icon { font-size: 4rem; margin-bottom: 16px; }
         .modal-gracias .gracias-text { font-family: 'Inter', sans-serif; font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
-        @media (max-width: 768px) { .landing-nav { padding: 14px 16px; } .landing-nav .logo-landing img { height: 34px; width: 34px; } .hero h1 { font-size: 1.8rem; } .hero-logo { width: 60px; height: 60px; } .hero-stats { gap: 20px; padding: 16px; } .hero-stat .stat-num { font-size: 1.3rem; } }
+        @media (max-width: 768px) { .landing-nav { padding: 14px 16px; justify-content: space-between; } .landing-nav .logo-landing img { height: 34px; width: 34px; } .hamburger { display: block; } .nav-links { display: none; flex-direction: column; width: 100%; gap: 4px; padding-top: 8px; } .nav-links.open { display: flex; } .nav-links a { padding: 8px 0; font-size: 0.85rem; } .nav-btns { width: 100%; justify-content: center; } .hero h1 { font-size: 1.8rem; } .hero-logo { width: 60px; height: 60px; } .hero-stats { gap: 20px; padding: 16px; } .hero-stat .stat-num { font-size: 1.3rem; } }
    .gallery-slide { display: none !important; text-align: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
 .gallery-slide.active { display: block !important; opacity: 1; }
 .gallery-slide.active { display: block !important; }
@@ -235,10 +248,11 @@
     <!-- ============================================ -->
     <!-- LANDING PAGE -->
     <!-- ============================================ -->
-    <div id="landing-page">
-        <nav class="landing-nav">
+    <main id="landing-page">
+        <nav class="landing-nav" role="navigation" aria-label="Navegación principal">
             <a href="#" class="logo-landing"><img src="https://i.ibb.co/5gkfzBXN/Whats-App-Image-2026-05-16-at-18-50-39.jpg" alt="CRT Journal"> CRT JOURNAL</a>
-            <div class="nav-links">
+            <button class="hamburger" onclick="toggleNav()" aria-label="Menú">☰</button>
+            <div class="nav-links" id="nav-links">
                 <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Características</a>
                 <a onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">Galería</a>
                 <a onclick="document.getElementById('plans').scrollIntoView({behavior:'smooth'})">Planes</a>
@@ -273,8 +287,8 @@
         <!-- NUEVA SECCIÓN: TEXTO SEO                      -->
         <!-- ============================================ -->
         <section class="seo-text" style="padding:40px 20px;max-width:900px;margin:0 auto;position:relative;z-index:1;">
-            <div class="section-title">¿Qué es un Journal de Trading?</div>
-            <div class="section-subtitle">Y por qué los traders rentables lo usan a diario</div>
+            <h2 class="section-title">¿Qué es un Journal de Trading?</h2>
+            <p class="section-subtitle">Y por qué los traders rentables lo usan a diario</p>
             <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:30px;backdrop-filter:blur(12px);font-family:'Inter',sans-serif;line-height:1.8;">
                 <p style="color:var(--text2);margin-bottom:16px;">Un <strong style="color:var(--neon);">journal de trading</strong> (o bitácora de trading) es un registro detallado de todas tus operaciones financieras. Pero es mucho más que un simple registro: es la herramienta que usan los traders profesionales para <strong style="color:#fff;">analizar su rendimiento</strong>, identificar patrones y eliminar errores emocionales.</p>
                 <p style="color:var(--text2);margin-bottom:16px;">En <strong style="color:var(--neon);">CRT Journal</strong> no solo anotas tus trades. Obtienes <strong style="color:#fff;">métricas avanzadas</strong> como win rate, profit factor, expectancy, racha de ganancias y drawdown. Todo calculado automáticamente para que sepas exactamente qué está funcionando y qué no.</p>
@@ -306,18 +320,18 @@
         </section>
 
         <section class="who-for" id="who-for">
-            <div class="section-title">¿Para quién es CRT Journal?</div>
-            <div class="section-subtitle">Diseñado para traders que buscan consistencia y resultados reales</div>
+            <h2 class="section-title">¿Para quién es CRT Journal?</h2>
+            <p class="section-subtitle">Diseñado para traders que buscan consistencia y resultados reales</p>
             <div class="who-grid">
                 <div class="who-card"><div class="who-icon">🏦</div><h3>Traders de Prop Firms</h3><p>Supera los desafíos con métricas de consistencia, días mínimos y gestión de riesgo integrada.</p></div>
-                <div class="who-card"><div class="who-icon">📊</div><h3>Tradores Independientes</h3><p>Lleva un control profesional de tus operaciones sin depender de hojas de cálculo complicadas.</p></div>
+                <div class="who-card"><div class="who-icon">📊</div><h3>Traders Independientes</h3><p>Lleva un control profesional de tus operaciones sin depender de hojas de cálculo complicadas.</p></div>
                 <div class="who-card"><div class="who-icon">🎯</div><h3>Quienes buscan consistencia</h3><p>Identifica patrones, mejora tu disciplina y conviértete en un trader rentable a largo plazo.</p></div>
             </div>
         </section>
 
         <section class="features" id="features">
-            <div class="section-title">Características</div>
-            <div class="section-subtitle">Métricas, gestión de riesgo, gráficos y chat IA para traders de forex, futuros y prop firms</div>
+            <h2 class="section-title">Características</h2>
+            <p class="section-subtitle">Métricas, gestión de riesgo, gráficos y chat IA para traders de forex, futuros y prop firms</p>
             <div class="features-grid">
                 <div class="feature-card"><span class="feature-icon">📊</span><h3>Métricas Avanzadas</h3><p>Win rate, profit factor, expectancy, racha, drawdown y más. Todo calculado automáticamente.</p></div>
                 <div class="feature-card"><span class="feature-icon">🛡️</span><h3>Gestión de Riesgo</h3><p>Control de riesgo por operación, alertas de límites y calculadora de tamaño de posición.</p></div>
@@ -330,8 +344,8 @@
         <!-- GALERÍA: CONOCE TUS NÚMEROS -->
         <!-- ============================================ -->
         <section class="gallery" id="gallery">
-            <div class="section-title">Conoce tus números, <span style="color:var(--neon);">conócete a ti mismo</span></div>
-            <div class="section-subtitle">Descubre todo lo que CRT Journal puede hacer por tu trading</div>
+            <h2 class="section-title">Conoce tus números, <span style="color:var(--neon);">conócete a ti mismo</span></h2>
+            <p class="section-subtitle">Descubre todo lo que CRT Journal puede hacer por tu trading</p>
             <div class="gallery-container" id="gallery-container">
                 <button class="gallery-nav gallery-prev" onclick="cambiarSlide(-1)">◀</button>
                 <button class="gallery-nav gallery-next" onclick="cambiarSlide(1)">▶</button>
@@ -369,8 +383,8 @@
         <!-- TESTIMONIOS -->
         <!-- ============================================ -->
         <section class="testimonials" id="testimonios" style="padding:60px 20px;max-width:1000px;margin:0 auto;position:relative;z-index:1;">
-            <div class="section-title">Lo que dicen los traders</div>
-            <div class="section-subtitle">Resultados reales de traders que ya usan CRT Journal</div>
+            <h2 class="section-title">Lo que dicen los traders</h2>
+            <p class="section-subtitle">Resultados reales de traders que ya usan CRT Journal</p>
             <div class="testimonials-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;">
                 <div class="testimonial-card" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px;text-align:center;backdrop-filter:blur(12px);transition:var(--transition);">
                     <div style="font-size:2rem;margin-bottom:10px;">🏆</div>
@@ -391,8 +405,8 @@
         </section>
 
         <section class="plans" id="plans">
-            <div class="section-title">Planes</div>
-            <div class="section-subtitle">Elige el plan que mejor se adapte a tu operativa</div>
+            <h2 class="section-title">Planes</h2>
+            <p class="section-subtitle">Elige el plan que mejor se adapte a tu operativa</p>
             <div class="plans-grid">
                 <div class="plan-card">
                     <h3>Básico</h3>
@@ -454,8 +468,8 @@
         </section>
 
         <section class="faq" id="faq">
-            <div class="section-title">Preguntas Frecuentes</div>
-            <div class="section-subtitle">Resolvemos tus dudas</div>
+            <h2 class="section-title">Preguntas Frecuentes</h2>
+            <p class="section-subtitle">Resolvemos tus dudas</p>
             <div class="faq-item" onclick="this.classList.toggle('open')"><h4>💡 ¿Cómo funciona la prueba gratis?</h4><p>Al registrarte, obtienes 7 días del plan Pro sin costo. Al terminar, vuelves al plan Básico.</p></div>
             <div class="faq-item" onclick="this.classList.toggle('open')"><h4>💳 ¿Qué métodos de pago aceptan?</h4><p>Aceptamos criptomonedas (USDT a través de Binance Pay, red TRC-20). Es rápido y seguro.</p></div>
             <div class="faq-item" onclick="this.classList.toggle('open')"><h4>🔒 ¿Mis datos están seguros?</h4><p>Tus datos se guardan cifrados con SHA-256 y sincronizados en la nube (plan Pro). Nadie más puede ver tu journal.</p></div>
@@ -465,7 +479,7 @@
         </section>
 
         <section class="about" id="about" style="padding:40px 20px 60px;max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1;">
-            <div class="section-title">Sobre CRT Journal</div>
+            <h2 class="section-title">Sobre CRT Journal</h2>
             <img src="https://i.ibb.co/5gkfzBXN/Whats-App-Image-2026-05-16-at-18-50-39.jpg" alt="CRT Journal" class="about-logo" style="width:60px;height:60px;border-radius:50%;margin:0 auto 16px;display:block;border:2px solid var(--neon);box-shadow:0 0 15px var(--neon-glow);object-fit:cover;">
             <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:30px;backdrop-filter:blur(12px);font-family:'Inter',sans-serif;line-height:1.8;text-align:left;">
                 <p style="color:var(--text2);margin-bottom:12px;"><strong style="color:var(--neon);">CRT Journal</strong> nace de una necesidad real: <strong style="color:#fff;">ser trader es difícil</strong>, pero llevar un buen registro de tus operaciones no debería serlo.</p>
@@ -476,7 +490,7 @@
             <p style="margin-top:20px;font-family:'Orbitron',sans-serif;font-size:0.9rem;color:var(--neon);text-shadow:0 0 20px var(--neon-glow);">Hecho para traders disciplinados.</p>
         </section>
 
-        <footer class="landing-footer">
+        <footer class="landing-footer" role="contentinfo">
             <div class="footer-grid">
                 <div class="footer-col"><img src="https://i.ibb.co/5gkfzBXN/Whats-App-Image-2026-05-16-at-18-50-39.jpg" alt="CRT" class="footer-logo"><h4>CRT JOURNAL</h4><p>Journal profesional de trading.</p></div>
                 <div class="footer-col"><h4>Producto</h4><a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Características</a><a onclick="document.getElementById('plans').scrollIntoView({behavior:'smooth'})">Planes</a><a onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">FAQ</a></div>
@@ -485,7 +499,7 @@
             </div>
             <div class="footer-bottom">© 2026 CRT JOURNAL · TODOS LOS DERECHOS RESERVADOS · <a onclick="abrirLegal('disclaimer')">Disclaimer</a></div>
         </footer>
-    </div>    <!-- MODAL REGISTRO -->
+    </main>    <!-- MODAL REGISTRO -->
     <div class="modal-overlay hidden" id="modal-registro">
         <div class="modal-panel">
             <button class="modal-close" onclick="cerrarRegistro()">✕</button>
@@ -607,8 +621,8 @@
         </aside>
 
         <main class="main" style="margin-left:240px;flex:1;padding:24px 28px;position:relative;z-index:1;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:40px;">
-            <div id="page-dashboard" class="page active"><h2>Dashboard</h2><div id="dashboard-alert"></div><div id="coach-tip-container"></div><div class="cards" id="dash-cards"></div><div class="card" id="weekly-summary-card"><div class="card-title">📊 Resumen Semanal</div><div id="weekly-summary-content" style="font-family:'Inter',sans-serif;font-size:0.82rem;">Selecciona una cuenta para ver el resumen semanal.</div></div>
-            <div class="card"><div class="card-title">Curva de Equity</div><div style="height:320px;"><canvas id="equityChart"></canvas></div></div><div class="card"><div class="card-title">Racha Visual <span style="font-size:0.65rem;color:var(--text2);font-family:'Inter',sans-serif;font-weight:400;">(ultimos 20 trades)</span></div><div id="streakVisualizer"><p style="color:var(--text2);font-size:0.78rem;" class="streak-empty">📭 Cargando...</p></div></div></div>
+            <div id="page-dashboard" class="page active"><h2>Dashboard</h2><div id="dashboard-alert"></div><div id="coach-tip-container"></div><div class="cards" id="dash-cards"></div><div class="card" id="weekly-summary-card"><h3 class="card-title">📊 Resumen Semanal</h3><div id="weekly-summary-content" style="font-family:'Inter',sans-serif;font-size:0.82rem;">Selecciona una cuenta para ver el resumen semanal.</div></div>
+            <div class="card"><h3 class="card-title">Curva de Equity</h3><div style="height:320px;"><canvas id="equityChart"></canvas></div></div><div class="card"><h3 class="card-title">Racha Visual <span style="font-size:0.65rem;color:var(--text2);font-family:'Inter',sans-serif;font-weight:400;">(ultimos 20 trades)</span></h3><div id="streakVisualizer"><p style="color:var(--text2);font-size:0.78rem;" class="streak-empty">📭 Cargando...</p></div></div></div>
 
             <div id="page-trades" class="page"><h2>Trades</h2><div class="card"><div class="cal-nav"><button onclick="cambiarMes(-1)">◀</button><span class="month-label" id="cal-label"></span><button onclick="cambiarMes(1)">▶</button><span style="margin-left:16px;font-weight:600;font-family:'Orbitron',sans-serif;font-size:0.82rem;" id="cal-total"></span><button class="btn btn-blue btn-sm" onclick="nuevoTrade()" style="margin-left:auto;">+ Trade</button><button class="btn btn-blue btn-sm" onclick="abrirModalImportar()">📤 Importar CSV/HTML</button><button class="btn btn-outline btn-sm" onclick="exportarCSV()">📥 Exportar CSV</button></div><div class="trades-layout"><div class="cal-column"><div class="cal-grid" id="cal-grid"></div></div><div class="semanas-column" id="semanas-column"></div></div></div><div class="card"><div class="card-title" id="hist-title">Historial <span style="font-size:0.6rem;color:#5a5878;font-weight:400;font-family:'Inter',sans-serif;">Ordenado por fecha descendente</span></div>
     <div class="trade-filters" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
@@ -624,19 +638,19 @@
         <button onclick="limpiarFiltros()" style="padding:8px 12px;background:transparent;border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#7a7a8a;font-size:0.68rem;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;">✕ Limpiar</button>
     </div><table><thead><tr><th>Fecha</th><th>Activo</th><th>Tipo</th><th>Cierre</th><th>$</th><th>%</th><th>Img</th><th>Plan</th><th></th></tr></thead><tbody id="trades-tbody"></tbody></table></div></div>
 
-            <div id="page-cuentas" class="page"><h2>Mis Cuentas</h2><div class="card"><div class="card-title">Cuentas <button class="btn btn-blue btn-sm" onclick="abrirModalCuenta()">+ Añadir</button><button class="btn btn-outline btn-sm" onclick="reiniciarTradesCuenta()" style="color:var(--gold);border-color:var(--gold);">🔄 Reiniciar trades</button></div><table><thead><tr><th>Cuenta</th><th>Empresa</th><th>Tamaño</th><th>Invertido</th><th>Objetivo</th><th>Días Mín</th><th>Consist.</th><th></th></tr></thead><tbody id="cuentas-lista-tbody"></tbody></table></div></div>
+            <div id="page-cuentas" class="page"><h2>Mis Cuentas</h2><div class="card"><h3 class="card-title">Cuentas <button class="btn btn-blue btn-sm" onclick="abrirModalCuenta()">+ Añadir</button><button class="btn btn-outline btn-sm" onclick="reiniciarTradesCuenta()" style="color:var(--gold);border-color:var(--gold);">🔄 Reiniciar trades</button></h3><table><thead><tr><th>Cuenta</th><th>Empresa</th><th>Tamaño</th><th>Invertido</th><th>Objetivo</th><th>Días Mín</th><th>Consist.</th><th></th></tr></thead><tbody id="cuentas-lista-tbody"></tbody></table></div></div>
             <div id="page-reglas" class="page"><h2>Reglas de la Cuenta</h2><div class="cards" id="reglas-cards"></div></div>
-            <div id="page-retiros" class="page"><h2>Retiros</h2><div class="cards" id="retiros-cards"></div><div class="card"><div class="card-title">Historial <button class="btn btn-blue btn-sm" onclick="abrirModalRetiro()">+ Añadir</button></div><table><thead><tr><th>Fecha</th><th>Monto</th><th>Notas</th></tr></thead><tbody id="retiros-tbody"></tbody></table></div></div>
+            <div id="page-retiros" class="page"><h2>Retiros</h2><div class="cards" id="retiros-cards"></div><div class="card"><h3 class="card-title">Historial <button class="btn btn-blue btn-sm" onclick="abrirModalRetiro()">+ Añadir</button></h3><table><thead><tr><th>Fecha</th><th>Monto</th><th>Notas</th></tr></thead><tbody id="retiros-tbody"></tbody></table></div></div>
 
-            <div id="page-plan" class="page"><h2>📝 Mi Plan de Trading</h2><div class="card"><div class="card-title">Mis Reglas <button class="btn btn-blue btn-sm" onclick="agregarReglaPlan()">+ Añadir</button></div><p style="color:var(--text2);font-size:0.72rem;margin-bottom:8px;">Doble clic para editar cada regla</p><div id="plan-reglas-container"></div><button class="btn btn-blue" onclick="guardarPlan()" style="margin-top:12px;">💾 Guardar Plan</button></div><div class="card"><div class="card-title">📊 Cumplimiento Semanal</div><div id="plan-cumplimiento-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
+            <div id="page-plan" class="page"><h2>📝 Mi Plan de Trading</h2><div class="card"><h3 class="card-title">Mis Reglas <button class="btn btn-blue btn-sm" onclick="agregarReglaPlan()">+ Añadir</button></h3><p style="color:var(--text2);font-size:0.72rem;margin-bottom:8px;">Doble clic para editar cada regla</p><div id="plan-reglas-container"></div><button class="btn btn-blue" onclick="guardarPlan()" style="margin-top:12px;">💾 Guardar Plan</button></div><div class="card"><h3 class="card-title">📊 Cumplimiento Semanal</h3><div id="plan-cumplimiento-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
 
-            <div id="page-metricas" class="page"><h2>📊 Métricas Avanzadas</h2><div class="cards" id="metricas-cards"></div><div class="card"><div class="card-title">📅 Rendimiento Mensual</div><div id="rendimiento-mensual"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📈 Frecuencia por Día</div><div style="height:260px;"><canvas id="frecuenciaChart"></canvas></div></div><div class="card"><div class="card-title">⏱️ Análisis de Duración</div><div id="duracion-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Duración por Tipo</div><div style="height:260px;"><canvas id="duracionChart"></canvas></div></div></div>
+            <div id="page-metricas" class="page"><h2>📊 Métricas Avanzadas</h2><div class="cards" id="metricas-cards"></div><div class="card"><h3 class="card-title">📅 Rendimiento Mensual</h3><div id="rendimiento-mensual"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><h3 class="card-title">📈 Frecuencia por Día</h3><div style="height:260px;"><canvas id="frecuenciaChart"></canvas></div></div><div class="card"><h3 class="card-title">⏱️ Análisis de Duración</h3><div id="duracion-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><h3 class="card-title">📊 Duración por Tipo</h3><div style="height:260px;"><canvas id="duracionChart"></canvas></div></div></div>
 
-            <div id="page-rendimiento" class="page"><h2>📈 Rendimiento Diario</h2><div class="cards" id="rendimiento-daily-cards"></div><div class="card"><div class="card-title">Balance Diario Acumulado</div><div style="height:320px;"><canvas id="balanceDiarioChart"></canvas></div></div><div class="card"><div class="card-title">Desglose por Día</div><div id="desglose-diario-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
+            <div id="page-rendimiento" class="page"><h2>📈 Rendimiento Diario</h2><div class="cards" id="rendimiento-daily-cards"></div><div class="card"><h3 class="card-title">Balance Diario Acumulado</h3><div style="height:320px;"><canvas id="balanceDiarioChart"></canvas></div></div><div class="card"><h3 class="card-title">Desglose por Día</h3><div id="desglose-diario-content"><p style="color:var(--text2);">Cargando...</p></div></div></div>
 
-            <div id="page-stats" class="page"><h2>Estadísticas</h2><div class="cards" id="stats-cards"></div><div class="card"><div class="card-title">🛡️ Gestión de Riesgo</div><div id="riesgo-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">📊 Distribución de Resultados</div><div style="height:280px;"><canvas id="distChart"></canvas></div></div><div class="card"><div class="card-title">🧠 Análisis</div><div id="ai-observations" class="ai-box">Cargando...</div></div><div class="card"><div class="card-title">💬 Chat IA</div><div id="chat-messages" class="ai-box" style="min-height:150px;"><p style="color:#888;">Pregúntame sobre tus trades. Ej: "¿cómo voy con el plan?", "¿qué día tuve mejor gestión de riesgo?", "¿cuál es mi punto más débil?"</p></div><div class="chat-input-row"><input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')preguntarAI()"><button onclick="preguntarAI()">➤</button></div></div></div>
+            <div id="page-stats" class="page"><h2>Estadísticas</h2><div class="cards" id="stats-cards"></div><div class="card"><h3 class="card-title">🛡️ Gestión de Riesgo</h3><div id="riesgo-content"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><h3 class="card-title">📊 Distribución de Resultados</h3><div style="height:280px;"><canvas id="distChart"></canvas></div></div><div class="card"><h3 class="card-title">🧠 Análisis</h3><div id="ai-observations" class="ai-box">Cargando...</div></div><div class="card"><h3 class="card-title">💬 Chat IA</h3><div id="chat-messages" class="ai-box" style="min-height:150px;"><p style="color:#888;">Pregúntame sobre tus trades. Ej: "¿cómo voy con el plan?", "¿qué día tuve mejor gestión de riesgo?", "¿cuál es mi punto más débil?"</p></div><div class="chat-input-row"><input type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')preguntarAI()"><button onclick="preguntarAI()">➤</button></div></div></div>
 
-            <div id="page-admin" class="page"><h2>🔐 Panel de Administrador</h2><div class="cards" id="admin-cards"></div><div class="card"><div class="card-title">💰 Ingresos del Mes</div><div id="admin-ingresos"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><div class="card-title">👥 Usuarios Registrados</div><div id="admin-tabla-usuarios"><p style="color:var(--text2);">Cargando...</p></div></div></div>
+            <div id="page-admin" class="page"><h2>🔐 Panel de Administrador</h2><div class="cards" id="admin-cards"></div><div class="card"><h3 class="card-title">💰 Ingresos del Mes</h3><div id="admin-ingresos"><p style="color:var(--text2);">Cargando...</p></div></div><div class="card"><h3 class="card-title">👥 Usuarios Registrados</h3><div id="admin-tabla-usuarios"><p style="color:var(--text2);">Cargando...</p></div></div></div>
         </main>
     </div>
 
@@ -672,7 +686,7 @@
         .val.green { color:var(--green);text-shadow:0 0 10px rgba(0,255,136,0.3); } .val.red { color:var(--red);text-shadow:0 0 10px rgba(255,126,95,0.3); } .val.neon { color:var(--neon); }
         .card { background:rgba(18,18,22,0.8);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;position:relative;backdrop-filter:blur(16px);transition:all 0.3s; }
         .card:hover { border-color:var(--border-strong);box-shadow:0 4px 25px rgba(0,0,0,0.4); }
-        .card-title { font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:600;margin-bottom:16px;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center; }
+        h3.card-title, .card-title { font-family:'Orbitron',sans-serif;font-size:0.88rem;font-weight:600;margin:0 0 16px 0;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center; }
         table { width:100%;border-collapse:collapse;font-size:0.8rem; }
         th { text-align:left;padding:12px 10px;border-bottom:2px solid rgba(0,255,255,0.15);color:var(--neon);font-size:0.68rem;text-transform:uppercase;letter-spacing:1.2px;font-family:'Orbitron',sans-serif;background:rgba(0,255,255,0.03); }
         td { padding:12px 10px;border-bottom:1px solid rgba(0,255,255,0.04);color:var(--text); } tr { transition:all 0.2s; } tr:hover td { background:rgba(0,255,255,0.03);color:#fff; }
@@ -784,7 +798,7 @@
         .card + .card::before { content: '' !important; display: block !important; height: 1px !important; background: linear-gradient(90deg, transparent, rgba(0,229,255,0.08), transparent) !important; margin-bottom: 20px !important; }
         .card { background: rgba(18,18,22,0.85) !important; border: 1px solid rgba(0,229,255,0.04) !important; border-radius: 12px !important; padding: 22px !important; margin-bottom: 20px !important; backdrop-filter: blur(16px) !important; transition: all 0.3s ease !important; }
         .card:hover { border-color: rgba(0,229,255,0.1) !important; box-shadow: 0 4px 25px rgba(0,0,0,0.4) !important; }
-        .card-title { font-family: 'Orbitron', sans-serif !important; font-size: 0.82rem !important; font-weight: 600 !important; margin-bottom: 14px !important; letter-spacing: 0.8px !important; color: #b0b0c0 !important; }
+        h3.card-title, .card-title { font-family: 'Orbitron', sans-serif !important; font-size: 0.82rem !important; font-weight: 600 !important; margin: 0 0 14px 0 !important; letter-spacing: 0.8px !important; color: #b0b0c0 !important; }
         th { text-align: left !important; padding: 10px 12px !important; border-bottom: 1px solid rgba(0,229,255,0.06) !important; color: #5a5878 !important; font-size: 0.62rem !important; text-transform: uppercase !important; letter-spacing: 1.2px !important; font-family: 'Inter', sans-serif !important; background: rgba(0,229,255,0.02) !important; font-weight: 600 !important; }
         td { padding: 10px 12px !important; border-bottom: 1px solid rgba(0,229,255,0.02) !important; color: #b0b0c0 !important; font-size: 0.75rem !important; }
         tr { transition: all 0.2s ease !important; }
@@ -966,6 +980,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 emailjs.init('h_Wh0jRq4rxTGllr7');
+// ============================================
+// HAMBURGUESA MÓVIL
+// ============================================
+function toggleNav(){document.getElementById('nav-links').classList.toggle('open');}
+document.addEventListener('click',function(e){var nav=document.getElementById('nav-links');if(nav&&nav.classList.contains('open')&&!e.target.closest('.landing-nav')){nav.classList.remove('open');}});
+// Cerrar menú al hacer click en un link
+document.querySelectorAll('#nav-links a').forEach(function(a){a.addEventListener('click',function(){document.getElementById('nav-links').classList.remove('open');});});
+
 // ============================================
 // FUNCIONES DE MODALES (AL INICIO - PARA EVITAR ERRORES)
 // ============================================
