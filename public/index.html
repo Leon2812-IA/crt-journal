@@ -953,19 +953,24 @@
         if (app) { observerGraficas.observe(app, { childList: true, subtree: true, attributes: true }); }
     })();
     </script><script>// ============================================
-// CONFIGURACIÓN DE FIREBASE + EMAILJS
+// CONFIGURACIÓN SEGURA — obtenida del servidor
 // ============================================
-const firebaseConfig = {
-  apiKey: "AIzaSyCxtKvOQTNz_OdA-njw1Sgo2sntx-lNv88",
-  authDomain: "crt-journal-f8ae3.firebaseapp.com",
-  projectId: "crt-journal-f8ae3",
-  storageBucket: "crt-journal-f8ae3.firebasestorage.app",
-  messagingSenderId: "629465653592",
-  appId: "1:629465653592:web:7dae95dc7958f31695c52d"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-emailjs.init('h_Wh0jRq4rxTGllr7');
+let firebaseConfig, emailjsPublicKey;
+(async function cargarConfig() {
+  try {
+    const resp = await fetch('/api/config');
+    if (!resp.ok) throw new Error('Error al cargar configuración');
+    const config = await resp.json();
+    firebaseConfig = config.firebase;
+    emailjsPublicKey = config.emailjsPublicKey;
+    firebase.initializeApp(firebaseConfig);
+    window.db = firebase.firestore();
+    emailjs.init(emailjsPublicKey);
+    console.log('✅ Configuración cargada desde servidor');
+  } catch (e) {
+    console.error('❌ No se pudo cargar la configuración:', e);
+  }
+})();
 
 // ============================================
 // FUNCIONES DE MODALES (AL INICIO - PARA EVITAR ERRORES)
