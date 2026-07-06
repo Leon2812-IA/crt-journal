@@ -138,8 +138,8 @@
         .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 22px; margin-bottom: 10px; cursor: pointer; transition: var(--transition); }
         .faq-item:hover { border-color: var(--neon); }
         .faq-item h4 { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: #fff; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .faq-item p { font-size: 0.78rem; color: var(--text2); font-family: 'Inter', sans-serif; line-height: 1.6; display: none; }
-        .faq-item.open p { display: block; }
+        .faq-item p { font-size: 0.78rem; color: var(--text2); font-family: 'Inter', sans-serif; line-height: 1.6; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .faq-item.open p { max-height: 200px; padding-top: 4px; }
         .faq-item.open { border-color: var(--neon); box-shadow: 0 0 15px var(--neon-glow); }
         .about { padding: 40px 20px 60px; max-width: 800px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
         .about p { color: var(--text2); font-family: 'Inter', sans-serif; font-size: 0.9rem; line-height: 1.7; max-width: 600px; margin: 0 auto; }
@@ -524,7 +524,7 @@
             <label for="login-password">Contraseña</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
             <button class="btn-submit" onclick="iniciarSesion()">Acceder</button>
             <div class="modal-error" id="login-error"></div>
-            <div class="modal-link">¿No tienes cuenta? <a onclick="cambiarARegistro()">Regístrate</a></div>
+            <div class="modal-link">¿No tienes cuenta? <a onclick="cambiarARegistro()">Regístrate</a> &nbsp;|&nbsp; <a style="color:var(--text2);font-size:0.72rem;">¿Olvidaste tu contraseña? Contacta a soporte@crtjournal.com</a></div>
         </div>
     </div>
 
@@ -1120,8 +1120,7 @@ function getUsuarioActual(){try{return JSON.parse(localStorage.getItem('crt_usua
 function setUsuarioActual(obj){localStorage.setItem('crt_usuario_actual',JSON.stringify(obj));}
 
 async function precargarAdmin(){
-    var ref = db.collection('usuarios').doc('admin@crtjournal.com');
-    var doc = await ref.get();
+        var ref = db.collection('usuarios').doc('admin@crtjournal.com');
     if(!doc.exists){
         await ref.set({
             nombre:'Admin',email:'admin@crtjournal.com',
@@ -1161,16 +1160,20 @@ async function setDatosUsuario(email,datos){
 // ============================================
 // SYNC EN LA NUBE (PLAN PRO)
 // ============================================
+function updateSyncBadge(ok){
+    var el = document.getElementById('status-plan-badge');
+    if (!el) return;
+    el.textContent = ok ? '☁️ Sync OK' : '⚠️ Sync pendiente';
+    el.style.color = ok ? 'var(--green)' : 'var(--gold)';
+}
 async function syncToCloud(){
     var usuario = getUsuarioActual();
     if(!usuario || usuario.plan !== 'pro') return;
     try {
         await setDatosUsuario(usuario.email, data);
-        document.getElementById('status-plan-badge').textContent = '☁️ Sync OK';
-        document.getElementById('status-plan-badge').style.color = 'var(--green)';
+        updateSyncBadge(true);
     } catch(e) {
-        document.getElementById('status-plan-badge').textContent = '⚠️ Sync pendiente';
-        document.getElementById('status-plan-badge').style.color = 'var(--gold)';
+        updateSyncBadge(false);
     }
 }
 
@@ -1184,7 +1187,7 @@ async function loadFromCloud(){
     return null;
 }
 
-async function registrar(){
+async function registrar(){try{
     var nombre = document.getElementById('reg-nombre').value.trim();
     var email = document.getElementById('reg-email').value.trim().toLowerCase();
     var password = document.getElementById('reg-password').value;
@@ -1192,7 +1195,7 @@ async function registrar(){
     if(!nombre||!email||!password){errorEl.textContent='❌ Todos los campos son obligatorios';return;}
     if(password.length<6){errorEl.textContent='❌ Mínimo 6 caracteres';return;}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errorEl.textContent='❌ Email no válido';return;}
-    var ref = db.collection('usuarios').doc(email);
+        try{var ref = db.collection('usuarios').doc(email);
     var doc = await ref.get();
     if(doc.exists){errorEl.textContent='❌ Email ya registrado';return;}
     await ref.set({
@@ -1201,7 +1204,7 @@ async function registrar(){
     });
     await db.collection('datos').doc(email).set({
         cuentas:[],trades:[],retiros:[],nextId:{cuenta:1,retiro:1,trade:1},planReglas:['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2']
-    });
+    }); }catch(e){document.getElementById('reg-error').textContent='\u274c Error de conexión. Intenta de nuevo.';return;}
     setUsuarioActual({nombre:nombre,email:email,plan:'pro',pruebaGratis:true,fechaPrueba:new Date().toISOString()});
     cerrarRegistro();
     mostrarDashboard();
@@ -1213,7 +1216,7 @@ async function iniciarSesion(){
     var password = document.getElementById('login-password').value;
     var errorEl = document.getElementById('login-error');
     if(!email||!password){errorEl.textContent='❌ Todos los campos son obligatorios';return;}
-    var ref = db.collection('usuarios').doc(email);
+    try{var ref = db.collection('usuarios').doc(email);
     var doc = await ref.get();
     if(!doc.exists){errorEl.textContent='❌ Email no encontrado';return;}
     var usuario = doc.data();
@@ -1230,12 +1233,15 @@ async function iniciarSesion(){
             _sendEmail('service_bbqvqm4','template_w0ua5qm',{nombre:usuario.nombre,email:usuario.email});
         }
     }
+    }catch(e){document.getElementById('login-error').textContent='\u274c Error de conexi\u00f3n. Intenta de nuevo.';return;}
     setUsuarioActual({nombre:usuario.nombre,email:usuario.email,plan:planEfectivo,pruebaGratis:usuario.pruebaGratis||false});
     cerrarLogin();
     mostrarDashboard();
 }
 
 function cerrarSesion(){
+    if (typeof _verifInterval !== 'undefined') { clearInterval(_verifInterval); _verifInterval = undefined; }
+    verificacionPlanActiva = false;
     localStorage.removeItem('crt_usuario_actual');
     document.getElementById('app').style.display='none';
     document.getElementById('landing-page').style.display='';
@@ -1246,7 +1252,7 @@ function cerrarSesion(){
     data={cuentas:[],trades:[],retiros:[],nextId:{cuenta:1,retiro:1,trade:1},planReglas:[]};
 }
 
-function mostrarDashboard(){
+async function mostrarDashboard(){
     document.getElementById('landing-page').style.display='none';
     document.getElementById('app').style.display='flex';
     document.getElementById('dashboard-status-bar').style.display='flex';
@@ -1255,7 +1261,7 @@ function mostrarDashboard(){
     document.getElementById('reg-nombre').value='';
     document.getElementById('reg-email').value='';
     document.getElementById('reg-password').value='';
-    cargarDatosUsuario();
+    await cargarDatosUsuario();
     var u = getUsuarioActual();
     if(u && u.email === 'admin@crtjournal.com'){
         document.getElementById('nav-admin').style.display = '';
@@ -1306,7 +1312,7 @@ async function saveData(){
     if(!usuario)return;
     await setDatosUsuario(usuario.email,data);
     if(usuario.plan === 'pro'){
-        try { await syncToCloud(); } catch(e) {}
+        try { updateSyncBadge(true); } catch(e) {}
     }
 }
 
@@ -1381,7 +1387,7 @@ var verificacionPlanActiva = false;
 function iniciarVerificacionPlan() {
     if (verificacionPlanActiva) return;
     verificacionPlanActiva = true;
-    setInterval(function() {
+    var _verifInterval = setInterval(function() {
         var usuario = getUsuarioActual();
         if (!usuario) return;
         if (usuario.pruebaGratis && usuario.plan === 'pro') {
@@ -1440,6 +1446,7 @@ async function renderAdmin() {
         document.getElementById('page-admin').innerHTML = '<h2>🔐 Acceso Denegado</h2><p style="color:var(--red);">Solo el administrador puede ver esta página.</p>';
         return;
     }
+    try { var adminDoc = await db.collection('usuarios').doc('admin@crtjournal.com').get(); if (!adminDoc.exists) { document.getElementById('page-admin').innerHTML = '<h2>🔐 Acceso Denegado</h2><p style="color:var(--red);">Admin no verificado en Firestore.</p>'; return; } } catch(e) { document.getElementById('page-admin').innerHTML = '<h2>⚠️ Error</h2><p style="color:var(--text2);">No se pudo verificar. Intenta de nuevo.</p>'; return; }
     var snapshot = await db.collection('usuarios').get();
     var usuarios = [];
     snapshot.forEach(function(doc) { usuarios.push(doc.data()); });
@@ -1754,6 +1761,9 @@ function renderDashboard(){try{renderResumenSemanal()}catch(e){}
         alertHtml = '<div style="background:rgba(240,185,11,0.10);border:1px solid var(--gold);border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;"><span style="font-size:1.4rem;">⚠️</span><div><div style="font-weight:600;color:var(--gold);">Atención: Te acercas al límite</div><div style="font-size:0.65rem;color:var(--text2);">Has consumido el '+Math.max(ddActualPctLimite,pnlHoyPctLimite).toFixed(0)+'% de tu margen. Gestiona el riesgo.</div></div></div>';
     }
     document.getElementById('dashboard-alert').innerHTML = alertHtml;
+    if (total === 0) {
+        document.getElementById('coach-tip-container').innerHTML = '<div class="coach-tip" style="background:rgba(0,255,255,0.08);border:1px solid var(--neon);text-align:center;padding:24px;"><div style="font-size:2rem;margin-bottom:8px;">📊</div><div style="font-size:0.9rem;color:#fff;margin-bottom:8px;">¡Bienvenido a CRT Journal!</div><div style="font-size:0.78rem;color:var(--text2);margin-bottom:14px;">Registra tu primer trade para ver tus métricas, equity curve y análisis.</div><button class="btn btn-blue" onclick="showPage(\'trades\',document.querySelector(\'.sidebar-nav a[onclick*=trades]\'));nuevoTrade();">➕ Añadir mi primer trade</button></div>';
+    }
 }
 
 function cambiarMes(dir){calMonth+=dir;if(calMonth<1){calMonth=12;calYear--;}if(calMonth>12){calMonth=1;calYear++;}renderCalendar();}
@@ -2204,7 +2214,7 @@ function eliminarCuentaCompleta(id){
     data.retiros = data.retiros.filter(function(r){return r.cuenta_id !== id;});
     saveData();
     if(cuentaActivaId === id){cuentaActivaId = data.cuentas.length > 0 ? data.cuentas[0].id : null;}
-    cargarDatosUsuario();
+    await cargarDatosUsuario();
     alert('🗑️ Cuenta eliminada.');
 }
 
@@ -2581,6 +2591,9 @@ function importarArchivo() {
 function exportarCSV(){var t=tradesCuenta();if(!t.length)return;var csv='fecha,hora_entrada,hora_salida,activo,tipo,setup,sesion,entry_price,stop_loss,cierre,resultado,resultado_pct,emocion,confianza,plan_seguido,notas,imagen\n';t.forEach(function(tr){csv+=tr.fecha+','+(tr.hora_entrada||'')+','+(tr.hora_salida||'')+','+tr.activo+','+tr.tipo+','+(tr.setup||'')+','+(tr.sesion||'')+','+(tr.entry_price||'')+','+(tr.stop_loss||'')+','+tr.cierre+','+tr.resultado+','+(tr.resultado_pct||'')+','+(tr.emocion||'')+','+(tr.confianza||'')+','+(tr.plan_seguido!==false)+',\"'+(tr.notas||'').replace(/\"/g,'\"\"')+'\",\"'+(tr.imagen||'').replace(/\"/g,'\"\"')+'\"\n';});var blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='trades.csv';a.click();}
 function abrirModal(id){document.getElementById(id).classList.remove('hidden');}
 function cerrarModal(id){document.getElementById(id).classList.add('hidden');}
+// Cerrar modales con Escape o clic fuera
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.modal-overlay:not(.hidden)').forEach(function(m){m.classList.add('hidden');});}});
+document.addEventListener('click',function(e){if(e.target.classList.contains('modal-overlay')){e.target.classList.add('hidden');}});
 function refreshActive(){var p=document.querySelector('.page.active');if(!p)return;var pageName=p.id.replace('page-','');if(pageName==='dashboard'){renderDashboard();renderCoachTip();actualizarBarraEstado();}if(pageName==='trades')renderCalendar();if(pageName==='cuentas')renderCuentas();if(pageName==='reglas')renderReglas();if(pageName==='retiros')renderRetiros();if(pageName==='plan')renderPlan();if(pageName==='metricas')renderMetricas();if(pageName==='rendimiento')renderRendimientoDiario();if(pageName==='stats'){renderStats();renderRiesgo();renderAI();renderDistChart();}}
 
 // ============ GALERÍA DE IMÁGENES ============
@@ -2614,6 +2627,8 @@ function irASlide(n) {
     _activarSlideImg(slideActual);
 }
 setInterval(function(){ cambiarSlide(1); }, 8000);
+// Navegación por teclado en galería
+document.addEventListener('keydown',function(e){if(document.getElementById('gallery')&&window.getComputedStyle(document.getElementById('gallery')).display!=='none'){if(e.key==='ArrowLeft')cambiarSlide(-1);if(e.key==='ArrowRight')cambiarSlide(1);}});
 
 // ============ INICIALIZACIÓN ============
 window.addEventListener('DOMContentLoaded', function() {
