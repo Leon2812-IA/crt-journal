@@ -1187,7 +1187,7 @@ async function loadFromCloud(){
     return null;
 }
 
-async function registrar(){try{
+async function registrar(){
     var nombre = document.getElementById('reg-nombre').value.trim();
     var email = document.getElementById('reg-email').value.trim().toLowerCase();
     var password = document.getElementById('reg-password').value;
@@ -1195,7 +1195,7 @@ async function registrar(){try{
     if(!nombre||!email||!password){errorEl.textContent='❌ Todos los campos son obligatorios';return;}
     if(password.length<6){errorEl.textContent='❌ Mínimo 6 caracteres';return;}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errorEl.textContent='❌ Email no válido';return;}
-        try{var ref = db.collection('usuarios').doc(email);
+    try{var ref = db.collection('usuarios').doc(email);
     var doc = await ref.get();
     if(doc.exists){errorEl.textContent='❌ Email ya registrado';return;}
     await ref.set({
