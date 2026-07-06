@@ -1440,6 +1440,17 @@ async function renderAdmin() {
         document.getElementById('page-admin').innerHTML = '<h2>🔐 Acceso Denegado</h2><p style="color:var(--red);">Solo el administrador puede ver esta página.</p>';
         return;
     }
+    // Doble verificación contra Firestore
+    try {
+        var adminCheck = await db.collection('usuarios').doc('admin@crtjournal.com').get();
+        if (!adminCheck.exists) {
+            document.getElementById('page-admin').innerHTML = '<h2>🔐 Acceso Denegado</h2><p style="color:var(--red);">Admin no verificado en Firestore.</p>';
+            return;
+        }
+    } catch(e) {
+        document.getElementById('page-admin').innerHTML = '<h2>⚠️ Error</h2><p style="color:var(--text2);">No se pudo verificar. Intenta de nuevo.</p>';
+        return;
+    }
     var snapshot = await db.collection('usuarios').get();
     var usuarios = [];
     snapshot.forEach(function(doc) { usuarios.push(doc.data()); });
