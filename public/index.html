@@ -138,7 +138,7 @@
         .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px 22px; margin-bottom: 10px; cursor: pointer; transition: var(--transition); }
         .faq-item:hover { border-color: var(--neon); }
         .faq-item h4 { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: #fff; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .faq-item p { font-size: 0.78rem; color: var(--text2); font-family: 'Inter', sans-serif; line-height: 1.6; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .faq-item p { font-size: 0.78rem; color: var(--text2); font-family: 'Inter', sans-serif; line-height: 1.6; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .faq-item.open p { max-height: 200px; padding-top: 4px; }
         .faq-item.open { border-color: var(--neon); box-shadow: 0 0 15px var(--neon-glow); }
         .about { padding: 40px 20px 60px; max-width: 800px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
@@ -1120,7 +1120,8 @@ function getUsuarioActual(){try{return JSON.parse(localStorage.getItem('crt_usua
 function setUsuarioActual(obj){localStorage.setItem('crt_usuario_actual',JSON.stringify(obj));}
 
 async function precargarAdmin(){
-        var ref = db.collection('usuarios').doc('admin@crtjournal.com');
+    var ref = db.collection('usuarios').doc('admin@crtjournal.com');
+    var doc = await ref.get();
     if(!doc.exists){
         await ref.set({
             nombre:'Admin',email:'admin@crtjournal.com',
@@ -1160,20 +1161,16 @@ async function setDatosUsuario(email,datos){
 // ============================================
 // SYNC EN LA NUBE (PLAN PRO)
 // ============================================
-function updateSyncBadge(ok){
-    var el = document.getElementById('status-plan-badge');
-    if (!el) return;
-    el.textContent = ok ? '☁️ Sync OK' : '⚠️ Sync pendiente';
-    el.style.color = ok ? 'var(--green)' : 'var(--gold)';
-}
 async function syncToCloud(){
     var usuario = getUsuarioActual();
     if(!usuario || usuario.plan !== 'pro') return;
     try {
         await setDatosUsuario(usuario.email, data);
-        updateSyncBadge(true);
+        document.getElementById('status-plan-badge').textContent = '☁️ Sync OK';
+        document.getElementById('status-plan-badge').style.color = 'var(--green)';
     } catch(e) {
-        updateSyncBadge(false);
+        document.getElementById('status-plan-badge').textContent = '⚠️ Sync pendiente';
+        document.getElementById('status-plan-badge').style.color = 'var(--gold)';
     }
 }
 
@@ -1195,7 +1192,7 @@ async function registrar(){
     if(!nombre||!email||!password){errorEl.textContent='❌ Todos los campos son obligatorios';return;}
     if(password.length<6){errorEl.textContent='❌ Mínimo 6 caracteres';return;}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errorEl.textContent='❌ Email no válido';return;}
-    try{var ref = db.collection('usuarios').doc(email);
+    var ref = db.collection('usuarios').doc(email);
     var doc = await ref.get();
     if(doc.exists){errorEl.textContent='❌ Email ya registrado';return;}
     await ref.set({
@@ -1204,7 +1201,7 @@ async function registrar(){
     });
     await db.collection('datos').doc(email).set({
         cuentas:[],trades:[],retiros:[],nextId:{cuenta:1,retiro:1,trade:1},planReglas:['Analizar Bias','Confirmacion','Entrada OB','SL correcto','Ratio 1:2']
-    }); }catch(e){document.getElementById('reg-error').textContent='\u274c Error de conexión. Intenta de nuevo.';return;}
+    });
     setUsuarioActual({nombre:nombre,email:email,plan:'pro',pruebaGratis:true,fechaPrueba:new Date().toISOString()});
     cerrarRegistro();
     mostrarDashboard();
@@ -1216,7 +1213,7 @@ async function iniciarSesion(){
     var password = document.getElementById('login-password').value;
     var errorEl = document.getElementById('login-error');
     if(!email||!password){errorEl.textContent='❌ Todos los campos son obligatorios';return;}
-    try{var ref = db.collection('usuarios').doc(email);
+    var ref = db.collection('usuarios').doc(email);
     var doc = await ref.get();
     if(!doc.exists){errorEl.textContent='❌ Email no encontrado';return;}
     var usuario = doc.data();
@@ -1233,15 +1230,12 @@ async function iniciarSesion(){
             _sendEmail('service_bbqvqm4','template_w0ua5qm',{nombre:usuario.nombre,email:usuario.email});
         }
     }
-    }catch(e){document.getElementById('login-error').textContent='\u274c Error de conexi\u00f3n. Intenta de nuevo.';return;}
     setUsuarioActual({nombre:usuario.nombre,email:usuario.email,plan:planEfectivo,pruebaGratis:usuario.pruebaGratis||false});
     cerrarLogin();
     mostrarDashboard();
 }
 
 function cerrarSesion(){
-    if (typeof _verifInterval !== 'undefined') { clearInterval(_verifInterval); _verifInterval = undefined; }
-    verificacionPlanActiva = false;
     localStorage.removeItem('crt_usuario_actual');
     document.getElementById('app').style.display='none';
     document.getElementById('landing-page').style.display='';
@@ -1252,7 +1246,7 @@ function cerrarSesion(){
     data={cuentas:[],trades:[],retiros:[],nextId:{cuenta:1,retiro:1,trade:1},planReglas:[]};
 }
 
-async function mostrarDashboard(){
+function mostrarDashboard(){
     document.getElementById('landing-page').style.display='none';
     document.getElementById('app').style.display='flex';
     document.getElementById('dashboard-status-bar').style.display='flex';
@@ -1261,7 +1255,7 @@ async function mostrarDashboard(){
     document.getElementById('reg-nombre').value='';
     document.getElementById('reg-email').value='';
     document.getElementById('reg-password').value='';
-    await cargarDatosUsuario();
+    cargarDatosUsuario();
     var u = getUsuarioActual();
     if(u && u.email === 'admin@crtjournal.com'){
         document.getElementById('nav-admin').style.display = '';
@@ -1312,7 +1306,7 @@ async function saveData(){
     if(!usuario)return;
     await setDatosUsuario(usuario.email,data);
     if(usuario.plan === 'pro'){
-        try { updateSyncBadge(true); } catch(e) {}
+        try { await syncToCloud(); } catch(e) {}
     }
 }
 
@@ -1387,7 +1381,7 @@ var verificacionPlanActiva = false;
 function iniciarVerificacionPlan() {
     if (verificacionPlanActiva) return;
     verificacionPlanActiva = true;
-    var _verifInterval = setInterval(function() {
+    setInterval(function() {
         var usuario = getUsuarioActual();
         if (!usuario) return;
         if (usuario.pruebaGratis && usuario.plan === 'pro') {
@@ -1446,7 +1440,6 @@ async function renderAdmin() {
         document.getElementById('page-admin').innerHTML = '<h2>🔐 Acceso Denegado</h2><p style="color:var(--red);">Solo el administrador puede ver esta página.</p>';
         return;
     }
-    try { var adminDoc = await db.collection('usuarios').doc('admin@crtjournal.com').get(); if (!adminDoc.exists) { document.getElementById('page-admin').innerHTML = '<h2>🔐 Acceso Denegado</h2><p style="color:var(--red);">Admin no verificado en Firestore.</p>'; return; } } catch(e) { document.getElementById('page-admin').innerHTML = '<h2>⚠️ Error</h2><p style="color:var(--text2);">No se pudo verificar. Intenta de nuevo.</p>'; return; }
     var snapshot = await db.collection('usuarios').get();
     var usuarios = [];
     snapshot.forEach(function(doc) { usuarios.push(doc.data()); });
@@ -1776,12 +1769,11 @@ function renderCalendar(){
     var pctTotal=tam>0?(total/tam*100):0;
     document.getElementById('cal-total').textContent='Total: '+(total>=0?'+':'')+'$'+total.toFixed(2)+' ('+(pctTotal>=0?'+':'')+pctTotal.toFixed(2)+'%)';
     document.getElementById('cal-total').style.color=total>=0?'var(--green)':'var(--red)';
-    var maxAbsPnl=0;for(var d in tpd){var a=Math.abs(tpd[d].pnl);if(a>maxAbsPnl)maxAbsPnl=a;}
     var grid=document.getElementById('cal-grid');grid.innerHTML='';
     ['Lun','Mar','Mie','Jue','Vie','Sab','Dom'].forEach(function(d){grid.innerHTML+='<div class="cal-day head">'+d+'</div>';});
     for(var i=0;i<adj;i++)grid.innerHTML+='<div class="cal-day empty"></div>';
     var hoy=new Date();
-    for(var day=1;day<=daysIn;day++){var d=tpd[day],pnl=d?d.pnl:0,cnt=d?d.count:0;var pct=tam>0?(pnl/tam*100):0;var isToday=day===hoy.getDate()&&calMonth===hoy.getMonth()+1&&calYear===hoy.getFullYear();var intensity=maxAbsPnl>0?Math.min(1,Math.abs(pnl)/maxAbsPnl):0;var bg=pnl>0?'rgba(0,255,136,'+(0.08+intensity*0.35).toFixed(2)+')':pnl<0?'rgba(255,126,95,'+(0.08+intensity*0.35).toFixed(2)+')':'';var dayClass='';if(pnl>0)dayClass=' win';else if(pnl<0)dayClass=' loss';else if(cnt>0)dayClass=' mixed';grid.innerHTML+='<div class=\"cal-day '+(isToday?'today':'')+dayClass+'\" onclick=\"abrirDia('+calYear+','+calMonth+','+day+')\" style=\"'+(bg?'background:'+bg+';':'')+'\"><div style=\"font-weight:700;font-size:1rem;\">'+day+'</div>'+(pnl!==0?'<div style=\"font-size:0.8rem;font-weight:600;color:'+(pnl>0?'var(--green)':'var(--red)')+'\">'+(pnl>0?'+':'')+'$'+Math.round(pnl)+'</div>':'')+(cnt>0?'<div style=\"font-size:0.6rem;color:var(--text2);\">'+cnt+' op</div>':'')+'</div>';}
+    for(var day=1;day<=daysIn;day++){var d=tpd[day],pnl=d?d.pnl:0,cnt=d?d.count:0;var pct=tam>0?(pnl/tam*100):0;var isToday=day===hoy.getDate()&&calMonth===hoy.getMonth()+1&&calYear===hoy.getFullYear();var dayClass='';if(pnl>0)dayClass=' win';else if(pnl<0)dayClass=' loss';else if(cnt>0)dayClass=' mixed';grid.innerHTML+='<div class="cal-day '+(isToday?'today':'')+dayClass+'" onclick="abrirDia('+calYear+','+calMonth+','+day+')"><div style="font-weight:700;font-size:1rem;">'+day+'</div>'+(pnl!==0?'<div style="font-size:0.8rem;font-weight:600;color:'+(pnl>0?'var(--green)':'var(--red)')+'">'+(pnl>0?'+':'')+'$'+Math.round(pnl)+'</div>':'')+(cnt>0?'<div style="font-size:0.6rem;color:var(--text2);">'+cnt+' op</div>':'')+'</div>';}
     renderHistorial();renderVistaSemanal();
 }
 
@@ -1828,7 +1820,6 @@ function verImagenTrade(id){
     abrirModal('modal-imagen');
 }
 
-function abrirDia(y,m,d){abrirDiaFormNuevo(y,m,d);}
 function nuevoTradeEnDia(){nuevoTrade();}
 function nuevoTrade(){
     if(!verificarLimiteTrades())return;
@@ -2214,7 +2205,7 @@ function eliminarCuentaCompleta(id){
     data.retiros = data.retiros.filter(function(r){return r.cuenta_id !== id;});
     saveData();
     if(cuentaActivaId === id){cuentaActivaId = data.cuentas.length > 0 ? data.cuentas[0].id : null;}
-    await cargarDatosUsuario();
+    cargarDatosUsuario();
     alert('🗑️ Cuenta eliminada.');
 }
 
@@ -2510,7 +2501,7 @@ function importarArchivo() {
                         notas: t.notas,
                         imagen: t.imagen,
                         checklist: t.checklist,
-                        cuenta_id: cuentaActivaId, setup: t.setup||'', sesion: t.sesion||'', entry_price: t.entry_price||0, stop_loss: t.stop_loss||0, emocion: t.emocion||'', confianza: t.confianza||3, plan_seguido: t.plan_seguido!==false
+                        cuenta_id: cuentaActivaId
                     });
                     data.nextId.trade++;
                 }
@@ -2552,7 +2543,7 @@ function importarArchivo() {
                     var mhCsvEntrada = cols[iHA].match(/(\d{1,2}):(\d{2})/);
                     if (mhCsvEntrada) heCSV = mhCsvEntrada[1].padStart(2,'0') + ':' + mhCsvEntrada[2];
                 }
-                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: heCSV, hora_salida: hsCSV, activo: s, tipo: op, cierre: 'Manual', resultado: bv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId, setup: '', sesion: '', entry_price: 0, stop_loss: 0, emocion: '', confianza: 3, plan_seguido: true });
+                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: heCSV, hora_salida: hsCSV, activo: s, tipo: op, cierre: 'Manual', resultado: bv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId });
                 data.nextId.trade++;
                 c++;
             }
@@ -2575,7 +2566,7 @@ function importarArchivo() {
                 if (m) f = m[3] + '-' + m[2] + '-' + m[1];
                 var rv = parseFloat(rs);
                 if (isNaN(rv)) continue;
-                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: '00:00', hora_salida: '00:00', activo: a, tipo: 'Largo', cierre: 'Manual', resultado: rv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId, setup: '', sesion: '', entry_price: 0, stop_loss: 0, emocion: '', confianza: 3, plan_seguido: true });
+                data.trades.push({ id: data.nextId.trade, fecha: f, hora_entrada: '00:00', hora_salida: '00:00', activo: a, tipo: 'Largo', cierre: 'Manual', resultado: rv, resultado_pct: 0, notas: 'Importado', imagen: '', checklist: [], cuenta_id: cuentaActivaId });
                 data.nextId.trade++;
                 c++;
             }
@@ -2588,7 +2579,7 @@ function importarArchivo() {
     reader.readAsText(file);
 }
 
-function exportarCSV(){var t=tradesCuenta();if(!t.length)return;var csv='fecha,hora_entrada,hora_salida,activo,tipo,setup,sesion,entry_price,stop_loss,cierre,resultado,resultado_pct,emocion,confianza,plan_seguido,notas,imagen\n';t.forEach(function(tr){csv+=tr.fecha+','+(tr.hora_entrada||'')+','+(tr.hora_salida||'')+','+tr.activo+','+tr.tipo+','+(tr.setup||'')+','+(tr.sesion||'')+','+(tr.entry_price||'')+','+(tr.stop_loss||'')+','+tr.cierre+','+tr.resultado+','+(tr.resultado_pct||'')+','+(tr.emocion||'')+','+(tr.confianza||'')+','+(tr.plan_seguido!==false)+',\"'+(tr.notas||'').replace(/\"/g,'\"\"')+'\",\"'+(tr.imagen||'').replace(/\"/g,'\"\"')+'\"\n';});var blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='trades.csv';a.click();}
+function exportarCSV(){var t=tradesCuenta();if(!t.length)return;var csv='fecha,hora_entrada,hora_salida,activo,tipo,cierre,resultado,notas,imagen\n';t.forEach(function(tr){csv+=tr.fecha+','+(tr.hora_entrada||'')+','+(tr.hora_salida||'')+','+tr.activo+','+tr.tipo+','+tr.cierre+','+tr.resultado+',"'+(tr.notas||'').replace(/"/g,'""')+'","'+(tr.imagen||'').replace(/"/g,'""')+'"\n';});var blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='trades.csv';a.click();}
 function abrirModal(id){document.getElementById(id).classList.remove('hidden');}
 function cerrarModal(id){document.getElementById(id).classList.add('hidden');}
 // Cerrar modales con Escape o clic fuera
